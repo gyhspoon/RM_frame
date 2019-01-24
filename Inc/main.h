@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * COPYRIGHT(c) 2018 STMicroelectronics
+  * COPYRIGHT(c) 2019 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -47,8 +47,36 @@
 
 /* Private define ------------------------------------------------------------*/
 
+#define LASER_Pin GPIO_PIN_13
+#define LASER_GPIO_Port GPIOG
+#define Cap_In_Pin GPIO_PIN_4
+#define Cap_In_GPIO_Port GPIOE
+#define Cap_Out_Pin GPIO_PIN_5
+#define Cap_Out_GPIO_Port GPIOE
+#define LED8_Pin GPIO_PIN_8
+#define LED8_GPIO_Port GPIOG
+#define LED7_Pin GPIO_PIN_7
+#define LED7_GPIO_Port GPIOG
+#define LED6_Pin GPIO_PIN_6
+#define LED6_GPIO_Port GPIOG
 #define NSS_Pin GPIO_PIN_6
 #define NSS_GPIO_Port GPIOF
+#define LED5_Pin GPIO_PIN_5
+#define LED5_GPIO_Port GPIOG
+#define LED4_Pin GPIO_PIN_4
+#define LED4_GPIO_Port GPIOG
+#define LED3_Pin GPIO_PIN_3
+#define LED3_GPIO_Port GPIOG
+#define LED2_Pin GPIO_PIN_2
+#define LED2_GPIO_Port GPIOG
+#define Cap_V_Pin GPIO_PIN_0
+#define Cap_V_GPIO_Port GPIOC
+#define BUTTON_Pin GPIO_PIN_2
+#define BUTTON_GPIO_Port GPIOB
+#define LED1_Pin GPIO_PIN_1
+#define LED1_GPIO_Port GPIOG
+#define LED_RED_Pin GPIO_PIN_11
+#define LED_RED_GPIO_Port GPIOE
 #define LED_GREEN_Pin GPIO_PIN_14
 #define LED_GREEN_GPIO_Port GPIOF
 

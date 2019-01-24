@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * COPYRIGHT(c) 2018 STMicroelectronics
+  * COPYRIGHT(c) 2019 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -39,6 +39,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
+#include "adc.h"
 #include "can.h"
 #include "dma.h"
 #include "iwdg.h"
@@ -121,47 +122,77 @@ int main(void)
   MX_TIM7_Init();
   MX_TIM10_Init();
   MX_TIM2_Init();
-  MX_IWDG_Init();
+  //MX_IWDG_Init();
   MX_TIM5_Init();
   MX_USART3_UART_Init();
   MX_UART7_Init();
+  MX_ADC1_Init();
+  MX_UART8_Init();
+  MX_USART2_UART_Init();
+  MX_TIM8_Init();
 
   /* USER CODE BEGIN 2 */
-	//鍚勬ā鍧楀垵濮嬪寲
-	InitRemoteControl();
+//各模块初始化
+
+	//电机控制
 	Motor_ID_Setting();
 	for(int i=0;i<8;i++) {InitMotor(can1[i]);InitMotor(can2[i]);}
-	InitPWM();
 	InitCanReception();
-	InitGyroUart();
-	InitJudgeUart();
 	
-	#ifdef DEBUG_MODE
-	ctrlUartInit();
-	//鏃堕棿涓柇
-	HAL_TIM_Base_Start_IT(&htim10);
+	//串口
+	#ifdef USE_AUTOAIM
+		InitAutoAim();
 	#endif
-	HAL_TIM_Base_Start_IT(&htim6);
-	HAL_TIM_Base_Start_IT(&htim7);
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+	InitRemoteControl();
+	InitJudgeUart();
+	#ifdef USE_IMU
+		mpu_device_init();
+		init_quaternion();
+	#else
+		#ifdef USE_GRYO
+			InitGyroUart();
+		#else
+			gyro_data.InitFinish=1;
+		#endif
+	#endif
+	#ifdef DEBUG_MODE
+		ctrlUartInit();
+	#endif
 	
-	//ADC
-	//HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&ADC_Value,160);
+	//计时器
+	HAL_TIM_Base_Start_IT(&ONE_MS_TIM);
+	HAL_TIM_Base_Start_IT(&TWO_MS_TIM);
+	//HAL_TIM_Base_Start_IT(&TEN_MS_TIM);
+	InitPWM();
+	#ifdef FRIC_PWM_MODE
+		HAL_TIM_PWM_Start(&STEER_TIM,TIM_CHANNEL_2);
+		HAL_TIM_PWM_Start(&STEER_TIM,TIM_CHANNEL_3);
+		__HAL_TIM_SetCompare(&STEER_TIM,TIM_CHANNEL_2,800);
+		__HAL_TIM_SetCompare(&STEER_TIM,TIM_CHANNEL_3,800);
+	#endif /*FRIC_PWM_MODE*/
+
 	
-	//鍏朵粬涓柇
+	//中断
 	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
 	HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+	HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn); 
 	HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
 	HAL_NVIC_EnableIRQ(TIM7_IRQn);
 	#ifdef DEBUG_MODE
-		HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+		//HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+		__HAL_UART_ENABLE_IT(&DEBUG_UART, UART_IT_IDLE);
 	#endif
-	__HAL_UART_ENABLE_IT(&UPPER_UART, UART_IT_IDLE);
-
 	
+	//ADC
+	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&ADC_Value,160);
+	
+	//看门狗
+	MX_IWDG_Init();							//Cube配置完记得注释掉上面自动生成的看门狗初始化函数
+	
+  //超级电容2初始化
+  Cap_Init();
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */

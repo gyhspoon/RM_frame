@@ -102,22 +102,44 @@ void RemoteDataProcess(uint8_t *pData)
 	else functionmode = LOWER_POS; 
 	
 	//左上角拨杆状态（RC_CtrlData.rc.s1）获取
-	//用于遥控器发射控制
 	GetRemoteSwitchAction(&g_switch1, RC_CtrlData.rc.s1);
 	
+	//遥控模式按键切换
+	static uint8_t remote_change_counter = 0;
+	static uint8_t remote_test_mode = 0;
+	if(HAL_GPIO_ReadPin(BUTTON_GPIO_Port,BUTTON_Pin))
+	{
+		remote_change_counter++;
+		if(remote_change_counter==40) remote_test_mode = !remote_test_mode;
+	}
+	else remote_change_counter = 0;
+	if(remote_test_mode==0)
+	{
+		HAL_GPIO_WritePin(GPIOF, LED_GREEN_Pin, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOE, LED_RED_Pin, GPIO_PIN_SET);
+	}
+	else
+	{
+		HAL_GPIO_WritePin(GPIOF, LED_GREEN_Pin, GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOE, LED_RED_Pin, GPIO_PIN_RESET);
+	}
+	//数据处理方式选择
 	switch(inputmode)
 	{
 		case REMOTE_INPUT:               
 		{
 			if(WorkState > 0)
-			{ 
-				RemoteControlProcess(&(RC_CtrlData.rc));
+			{
+				if(remote_test_mode==0) 
+					RemoteControlProcess(&(RC_CtrlData.rc));
+				else
+					RemoteTestProcess(&(RC_CtrlData.rc));
 			}
 		}break;
 		case KEY_MOUSE_INPUT:              
 		{
 			if(WorkState > 0)
-			{ 
+			{	
 				MouseKeyControlProcess(&RC_CtrlData.mouse,&RC_CtrlData.key);
 			}
 		}break;
@@ -131,9 +153,10 @@ void RemoteDataProcess(uint8_t *pData)
 //初始化遥控器串口DMA接收
 void InitRemoteControl(){
 	if(HAL_UART_Receive_DMA(&RC_UART, rc_data, 18) != HAL_OK){
-			Error_Handler();
+		Error_Handler();
 	} 
 	FunctionTaskInit();
+	rx_free = 1;
 }
 
 //遥控器串口中断入口函数，从此处开始执行
@@ -142,37 +165,48 @@ uint8_t rc_update = 0;
 uint8_t rc_cnt = 0;
 uint8_t tx_cnt = 200;
 
+uint8_t  tx_free = 1;
+uint8_t  rx_free = 1;
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
 	if(UartHandle == &RC_UART){
 		rc_update = 1;
+		rx_free = 1;
 	}
 	else if(UartHandle == &GYRO_UART)
 	{
+		#ifndef USE_IMU
 		#ifdef USE_GYRO
-		gyroUartRxCpltCallback();
+			gyroUartRxCpltCallback();
+		#endif
 		#endif
 	}
 	else if(UartHandle == &JUDGE_UART)
 	{
 		judgeUartRxCpltCallback();  //裁判系统数据解算
 	}
-	
+	else if(UartHandle == &AUTOAIM_UART)
+	{
+		#ifdef USE_AUTOAIM
+		AutoAimRxEnemyINFO();
+		#endif /*USE_AUTOAIM*/
+	}
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
 	if(UartHandle == &JUDGE_UART)
 	{
-		
+		tx_free = 1;
 	}
 }
 void UART_IDLE_Handler(UART_HandleTypeDef *UartHandle)
 {
-	if(UartHandle == &UPPER_UART)
+	if(UartHandle == &DEBUG_UART)
 	{
 		#ifdef DEBUG_MODE
-		ctrlUartRxCpltCallback();
+			ctrlUartRxCpltCallback();
 		#endif
 	}
 }

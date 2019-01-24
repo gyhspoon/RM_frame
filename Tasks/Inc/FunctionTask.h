@@ -46,8 +46,13 @@
 #define LOW_FORWARD_BACK_SPEED 			200
 #define LOW_LEFT_RIGHT_SPEED   			200/2
 
+#define CHASSIS_TWIST_ANGLE_LIMIT		35
+
 #define MOUSE_LR_RAMP_TICK_COUNT		50
 #define MOUSR_FB_RAMP_TICK_COUNT		60
+
+#define MOUSE_TO_YAW_ANGLE_INC_FACT		0.05f
+#define MOUSE_TO_PITCH_ANGLE_INC_FACT	0.05f
 
 #define MK_ROTATE_SPEED_REF 			1.20f
 
@@ -85,6 +90,13 @@ typedef enum
 	NO_CHANGE,
 }KeyboardMode_e;
 
+typedef enum
+{
+	SHORT_CLICK,
+	LONG_CLICK,
+	NO_CLICK,
+}MouseMode_e;
+
 typedef __packed struct
 {
     int16_t forward_back_ref;
@@ -93,9 +105,9 @@ typedef __packed struct
 }ChassisSpeed_Ref_t;
 
 extern ChassisSpeed_Ref_t ChassisSpeedRef; 
+extern int32_t auto_counter;
 
 void FunctionTaskInit(void);
-void Limit_Position(void);
-void OptionalFunction(void);
+
 
 #endif /*__FUNCTIONTASK_H*/
