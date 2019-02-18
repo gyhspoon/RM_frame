@@ -338,7 +338,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;                     ../Drivers/STM32F4xx_HAL_Driver/Inc;                     ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                     ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                     ../Drivers/CMSIS/Include;                     ../Tasks/Inc</IncludePath>
+              <IncludePath>../Inc;                                              ../Drivers/STM32F4xx_HAL_Driver/Inc;                                              ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                                              ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                                              ../Drivers/CMSIS/Include;                                              ../Tasks/Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -488,29 +488,29 @@
           <GroupName>Tasks</GroupName>
           <Files>
             <File>
-              <FileName>Configuration.h</FileName>
+              <FileName>includes.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Tasks\Inc\Configuration.h</FilePath>
+              <FilePath>..\Inc\includes.h</FilePath>
             </File>
             <File>
-              <FileName>RobotDetail.h</FileName>
+              <FileName>AuxDevice.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Tasks\Inc\RobotDetail.h</FilePath>
+              <FilePath>..\Tasks\Inc\AuxDevice.h</FilePath>
             </File>
             <File>
-              <FileName>RobotMotor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Tasks\Inc\RobotMotor.h</FilePath>
-            </File>
-            <File>
-              <FileName>ControlTask.c</FileName>
+              <FileName>FunctionTask.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Tasks\Src\ControlTask.c</FilePath>
+              <FilePath>..\Tasks\Src\FunctionTask.c</FilePath>
             </File>
             <File>
               <FileName>MotorTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Tasks\Src\MotorTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>ControlTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Tasks\Src\ControlTask.c</FilePath>
             </File>
             <File>
               <FileName>RemoteTask.c</FileName>
@@ -538,6 +538,11 @@
               <FilePath>..\Tasks\Src\AutoAimTask.c</FilePath>
             </File>
             <File>
+              <FileName>CapControlTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Tasks\Src\CapControlTask.c</FilePath>
+            </File>
+            <File>
               <FileName>PowerLimitationTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Tasks\Src\PowerLimitationTask.c</FilePath>
@@ -546,11 +551,6 @@
               <FileName>GyroReadTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Tasks\Src\GyroReadTask.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_imu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Tasks\Src\bsp_imu.c</FilePath>
             </File>
             <File>
               <FileName>pid_regulator.c</FileName>
@@ -563,9 +563,9 @@
               <FilePath>..\Tasks\Src\RMLib.lib</FilePath>
             </File>
             <File>
-              <FileName>FunctionTask_for_Infantry.c</FileName>
+              <FileName>bsp_imu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Tasks\Src\FunctionTask_for_Infantry.c</FilePath>
+              <FilePath>..\Tasks\Src\bsp_imu.c</FilePath>
             </File>
             <File>
               <FileName>Cap2ControlTask.c</FileName>

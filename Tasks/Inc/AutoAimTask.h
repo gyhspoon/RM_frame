@@ -20,16 +20,17 @@
 
 #define GMP_ANGLE		(double)((GMP.RxMsg6623.angle-GM_PITCH_ZERO)/8192.0*2*const_pi)
 
-#define RX_ENEMY_START		Rx_enemy_INFO[0]
-#define RX_ENEMY_X1				Rx_enemy_INFO[1]
-#define RX_ENEMY_X2 			Rx_enemy_INFO[2]
-#define RX_ENEMY_Y1 			Rx_enemy_INFO[3]
-#define RX_ENEMY_Y2				Rx_enemy_INFO[4]
-#define RX_ENEMY_Z1				Rx_enemy_INFO[5]
-#define RX_ENEMY_Z2 			Rx_enemy_INFO[6]
-#define RX_ENEMY_END 			Rx_enemy_INFO[7]
+#define RX_ENEMY_START		Enemy_INFO[0]
+#define RX_ENEMY_X1				Enemy_INFO[1]
+#define RX_ENEMY_X2 			Enemy_INFO[2]
+#define RX_ENEMY_Y1 			Enemy_INFO[3]
+#define RX_ENEMY_Y2				Enemy_INFO[4]
+#define RX_ENEMY_Z1				Enemy_INFO[5]
+#define RX_ENEMY_Z2 			Enemy_INFO[6]
+#define RX_ENEMY_END 			Enemy_INFO[7]
 
 #define const_pi						3.14159
+#define coordinate_max			100
 #define k_coordinate   			(1*100.0/(32768.0-1.0))
 #define k_distance					(1*1000.0/(32768.0-1.0))
 #define bullet_speed_real		(bullet_speed+bullet_speed_adjust)
@@ -50,15 +51,14 @@ typedef struct Coordinate_t
 
 extern uint8_t aim_mode;
 extern double bullet_speed_adjust,yaw_adjust,pitch_adjust;
-extern uint8_t Rx_enemy_INFO[];
+
 void InitAutoAim(void);
-void AutoAimRxEnemyINFO(void);
-void TxCurrentYaw(void);
-void TxCurrentPitch(void);
-void TxWorkstate(void);
-void CANTxCurrentINFO(void);
-void enemyINFOProcess(void);
-void autoAimGMCTRL(void);
+void AutoAimUartRxCpltCallback(void);
+void CANTxINFO(void);
+void EnemyINFOProcess(void);
+void AutoAimNormal(void);
+void AutoAimBuff(void);
+void AutoAimGMCTRL(void);
 
 #endif /*USE_AUTOAIM*/
 #endif /*DEBUG_MODE*/

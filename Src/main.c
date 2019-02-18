@@ -132,67 +132,54 @@ int main(void)
   MX_TIM8_Init();
 
   /* USER CODE BEGIN 2 */
-//各模块初始化
-
-	//电机控制
+	//各模块初始化
+	#ifdef FRIC_PWM_MODE//临时使用，后续不需要
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
+	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_2,800);
+	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_3,800);
+	#endif /*FRIC_PWM_MODE*/
+	InitRemoteControl();
 	Motor_ID_Setting();
 	for(int i=0;i<8;i++) {InitMotor(can1[i]);InitMotor(can2[i]);}
+	InitPWM();
 	InitCanReception();
-	
-	//串口
-	#ifdef USE_AUTOAIM
-		InitAutoAim();
-	#endif
-	InitRemoteControl();
+	//InitGyroUart();
 	InitJudgeUart();
-	#ifdef USE_IMU
-		mpu_device_init();
-		init_quaternion();
-	#else
-		#ifdef USE_GRYO
-			InitGyroUart();
-		#else
-			gyro_data.InitFinish=1;
-		#endif
+	/*****陀螺仪初始化*****/
+	mpu_device_init();
+	init_quaternion();
+
+	/*****陀螺仪初始化结束*****/
+	MX_IWDG_Init();							//Cube配置完记得注释掉上面自动生成的看门狗初始化函数
+	#ifdef USE_AUTOAIM
+	InitAutoAim();
 	#endif
 	#ifdef DEBUG_MODE
-		ctrlUartInit();
+	ctrlUartInit();
+	//时间中断
+	HAL_TIM_Base_Start_IT(&htim10);
 	#endif
+	HAL_TIM_Base_Start_IT(&htim6);
+	HAL_TIM_Base_Start_IT(&htim7);
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
 	
-	//计时器
-	HAL_TIM_Base_Start_IT(&ONE_MS_TIM);
-	HAL_TIM_Base_Start_IT(&TWO_MS_TIM);
-	//HAL_TIM_Base_Start_IT(&TEN_MS_TIM);
-	InitPWM();
-	#ifdef FRIC_PWM_MODE
-		HAL_TIM_PWM_Start(&STEER_TIM,TIM_CHANNEL_2);
-		HAL_TIM_PWM_Start(&STEER_TIM,TIM_CHANNEL_3);
-		__HAL_TIM_SetCompare(&STEER_TIM,TIM_CHANNEL_2,800);
-		__HAL_TIM_SetCompare(&STEER_TIM,TIM_CHANNEL_3,800);
-	#endif /*FRIC_PWM_MODE*/
-
+	//ADC
+	//HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&ADC_Value,160);
 	
-	//中断
+	//时间中断
 	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
 	HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn); 
+	HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
 	HAL_NVIC_EnableIRQ(TIM6_DAC_IRQn);
 	HAL_NVIC_EnableIRQ(TIM7_IRQn);
 	#ifdef DEBUG_MODE
-		//HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
-		__HAL_UART_ENABLE_IT(&DEBUG_UART, UART_IT_IDLE);
+		HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
 	#endif
+	__HAL_UART_ENABLE_IT(&UPPER_UART, UART_IT_IDLE);
 	
-	//ADC
-	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&ADC_Value,160);
 	
-	//看门狗
-	MX_IWDG_Init();							//Cube配置完记得注释掉上面自动生成的看门狗初始化函数
-	
-  //超级电容2初始化
-  Cap_Init();
-  
   /* USER CODE END 2 */
 
   /* Infinite loop */

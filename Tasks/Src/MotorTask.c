@@ -11,12 +11,14 @@
   */
 #include "includes.h"
 
-#ifdef CONFIGURATION
 void ControlNM(MotorINFO *id);
 void ControlCM(MotorINFO *id);
-void ControlANTI_CM(MotorINFO *id);
 void ControlGMY(MotorINFO *id);
 void ControlGMP(MotorINFO *id);
+extern int16_t testIntensity;
+
+uint8_t GMYReseted = 0;
+uint8_t GMPReseted = 0;
 
 //**********************************************************************
 //					pid(kp,ki,kd,kprM,kirM,kdrM,rM)
@@ -24,59 +26,47 @@ void ControlGMP(MotorINFO *id);
 //**********************************************************************
 
 //**********************************************************************
-//				SpeedBased_MOTORINFO_Init(func,spid)
+//				Chassis_MOTORINFO_Init(func,spid)
 //**********************************************************************
-MotorINFO CMFL = SpeedBased_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
-MotorINFO CMFR = SpeedBased_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
-MotorINFO CMBL = SpeedBased_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
-MotorINFO CMBR = SpeedBased_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
-MotorINFO FRICL = SpeedBased_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
-MotorINFO FRICR = SpeedBased_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
-//***********************************************************************************
-//		     Gimbal_MOTORINFO_Init(rdc,func,zero,compensation,maxrange,ppid,spid)
-//***********************************************************************************
+MotorINFO CMFL = Chassis_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
+MotorINFO CMFR = Chassis_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
+MotorINFO CMBL = Chassis_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
+MotorINFO CMBR = Chassis_MOTORINFO_Init(&ControlCM,CHASSIS_MOTOR_SPEED_PID_DEFAULT);
+MotorINFO FRICL = Chassis_MOTORINFO_Init(&ControlCM,FRIC_MOTOR_SPEED_PID_DEFAULT);
+MotorINFO FRICR = Chassis_MOTORINFO_Init(&ControlCM,FRIC_MOTOR_SPEED_PID_DEFAULT);
+//************************************************************************
+//		     Gimbal_MOTORINFO_Init(rdc,func,ppid,spid)
+//************************************************************************
 //使用云台电机时，请务必确定校准过零点
-MotorINFO GMP  = Gimbal_MOTORINFO_Init(2.0,&ControlGMP, 3740 , 0 , 20 ,
-									   fw_PID_INIT_EASY(0.5,0,0.9, 	100.0),
-									   fw_PID_INIT_EASY(920,30,0, 	5000.0));
-									   
-MotorINFO GMY  = Gimbal_MOTORINFO_Init(1.0,&ControlGMY, 1310 , 0 , 40 ,
-									   fw_PID_INIT_EASY(0.6,0,0.5, 	100.0),
-									   fw_PID_INIT_EASY(2500,100,0, 5000.0));
+MotorINFO GMP  = Gimbal_MOTORINFO_Init(1.0,&ControlGMP,
+									   fw_PID_INIT(0.3,0,0.3, 	100.0, 100.0, 100.0, 10.0),
+									   fw_PID_INIT(2000,80,0, 	50000.0, 50000.0, 50000.0, 5000.0));
+MotorINFO GMY  = Gimbal_MOTORINFO_Init(1.0,&ControlGMY,
+									   fw_PID_INIT(0.37,0,0.1, 	10.0, 10.0, 10.0, 10.0),
+									   fw_PID_INIT(10000,150,0, 	50000.0, 50000.0, 50000.0, 5000.0));
+										 
+MotorINFO SGMP  = Gimbal_MOTORINFO_Init(1.0,&ControlGMP,
+									   fw_PID_INIT(0.5,0,0.3, 	10.0, 10.0, 10.0, 10.0),
+									   fw_PID_INIT(12000,25,0, 	50000.0, 50000.0, 50000.0, 29000.0));
+MotorINFO SGMY  = Normal_MOTORINFO_Init(1.0,&ControlGMY,
+									   fw_PID_INIT(0.36,0,0, 	10.0, 10.0, 10.0, 10.0),
+									   fw_PID_INIT(8500,22,0, 	50000.0, 50000.0, 50000.0, 30000.0));
 
 //*************************************************************************
-//			AngleBased_MOTORINFO_Init(rdc,func,ppid,spid)
+//			Normal_MOTORINFO_Init(rdc,func,ppid,spid)
 //*************************************************************************
-MotorINFO STIR = AngleBased_MOTORINFO_Init(36.0,&ControlNM,
-								fw_PID_INIT_EASY(10.0, 0.0, 0.0, 1200.0),
-								fw_PID_INIT_EASY(30, 0.0, 0.0,	 15000.0));
-MotorINFO CML = AngleBased_MOTORINFO_Init(19.0,&ControlNM,
-								fw_PID_INIT_EASY(10.0, 0.0, 0.0, 1200.0),
-								fw_PID_INIT_EASY(30, 0.0, 0.0,	 15000.0));
-MotorINFO CMR = AngleBased_MOTORINFO_Init(19.0,&ControlNM,
-								fw_PID_INIT_EASY(10.0, 0.0, 0.0, 1200.0),
-								fw_PID_INIT_EASY(30, 0.0, 0.0,	 15000.0));
-
-MotorINFO* can1[8]={&FRICL,&FRICR,0,0,&GMY,&GMP,&STIR,0};
-MotorINFO* can2[8]={&CML,&CMR,&CMBL,&CMBR,0,0,0,0};
-
-
-
-MotorINFO* ChassisMotorGroup[4]={&CML,&CMR,0,0};			// 非四电机例子
-
-//MotorINFO* ChassisMotorGroup[4]={&CMFL,&CMFR,&CMBL,&CMBR};
-
-
-#ifdef USE_CHASSIS_FOLLOW
-MotorINFO* GimbalMotorGroup[2]={&GMP,&GMY};
-#else
-#ifdef USE_AUTOAIM
-MotorINFO* GimbalMotorGroup[2]={&GMP,&GMY};
-#endif
-#endif
-
-#endif
-
+MotorINFO STIR = Normal_MOTORINFO_Init(108.0,&ControlNM,
+								fw_PID_INIT(600.0, 0.0, 0.0, 	15000.0, 15000.0, 15000.0, 15000.0),
+								fw_PID_INIT(1, 0.0, 0.0, 		15000.0, 15000.0, 15000.0, 15000.0));
+MotorINFO SSTIR = Normal_MOTORINFO_Init(36.0,&ControlNM,
+								fw_PID_INIT(10.0, 0.0, 0.0, 	1080.0, 1080.0, 1080.0, 1080.0),
+								fw_PID_INIT(30, 0.0, 0.0, 		10000.0, 10000.0, 10000.0, 10000.0));
+MotorINFO GATE = Normal_MOTORINFO_Init(36,&ControlNM,
+								fw_PID_INIT(1200.0, 0.0, 0.0, 	20000.0, 15000.0, 15000.0, 20000.0),
+								fw_PID_INIT(1, 0.0, 0.0, 		15000.0, 15000.0, 15000.0, 15000.0));
+		
+MotorINFO* can1[8]={&FRICL,&FRICR,0,0,&GMY,&GMP,&STIR,&GATE};
+MotorINFO* can2[8]={&CMFL,&CMFR,&CMBL,&CMBR,&SGMY,&SGMP,&SSTIR,0};
 
 void ControlNM(MotorINFO* id)
 {
@@ -90,20 +80,20 @@ void ControlNM(MotorINFO* id)
 		if(ThisAngle<=id->lastRead)
 		{
 			if((id->lastRead-ThisAngle)>4000)//编码器上溢
-				id->Real = id->Real + (ThisAngle+8192-id->lastRead) * 360 / 8192.0 / id->ReductionRate;
+				id->RealAngle = id->RealAngle + (ThisAngle+8192-id->lastRead) * 360 / 8192.0 / id->ReductionRate;
 			else//正常
-				id->Real = id->Real - (id->lastRead - ThisAngle) * 360 / 8192.0 / id->ReductionRate;
+				id->RealAngle = id->RealAngle - (id->lastRead - ThisAngle) * 360 / 8192.0 / id->ReductionRate;
 		}
 		else
 		{
 			if((ThisAngle-id->lastRead)>4000)//编码器下溢
-				id->Real = id->Real - (id->lastRead+8192-ThisAngle) *360 / 8192.0 / id->ReductionRate;
+				id->RealAngle = id->RealAngle - (id->lastRead+8192-ThisAngle) *360 / 8192.0 / id->ReductionRate;
 			else//正常
-				id->Real = id->Real + (ThisAngle - id->lastRead) * 360 / 8192.0 / id->ReductionRate;
+				id->RealAngle = id->RealAngle + (ThisAngle - id->lastRead) * 360 / 8192.0 / id->ReductionRate;
 		}
-		ThisSpeed = id->RxMsgC6x0.rotateSpeed * 6 / id->ReductionRate;		//单位：度每秒
+		ThisSpeed = id->RxMsgC6x0.RotateSpeed * 6;		//单位：度每秒
 		
-		id->Intensity = PID_PROCESS_Double(&(id->positionPID),&(id->speedPID),id->Target,id->Real,ThisSpeed);
+		id->Intensity = PID_PROCESS_Double(&(id->positionPID),&(id->speedPID),id->TargetAngle,id->RealAngle,ThisSpeed);
 		
 		id->s_count = 0;
 		id->lastRead = ThisAngle;
@@ -115,42 +105,33 @@ void ControlNM(MotorINFO* id)
 }
 void ControlCM(MotorINFO* id)
 {
-	//Target 代作为目标速度
+	//TargetAngle 代作为目标速度
 	if(id==0) return;
-	id->offical_speedPID.ref = (float)(id->Target);
-	id->offical_speedPID.fdb = id->RxMsgC6x0.rotateSpeed;
+	id->offical_speedPID.ref = (float)(id->TargetAngle);
+	id->offical_speedPID.fdb = id->RxMsgC6x0.RotateSpeed;
 	id->offical_speedPID.Calc(&(id->offical_speedPID));
 	id->Intensity=(1.30f)*id->offical_speedPID.output;
 }
-void ControlANTI_CM(MotorINFO* id)
-{
-	//Target 代作为目标速度
-	if(id==0) return;
-	id->offical_speedPID.ref = (float)(id->Target);
-	id->offical_speedPID.fdb = id->RxMsgC6x0.rotateSpeed;
-	id->offical_speedPID.Calc(&(id->offical_speedPID));
-	id->Intensity=(-1.30f)*id->offical_speedPID.output;
-}
-
-void ControlGM(MotorINFO* id,float ThisAngle,float ThisSpeed)
+#ifdef USE_IMU
+void ControlGMY(MotorINFO* id)
 {
 	if(id==0) return;
-	if(id->s_count == 0)
+	if(id->s_count == 1)
 	{
-		static uint8_t Reseted = 0;
-		uint16_t GM_ZERO = id->RxMsgC6x0.angle;
-		uint16_t GM_COMPENSATION = id->RxMsgC6x0.rotateSpeed;
-		uint16_t GM_MAX_RANGE = id->RxMsgC6x0.moment;
-		double 	encoder_real = (GM_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate;
-		//NORMALIZE_ANGLE180(encoder_real);
+		#ifndef AUTOAIM_TEST
+		float 	ThisAngle = imu.yaw-90.0f;
+		#else
+		double 	ThisAngle = (double)(GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0;
+		#endif
+		float 	ThisSpeed = -imu.wz;		
 		int8_t 	dir;
 		if(id->ReductionRate>=0) dir=1;
 		else dir=-1;
-		
+
 		if(id->FirstEnter==1) {
 			id->lastRead = ThisAngle;
-			id->Real = encoder_real;
-			NORMALIZE_ANGLE180(id->Real);
+			id->RealAngle =(double)(GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate;
+			NORMALIZE_ANGLE180(id->RealAngle);
 			id->FirstEnter = 0;
 			return;
 		}
@@ -158,61 +139,88 @@ void ControlGM(MotorINFO* id,float ThisAngle,float ThisSpeed)
 		if(ThisAngle <= id->lastRead)
 		{
 			if((id->lastRead-ThisAngle) > 180)
-				 id->Real += (ThisAngle + 360 - id->lastRead)*dir;
+				 id->RealAngle += (ThisAngle + 360 - id->lastRead)*dir;
 			else
-				 id->Real -= (id->lastRead - ThisAngle)*dir;
+				 id->RealAngle -= (id->lastRead - ThisAngle)*dir;
 		}
 		else
 		{
 			if((ThisAngle-id->lastRead) > 180)
-				 id->Real -= (id->lastRead + 360 - ThisAngle)*dir;
+				 id->RealAngle -= (id->lastRead + 360 - ThisAngle)*dir;
 			else
-				 id->Real += (ThisAngle - id->lastRead)*dir;
+				 id->RealAngle += (ThisAngle - id->lastRead)*dir;
 		}
-		if(abs(id->Real-id->Target)<5) Reseted = 1;
+		if(abs(id->RealAngle-id->TargetAngle)<5) GMYReseted = 1;
 		id->lastRead = ThisAngle ;
-		
-		MINMAX(id->Target, id->Real - encoder_real - GM_MAX_RANGE, id->Real - encoder_real + GM_MAX_RANGE);
-		if(Reseted==0) id->positionPID.outputMax = 1.0;
+		#ifdef HERO_MAIN
+		MINMAX(id->TargetAngle, id->RealAngle - (GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate - 55.0f, id->RealAngle - (GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate + 55.0f);
+		#endif
+		if(GMYReseted==0) id->positionPID.outputMax = 1.0;
 		else id->positionPID.outputMax = 10.0;
-		
-		id->Intensity = GM_COMPENSATION - PID_PROCESS_Double(&(id->positionPID),&(id->speedPID),id->Target,id->Real,-ThisSpeed);
-		
-		MINMAX(id->Intensity,-id->speedPID.outputMax,id->speedPID.outputMax);
-		
-		id->s_count = 0;
+		id->Intensity = PID_PROCESS_Double(&(id->positionPID),&(id->speedPID),id->TargetAngle,id->RealAngle,ThisSpeed);
+
+		//id->s_count = 0;
 	}
 	else
 	{
 		id->s_count++;
 	}		
 }
-
-#ifdef OLD_INFANTRY
 void ControlGMP(MotorINFO* id)
 {
-	ControlGM(id,gyro_data.pit+180,gyro_data.wy);
-}
-void ControlGMY(MotorINFO* id)
-{
-	ControlGM(id,gyro_data.yaw+180,gyro_data.wz);
+	if(id==0) return;
+	if(id->s_count == 1)
+	{
+		#ifndef AUTOAIM_TEST
+		float 	ThisAngle = imu.rol;
+		#else
+		double 	ThisAngle = (double)(GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0;
+		#endif
+		float 	ThisSpeed = imu.wx;
+		int8_t 	dir;
+		if(id->ReductionRate>=0) dir=1;
+		else dir=-1;
+		
+		if(id->FirstEnter==1) {
+			id->lastRead = ThisAngle;
+			id->RealAngle =(double)(GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate;
+			NORMALIZE_ANGLE180(id->RealAngle);
+			id->FirstEnter = 0;
+			return;
+		}
+		
+		if(ThisAngle <= id->lastRead)
+		{
+			if((id->lastRead-ThisAngle) > 180)
+				 id->RealAngle += (ThisAngle + 360 - id->lastRead)*dir;
+			else
+				 id->RealAngle -= (id->lastRead - ThisAngle)*dir;
+		}
+		else
+		{
+			if((ThisAngle-id->lastRead) > 180)
+				 id->RealAngle -= (id->lastRead + 360 - ThisAngle)*dir;
+			else
+				 id->RealAngle += (ThisAngle - id->lastRead)*dir;
+		}
+		if(abs(id->RealAngle-id->TargetAngle)<5) GMPReseted = 1;
+		id->lastRead = ThisAngle ;
+		#ifdef HERO_MAIN
+		MINMAX(id->TargetAngle, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate - 45.0f, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate + 25.0f);
+		#endif
+		if(GMPReseted==0) id->positionPID.outputMax = 1.0;
+		else id->positionPID.outputMax = 8.0;
+		id->Intensity = GM_PITCH_GRAVITY_COMPENSATION + PID_PROCESS_Double(&(id->positionPID),&(id->speedPID),id->TargetAngle,id->RealAngle,ThisSpeed);
+		MINMAX(id->Intensity,-id->speedPID.outputMax,id->speedPID.outputMax);
+		
+		//id->s_count = 0;
+	}
+	else
+	{
+		id->s_count++;
+	}		
 }
 #endif
-
-#ifdef NEW_INFANTRY
-double pitchAngle;
-void ControlGMP(MotorINFO* id)
-{
-	pitchAngle = gyro_data.rol+180;
-	NORMALIZE_ANGLE180(pitchAngle);
-	ControlGM(id,-gyro_data.rol,gyro_data.wx);
-}
-void ControlGMY(MotorINFO* id)
-{
-	ControlGM(id,gyro_data.yaw,-gyro_data.wz);
-}
-#endif
-
 //CAN
 void setCAN11()
 {
@@ -255,7 +263,7 @@ void setCAN11()
 		#ifdef CAN12
 			can1_type = 2;
 		#else
-		#ifdef CAN13
+		#ifdef NO_RC_MODE
 			can1_type = 3;
 		#endif
 		#endif
@@ -308,8 +316,7 @@ void setCAN12()
 			Error_Handler();
 		}
 		can1_update = 0;
-		
-		#ifdef CAN13
+		#ifdef NO_RC_MODE
 			can1_type = 3;
 		#else
 		#ifdef CAN11
@@ -367,10 +374,6 @@ void setCAN21()
 		can2_update = 0;
 		#ifdef CAN22
 			can2_type = 2;
-		#else
-		#ifdef CAN23
-			can2_type = 3;
-		#endif
 		#endif
 		HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
 		HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
@@ -421,12 +424,8 @@ void setCAN22()
 			Error_Handler();
 		}
 		can2_update = 0;
-		#ifdef CAN23
-			can2_type = 3;
-		#else
 		#ifdef CAN21
 			can2_type = 1;
-		#endif
 		#endif
 		HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
 		HAL_NVIC_EnableIRQ(CAN2_RX0_IRQn);
@@ -445,8 +444,8 @@ void InitMotor(MotorINFO *id)
 	if(id==0) return;
 	id->FirstEnter=1;
 	id->lastRead=0;
-	id->Real=0;
-	id->Target=0;
+	id->RealAngle=0;
+	id->TargetAngle=0;
 	id->offical_speedPID.Reset(&(id->offical_speedPID));
 	(id->Handle)(id);
 	id->Intensity=0;

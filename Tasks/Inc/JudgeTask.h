@@ -99,8 +99,11 @@ extern extShowData_t user_data;
 extern float fakeHeat0;
 extern float realBulletSpeed0;
 extern uint16_t realHeat0;
+extern uint16_t remainHeat0;
+extern uint16_t remainHeat1;
 extern uint8_t syncCnt0;
 extern float cooldown0;
+extern float cooldown1;
 extern uint16_t maxHeat0;
 
 #endif /*__ JUDGETASK_H */

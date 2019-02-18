@@ -14,23 +14,25 @@
 #include "includes.h"
 #include "math.h"
 
+#ifdef USE_CAPCONTROL_ONE
+
 uint8_t can_power_in=0;
 CapControl_t Control_SuperCap={0,0};
 uint8_t i=0;
 float v_tem[5];
 
-#ifdef USE_SUPER_CAP
-extern MotorINFO* ChassisMotorGroup[4];
 void Cap_Control(void)
 {
 	for(i=0;i<5;i++)
 	{
+		
 		HAL_ADC_Start(&hadc1);
 		while(HAL_ADC_PollForConversion(&hadc1,100) != HAL_OK);
 		v_tem[i]=HAL_ADC_GetValue(&hadc1)*29.19f/40.96f;
 		HAL_ADC_Stop(&hadc1);
 		
 	}
+	
 	for(i=0;i<5;i++){
 		Control_SuperCap.C_voltage += v_tem[i];
 	}
@@ -66,12 +68,9 @@ void Cap_Control(void)
 			}
 			else
 			{
-				uint8_t CM_flag = 1;
-				for(int i=0;i<4;i++){
-					if(ChassisMotorGroup[i]!=0) 
-						CM_flag&=(fabs(ChassisMotorGroup[i]->offical_speedPID.fdb)<2000);
-				}
-				if(CM_flag&&can_power_in==1)
+				if(fabs(CMFL.offical_speedPID.fdb)<2000&&fabs(CMFR.offical_speedPID.fdb)<2000
+					&&fabs(CMBL.offical_speedPID.fdb)<2000&&fabs(CMBR.offical_speedPID.fdb)<2000
+					&&can_power_in==1)
 				{		
 					FUNC__CAP__RECHARGE();
 				}
@@ -82,21 +81,5 @@ void Cap_Control(void)
 		}
 	}
 }
-void LED_Show_SuperCap_Voltage(uint8_t flag)
-{
-	if(flag==0)
-	{
-		HAL_GPIO_WritePin(GPIOG, 0x1fe, GPIO_PIN_SET);
-		return;
-	}
-	if(Control_SuperCap.C_voltage<1100)
-		HAL_GPIO_WritePin(GPIOG, 0x1fe, GPIO_PIN_SET);
-	else{
-		HAL_GPIO_WritePin(GPIOG, 0x1fe, GPIO_PIN_SET);
-		int unlight = 7-(Control_SuperCap.C_voltage-1100)/143;
-		if(unlight<0) unlight=0;
-		HAL_GPIO_WritePin(GPIOG, 0x1fe>>unlight, GPIO_PIN_RESET);
-	}
-}
-#endif 
-/**/
+
+#endif //USE_CAPCONTROL_ONE

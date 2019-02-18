@@ -15,10 +15,10 @@
 
 #include "stm32f4xx_hal.h"
 
-typedef enum{
-  CAP_STATE_STOP,
-  CAP_STATE_RECHARGE,
-  CAP_STATE_RELEASE
+typedef enum {
+	CAP_STATE_STOP,
+	CAP_STATE_RECHARGE,
+	CAP_STATE_RELEASE
 }cap_state;
 
 typedef __packed struct
@@ -46,7 +46,7 @@ void Cap_Run(void);
 
 /*********************************************************
   * @brief  Switch the state of the capacitance controller
-            into a specific state manually.
+			into a specific state manually.
   * @param  The aim state of the capacitance controller.
   * @retval None
   */

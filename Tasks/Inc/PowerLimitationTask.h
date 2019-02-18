@@ -15,7 +15,7 @@
 #include "includes.h"
 
 extern float SpeedAttenuation;
-extern float PowerLimitation(void);
+extern void PowerLimitation(void);
 extern void SpeedLimitation(void);
 extern void getRealSpeed(void);
 extern uint8_t flag;
@@ -23,7 +23,7 @@ extern uint8_t flag;
 #define POWER_LIMITATION_PID_DEFAULT \
 {\
 	0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ,\
-	1.0, 0.0, 0.0, \
+	3.5, 3.5, 0.0, \
 	0.0, 0.0, 0.0, \
 	10800, 10800, 10800,\
 	0.0,\

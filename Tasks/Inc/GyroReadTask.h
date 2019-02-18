@@ -13,3 +13,7 @@
 
 void InitGyroUart(void);
 void gyroUartRxCpltCallback(void);
+
+extern float gyroXAngle,gyroYAngle,gyroZAngle;
+extern float gyroXspeed,gyroYspeed,gyroZspeed;
+extern float gyroXacc,gyroYacc,gyroZacc;

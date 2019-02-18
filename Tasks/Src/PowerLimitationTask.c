@@ -13,72 +13,20 @@
 #include "includes.h"
 #include "math.h"
 
-//底盘功率限制
-#ifdef USE_POWER_LIMIT
-#define POW_M  USE_POWER_LIMIT
-#if USE_POWER_LIMIT < 50
-#define COARSE 	0.6
-#define FINE 	0.8
-#else
-#define COARSE 	0.8
-#define FINE 	0.9
-#endif
-float Power_Pool=0;
-float Power_Pool_History_Max = 0;
 float SpeedAttenuation = 1.0f;
 float LimitFactor = 1.0f;
 uint8_t flag = 1;
 fw_PID_Regulator_t PowerLimitationPID = POWER_LIMITATION_PID_DEFAULT;
-int16_t PowerBufferMax = 80;
 
-float PowerLimitation()
-{
-	static float windows = 1.0;
-	static float rate = 0.1;
-	Power_Pool += (PowerHeatData.chassisPower-POW_M)*0.1f;
-	if(Power_Pool<0) Power_Pool=0;
-	if(Power_Pool>150) {
-		windows -=0.01f;
-		rate/=2;
-	}
-	if (JUDGE_State == OFFLINE) return windows;
-	else 
-	{
-		if(PowerHeatData.chassisPower > POW_M) 
-		{	
-			if(Power_Pool>Power_Pool_History_Max) Power_Pool_History_Max = Power_Pool;
-			rate = rate*0.95f>rate-0.02f?rate*0.95f:rate-0.02f;
-		}
-		else if(PowerHeatData.chassisPower < POW_M * COARSE)
-		{
-			rate+=0.04f;
-		}
-		else if(PowerHeatData.chassisPower < POW_M * FINE)
-		{
-			rate+=0.01f;
-		}
-	}
-	if(rate>windows)
-		rate=windows;
-	return rate;
-}
-/*
-#define POW_M  USE_POWER_LIMIT
+//底盘功率限制
 void PowerLimitation(void)
 {
-	int16_t sum = 0;
+	uint16_t sum = 0;
 	int16_t CM_current_max;
-	#ifndef GUARD
 	int16_t CMFLIntensity = CMFL.Intensity;
 	int16_t CMFRIntensity = CMFR.Intensity;
 	int16_t CMBLIntensity = CMBL.Intensity;
 	int16_t CMBRIntensity = CMBR.Intensity;
-	#else
-	int16_t CMFLIntensity = CML.Intensity;
-	int16_t CMFRIntensity = CMR.Intensity;
-	int16_t CMBLIntensity = CML.Intensity;
-	int16_t CMBRIntensity = CMR.Intensity;
-	#endif
 	//离线模式
 	if (JUDGE_State == OFFLINE)
 	{
@@ -93,15 +41,16 @@ void PowerLimitation(void)
 		}
 		//CM_current_max = CM_current_MAX;
 	}
+	
 	//仿桂电策略
-	else if(PowerHeatData.chassisPowerBuffer-((PowerHeatData.chassisPower-POW_M)>0?(PowerHeatData.chassisPower-POW_M):0)*1.0f < 7.0f)
+	else if(PowerHeatData.chassisPowerBuffer-((PowerHeatData.chassisPower-80)>0?(PowerHeatData.chassisPower-80):0)*0.5f < 10.0f)
 	{
 		//CM_current_max = 2730;
 		sum = __fabs(CMFLIntensity) + __fabs(CMFRIntensity) + __fabs(CMBLIntensity) + __fabs(CMBRIntensity);
 		float realPowerBuffer = PowerHeatData.chassisPowerBuffer;
 		float realPower = PowerHeatData.chassisPower;
 		PowerLimitationPID.feedback = realPower;
-		PowerLimitationPID.target = POW_M*0.93;
+		PowerLimitationPID.target = 70;
 		PowerLimitationPID.Calc(&PowerLimitationPID);
 		CM_current_max = PowerLimitationPID.output;
 		//LimitFactor += PowerLimitationPID.output/sum;
@@ -116,15 +65,11 @@ void PowerLimitation(void)
 		CMBLIntensity *= LimitFactor/sum;
 		CMBRIntensity *= LimitFactor/sum;
 	}
-	#ifdef USE_SUPER_CAP
-	else if(Control_SuperCap.release_power==0||PowerHeatData.chassisPower>30)
-	#else
-	else if (PowerHeatData.chassisPower>30)
-	#endif
+	else if (Control_SuperCap.release_power==0 || PowerHeatData.chassisPower>30)
 	{
 		//PowerLimitationPID.Reset(&PowerLimitationPID);
 		//LimitFactor = 1.0f;
-		CM_current_max = 10000;
+		CM_current_max = 12000;
 		sum = __fabs(CMFLIntensity) + __fabs(CMFRIntensity) + __fabs(CMBLIntensity) + __fabs(CMBRIntensity);
 		if(sum > CM_current_max)
 		{
@@ -134,17 +79,10 @@ void PowerLimitation(void)
 			CMBRIntensity = (CMBRIntensity/(sum+0.0f))*CM_current_max;
 		}
 	}
-	
-	#ifndef GUARD
 	CMFL.Intensity = CMFLIntensity;
 	CMFR.Intensity = CMFRIntensity;
 	CMBL.Intensity = CMBLIntensity;
 	CMBR.Intensity = CMBRIntensity;
-	#else
-	CML.Intensity = CMFLIntensity*2;
-	CMR.Intensity = CMFRIntensity*2;
-	#endif
 }
-*/
-#endif
+
 

@@ -19,7 +19,7 @@ void InitJudgeUart(void){
 	tx_free = 1;
 	Send_User_Data();
 	if(HAL_UART_Receive_DMA(&JUDGE_UART, &tmp_judge, 1) != HAL_OK){
-		Error_Handler();
+			Error_Handler();
 	}
 }
 uint8_t receiving = 0;
@@ -157,10 +157,10 @@ uint16_t realHeat0 = 0;
 float fakeHeat0 = 0;
 float realBulletSpeed0 = 22;
 float cooldown0 = COOLDOWN03;
+float cooldown1 = COOLDOWN13;
 uint8_t shoot0Cnt = 0;
 uint8_t shoot1Cnt = 0;
 uint8_t syncCnt0 = 0;
-extern float rate;
 
 void Judge_Refresh_Power()
 {
@@ -189,7 +189,7 @@ void Judge_Refresh_Power()
 	remainHeat0 = maxHeat0 - PowerHeatData.shooterHeat0;
 	remainHeat1 = maxHeat1 - PowerHeatData.shooterHeat1;
 	JUDGE_Received = 1;
-	rate = PowerLimitation();
+	
 }
 
 void Judge_Refresh_State()
@@ -212,10 +212,10 @@ void Judge_Refresh_State()
 	remainHP = RobotState.remainHP;
 	switch(maxHP)
 	{
-		case MAXHP1:{maxHeat0 = MAXHEAT01;cooldown0 = COOLDOWN01;}break;
-		case MAXHP2:{maxHeat0 = MAXHEAT02;cooldown0 = COOLDOWN02;}break;
-		case MAXHP3:{maxHeat0 = MAXHEAT03;cooldown0 = COOLDOWN03;}break;
-		default:{maxHeat0 = MAXHEAT03;cooldown0 = COOLDOWN03;}break;
+		case MAXHP1:{maxHeat0 = MAXHEAT01;cooldown0 = COOLDOWN01;maxHeat1 = MAXHEAT11;cooldown1 = COOLDOWN11;}break;
+		case MAXHP2:{maxHeat0 = MAXHEAT02;cooldown0 = COOLDOWN02;maxHeat1 = MAXHEAT12;cooldown1 = COOLDOWN12;}break;
+		case MAXHP3:{maxHeat0 = MAXHEAT03;cooldown0 = COOLDOWN03;maxHeat1 = MAXHEAT13;cooldown1 = COOLDOWN13;}break;
+		default:{maxHeat0 = MAXHEAT03;cooldown0 = COOLDOWN03;maxHeat1 = MAXHEAT13;cooldown1 = COOLDOWN13;}break;
 	}
 	JUDGE_Received = 1;
 }
