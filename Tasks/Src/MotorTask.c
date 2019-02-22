@@ -68,9 +68,6 @@ MotorINFO GATE = Normal_MOTORINFO_Init(36,&ControlNM,
 MotorINFO* can1[8]={&FRICL,&FRICR,0,0,&GMY,&GMP,&STIR,&GATE};
 MotorINFO* can2[8]={&CMFL,&CMFR,&CMBL,&CMBR,&SGMY,&SGMP,&SSTIR,0};
 
-//MotorINFO* can2[8]={0,0,0,0,0,0,0,0};
-//MotorINFO* can1[8]={&CMFL,&CMFR,&CMBL,&CMBR,0,0,0,0};
-
 void ControlNM(MotorINFO* id)
 {
 	if(id==0) return;
@@ -153,8 +150,8 @@ void ControlGMY(MotorINFO* id)
 			else
 				 id->RealAngle += (ThisAngle - id->lastRead)*dir;
 		}
-		if(fabs(id->RealAngle-id->TargetAngle)<5) GMYReseted = 1;
-		id->lastRead = ThisAngle;
+		if(abs(id->RealAngle-id->TargetAngle)<5) GMYReseted = 1;
+		id->lastRead = ThisAngle ;
 		#ifdef HERO_MAIN
 		MINMAX(id->TargetAngle, id->RealAngle - (GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate - 55.0f, id->RealAngle - (GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate + 55.0f);
 		#endif
@@ -209,7 +206,7 @@ void ControlGMP(MotorINFO* id)
 		if(abs(id->RealAngle-id->TargetAngle)<5) GMPReseted = 1;
 		id->lastRead = ThisAngle ;
 		#ifdef HERO_MAIN
-		MINMAX(id->TargetAngle, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate - 45.0f, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate + 25.0f);
+		MINMAX(id->TargetAngle, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate - 45.0f, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate + 15.0f);
 		#endif
 		if(GMPReseted==0) id->positionPID.outputMax = 1.0;
 		else id->positionPID.outputMax = 8.0;

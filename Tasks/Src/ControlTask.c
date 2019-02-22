@@ -16,8 +16,17 @@ uint16_t prepare_time = 0;
 uint16_t counter = 0;
 double rotate_speed = 0;
 MusicNote SuperMario[] = {
-	{H1, 100}, {0, 50}, 
-	{H3, 250}, {0, 50}
+	{H3, 100}, {0, 50}, 
+	{H3, 250}, {0, 50}, 
+	{H3, 100}, {0, 50}, 
+	{0, 150},
+	{H1, 100}, {0, 50},  
+	{H3, 250}, {0, 50},
+	{H5, 250}, {0, 50},
+	{0, 300},
+	{M5, 250}, {0, 50},
+	{0, 300},
+	{H1, 250}, {0, 50}
 };
 
 PID_Regulator_t CMRotatePID = CHASSIS_MOTOR_ROTATE_PID_DEFAULT; 
@@ -71,41 +80,29 @@ void WorkStateFSM(void)
 		case NORMAL_STATE:				//正常模式
 		{
 			if (inputmode == STOP) WorkState = STOP_STATE;
-			
-			if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
-			if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
-			/*
 			if (inputmode == REMOTE_INPUT)
 			{
 				if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
 				if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
-			}*/
+			}
 		}break;
 		case ADDITIONAL_STATE_ONE:		//附加模式一
 		{
 			if (inputmode == STOP) WorkState = STOP_STATE;
-			
-			if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
-			if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
-			/*
 			if (inputmode == REMOTE_INPUT)
 			{
 				if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
 				if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
-			}*/
+			}
 		}break;
 		case ADDITIONAL_STATE_TWO:		//附加模式二
 		{
 			if (inputmode == STOP) WorkState = STOP_STATE;
-			
-			if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
-			if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
-			/*
 			if (inputmode == REMOTE_INPUT)
 			{
 				if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
 				if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
-			}*/
+			}
 		}break;
 		case STOP_STATE:				//紧急停止
 		{
@@ -189,35 +186,49 @@ void ControlRotate(void)
 	CMRotatePID.ref = 0;
 	CMRotatePID.fdb = ChassisSpeedRef.rotate_ref;
 	CMRotatePID.Calc(&CMRotatePID);
-	if(ChassisTwistState) MINMAX(CMRotatePID.output,-20,20);
+	if(ChassisTwistState) MINMAX(CMRotatePID.output,-30,30);
 	//rotate_speed = CMRotatePID.output * 16 + ChassisSpeedRef.forward_back_ref * 0.01 + ChassisSpeedRef.left_right_ref * 0.01;
 	rotate_speed = CMRotatePID.output * 16;
 }
 
 void Chassis_Data_Decoding()
 {
-	ControlRotate();
-	///
-	CMFL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						+ ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						+ rotate_speed)*12;
-	CMFR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						+ ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						+ rotate_speed)*12;
-	CMBL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						- ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						+ rotate_speed)*12;
-	CMBR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						- ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-						+ rotate_speed)*12;
-	///
-	/*//
-	rotate_speed-=0.1;
-	CMFL.TargetAngle = (  ChassisSpeedRef.forward_back_ref + ChassisSpeedRef.left_right_ref	+ rotate_speed)*12;
-	CMFR.TargetAngle = (- ChassisSpeedRef.forward_back_ref + ChassisSpeedRef.left_right_ref + rotate_speed)*12;
-	CMBL.TargetAngle = (  ChassisSpeedRef.forward_back_ref - ChassisSpeedRef.left_right_ref + rotate_speed)*12;
-	CMBR.TargetAngle = (- ChassisSpeedRef.forward_back_ref - ChassisSpeedRef.left_right_ref	+ rotate_speed)*12;
-	*///
+	if(!chassis_lock)
+	{
+		ControlRotate();
+
+		CMFL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ rotate_speed)*12;
+		CMFR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ rotate_speed)*12;
+		CMBL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							- ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ rotate_speed)*12;
+		CMBR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							- ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ rotate_speed)*12;
+	}
+	else
+	{
+		CMFL.TargetAngle = 0;
+		CMFR.TargetAngle = 0;
+		CMBL.TargetAngle = 0;
+		CMBR.TargetAngle = 0;
+	}
+//	CMFL.TargetAngle = (  ChassisSpeedRef.forward_back_ref	*0.075 
+//						+ ChassisSpeedRef.left_right_ref	*0.075 
+//						+ rotate_speed					*0.075)*160;
+//	CMFR.TargetAngle = (- ChassisSpeedRef.forward_back_ref	*0.075 
+//						+ ChassisSpeedRef.left_right_ref	*0.075 
+//						+ rotate_speed					*0.075)*160;
+//	CMBL.TargetAngle = (  ChassisSpeedRef.forward_back_ref	*0.075 
+//						- ChassisSpeedRef.left_right_ref	*0.075 
+//						+ rotate_speed					*0.075)*160;
+//	CMBR.TargetAngle = (- ChassisSpeedRef.forward_back_ref	*0.075 
+//						- ChassisSpeedRef.left_right_ref	*0.075 
+//						+ rotate_speed					*0.075)*160;
 }
 
 //主控制循环
@@ -235,53 +246,7 @@ void controlLoop()
 		
 		for(int i=0;i<8;i++) if(can1[i]!=0) (can1[i]->Handle)(can1[i]);
 		for(int i=0;i<8;i++) if(can2[i]!=0) (can2[i]->Handle)(can2[i]);
-/*/混合pid开始(覆盖之前底盘pid)
-		static float kp=12,ki=0.17,kd=2;
-		static float e1,e2,e3,e4,e12,e13,e14,e23,e24,e34;//偏差，p
-		static float s1,s2,s3,s4,s12,s13,s14,s23,s24,s34;//偏差和，i
-		static float d1,d2,d3,d4,d12,d13,d14,d23,d24,d34;//偏差差，d
-		static float l1,l2,l3,l4,l12,l13,l14,l23,l24,l34;//上一次的偏差，last e
-		e1=CMFL.offical_speedPID.ref - CMFL.offical_speedPID.fdb;
-		e2=CMFR.offical_speedPID.ref - CMFR.offical_speedPID.fdb;
-		e3=CMBL.offical_speedPID.ref - CMBL.offical_speedPID.fdb;
-		e4=CMBR.offical_speedPID.ref - CMBR.offical_speedPID.fdb;
-		e2=-e2;e4=-e4;
-		e12=e1-e2;
-		e13=e1-e3;
-		e14=e1-e4;
-		e23=e2-e3;
-		e24=e2-e4;
-		e34=e3-e4;
 		
-		s1+=e1;s2+=e2;s3+=e3;s4+=e4;
-		s12+=e12;s13+=e13;s14+=e14;
-		s23+=e23;s24+=e24;s34+=e34;
-		//让s收敛
-		s1*=0.99;s2*=0.99;s3*=0.99;s4*=0.99;
-		s12*=0.99;s13*=0.99;s14*=0.99;
-		s23*=0.99;s24*=0.99;s34*=0.99;
-		
-		d1=e1-l1;d2=e2-l2;d3=e3-l3;d4=e4-l4;
-		d12=e12-l12;d13=e13-l13;d14=e14-l14;
-		d23=e23-l23;d24=e24-l24;d34=e34-l34;
-		
-		l1=e1;l2=e2;l3=e3;l4=e4;
-		l12=e12;l13=e13;l14=e14;
-		l23=e23;l24=e24;l34=e34;
-		
-		CMFL.Intensity=kp*(e1+e12+e13+e14)
-									+ki*(s1+s12+s13+s14)
-									+kd*(d1-d12-d13-d14);
-		CMFR.Intensity=kp*(e2-e12+e23+e24)
-									+ki*(s2-s12+s23+s24)
-									+kd*(d2+d12-d23-d24);
-		CMBL.Intensity=kp*(e3-e13-e23-e34)
-									+ki*(s3-s13-s23+s34)
-									+kd*(d3+d13+d23-d34);
-		CMBR.Intensity=kp*(e4-e14-e24-e34)
-									+ki*(s4-s14-s24-s34)
-									+kd*(d4+d14+d24+d34);
-*///混合pid结束
 		OptionalFunction();
 
 		#ifdef CAN11
@@ -313,7 +278,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(imu.InitCount == 2000) {imu.InitFinish = 1;imu.FirstEnter = 0;imu.InitCount = 0;}
 		//主循环在时间中断中启动
 		controlLoop();
-		Cap_Run();
 		
 		//自瞄数据解算（3ms）
 		static int aim_cnt=0;

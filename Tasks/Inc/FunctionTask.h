@@ -39,12 +39,12 @@
 #define KEY_V			0x4000
 #define KEY_B			0x8000
 
-#define NORMAL_FORWARD_BACK_SPEED 		500
-#define NORMAL_LEFT_RIGHT_SPEED  		500/1.5
-#define HIGH_FORWARD_BACK_SPEED 		700
-#define HIGH_LEFT_RIGHT_SPEED   		700/1.5
-#define LOW_FORWARD_BACK_SPEED 			200
-#define LOW_LEFT_RIGHT_SPEED   			200/1.5
+#define NORMAL_FORWARD_BACK_SPEED 		600
+#define NORMAL_LEFT_RIGHT_SPEED  		600/1.5
+#define HIGH_FORWARD_BACK_SPEED 		800
+#define HIGH_LEFT_RIGHT_SPEED   		800/1.5
+#define LOW_FORWARD_BACK_SPEED 			300
+#define LOW_LEFT_RIGHT_SPEED   			300/1.5
 
 #define CHASSIS_TWIST_ANGLE_LIMIT			50
 #define CHASSIS_TWIST_ANGLE_LIMIT_45	12
@@ -102,6 +102,81 @@
 	else if(cnt < 5) cnt++;\
 }
 
+#define OnePushZ(button,execution)\
+{\
+	static uint16_t cacheZ;\
+	static uint8_t cntZ=0;\
+	if(cacheZ != (button)){\
+		cacheZ = (button);\
+		cntZ = 0;\
+	}\
+	else if(cntZ == 5){\
+		if(cacheZ) execution;\
+		cntZ=11;\
+	}\
+	else if(cntZ < 5) cntZ++;\
+}
+
+#define OnePushF(button,execution)\
+{\
+	static uint16_t cacheF;\
+	static uint8_t cntF=0;\
+	if(cacheF != (button)){\
+		cacheF = (button);\
+		cntF = 0;\
+	}\
+	else if(cntF == 5){\
+		if(cacheF) execution;\
+		cntF=11;\
+	}\
+	else if(cntF < 5) cntF++;\
+}
+
+#define OnePushX(button,execution)\
+{\
+	static uint16_t cacheX;\
+	static uint8_t cntX=0;\
+	if(cacheX != (button)){\
+		cacheX = (button);\
+		cntX = 0;\
+	}\
+	else if(cntX == 5){\
+		if(cacheX) execution;\
+		cntX=11;\
+	}\
+	else if(cntX < 5) cntX++;\
+}
+
+#define OnePushQ(button,execution)\
+{\
+	static uint16_t cacheQ;\
+	static uint8_t cntQ=0;\
+	if(cacheQ != (button)){\
+		cacheQ = (button);\
+		cntQ = 0;\
+	}\
+	else if(cntQ == 5){\
+		if(cacheQ) execution;\
+		cntQ=11;\
+	}\
+	else if(cntQ < 5) cntQ++;\
+}
+
+#define OnePushE(button,execution)\
+{\
+	static uint16_t cacheE;\
+	static uint8_t cntE=0;\
+	if(cacheE != (button)){\
+		cacheE = (button);\
+		cntE = 0;\
+	}\
+	else if(cntE == 5){\
+		if(cacheE) execution;\
+		cntE=11;\
+	}\
+	else if(cntE < 5) cntE++;\
+}
+
 #define Delay(TIM,execution)\
 {\
 	static uint16_t time=TIM;\
@@ -138,7 +213,7 @@ extern ChassisSpeed_Ref_t ChassisSpeedRef;
 extern int ChassisTwistGapAngle;
 extern uint8_t ChassisTwistState;
 extern int32_t auto_counter;
-//extern int pwm;
+extern uint8_t chassis_lock;
 
 void FunctionTaskInit(void);
 void Limit_Position(void);

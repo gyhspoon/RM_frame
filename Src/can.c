@@ -53,7 +53,6 @@ CAN_HandleTypeDef hcan2;
 void MX_CAN1_Init(void)
 {
 
-
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 3;
   hcan1.Init.Mode = CAN_MODE_NORMAL;

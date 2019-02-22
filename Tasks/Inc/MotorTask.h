@@ -17,7 +17,7 @@
 #ifdef HERO_MAIN
 #define GM_PITCH_GRAVITY_COMPENSATION -40
 #define GM_PITCH_ZERO 	6000
-#define GM_YAW_ZERO 	400
+#define GM_YAW_ZERO 	420
 #endif
 #define CHASSIS_SPEED_ATTENUATION   (1.30f)
 #define NORMALIZE_ANGLE180(angle) angle = ((angle) > 180) ? ((angle) - 360) : (((angle) < -180) ? (angle) + 360 : angle)
@@ -34,7 +34,7 @@
 #define CHASSIS_MOTOR_SPEED_PID_DEFAULT \
 {\
 	0,0,{0,0},\
-	12.0f,0.17f,2.0f,\
+	12.0f,0.0f,2.0f,\
 	0,0,0,\
 	15000,15000,15000,\
 	0,12000,0,0,0,\
