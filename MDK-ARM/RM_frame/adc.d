@@ -37,3 +37,4 @@
 .\rm_frame\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 .\rm_frame\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 .\rm_frame\adc.o: ../Inc/gpio.h
+.\rm_frame\adc.o: ../Inc/dma.h
