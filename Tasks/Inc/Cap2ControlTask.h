@@ -23,8 +23,8 @@ typedef enum {
 
 typedef __packed struct
 {
-	uint8_t release_power;
-	uint8_t stop_power;
+	uint16_t P_voltage;
+	uint16_t P_Power;
 	uint16_t C_voltage;
 }CapControl_t;
 
@@ -58,6 +58,10 @@ void Cap_State_Switch(cap_state);
   * @retval The current voltage of capacitance.(typical value: 11.0-22.5)
   */
 double Cap_Get_Cap_Voltage(void);
+
+//by zzy
+double Cap_Get_Power_Voltage(void);
+double Cap_Get_Power_CURR(void);
 
 /*********************************************************
   * @brief  Get the current state of the capacitance controller.

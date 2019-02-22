@@ -19,10 +19,9 @@
 #define USE_AUTOAIM
 //#define USE_GYRO
 #define USE_IMU
-//#define USE_CHASSIS_FOLLOW
-#define USE_POWERLIMITATION
+#define USE_CHASSIS_FOLLOW
 #define USE_HEAT_LIMIT_HERO_MAIN
-#define AUTOAIM_TEST
+//#define AUTOAIM_TEST
 
 #define CAN11
 #define CAN12

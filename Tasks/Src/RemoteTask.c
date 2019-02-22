@@ -118,10 +118,10 @@ void RemoteDataProcess(uint8_t *pData)
 		{
 			if(WorkState > 0)
 			{ 
-				MouseKeyControlProcess(&RC_CtrlData.mouse,&RC_CtrlData.key);
+				MouseKeyControlProcess(&RC_CtrlData.mouse,&RC_CtrlData.key,&(RC_CtrlData.rc));
 			}
 		}break;
-		case STOP:               
+		case STOP:
 		{
 			 
 		}break;
@@ -170,11 +170,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 	}
 }
 
+extern uint8_t sendfinish;
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
 	if(UartHandle == &JUDGE_UART)
 	{
 		tx_free = 1;
+	}
+	else if(UartHandle == &CAP_UART)
+	{
+		sendfinish = 1;
 	}
 }
 void UART_IDLE_Handler(UART_HandleTypeDef *UartHandle)

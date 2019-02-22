@@ -150,8 +150,8 @@ void ControlGMY(MotorINFO* id)
 			else
 				 id->RealAngle += (ThisAngle - id->lastRead)*dir;
 		}
-		if(abs(id->RealAngle-id->TargetAngle)<5) GMYReseted = 1;
-		id->lastRead = ThisAngle ;
+		if(fabs(id->RealAngle-id->TargetAngle)<5) GMYReseted = 1;
+		id->lastRead = ThisAngle;
 		#ifdef HERO_MAIN
 		MINMAX(id->TargetAngle, id->RealAngle - (GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate - 55.0f, id->RealAngle - (GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate + 55.0f);
 		#endif

@@ -80,29 +80,41 @@ void WorkStateFSM(void)
 		case NORMAL_STATE:				//正常模式
 		{
 			if (inputmode == STOP) WorkState = STOP_STATE;
+			
+			if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
+			if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
+			/*
 			if (inputmode == REMOTE_INPUT)
 			{
 				if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
 				if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
-			}
+			}*/
 		}break;
 		case ADDITIONAL_STATE_ONE:		//附加模式一
 		{
 			if (inputmode == STOP) WorkState = STOP_STATE;
+			
+			if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
+			if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
+			/*
 			if (inputmode == REMOTE_INPUT)
 			{
 				if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
 				if(functionmode == LOWER_POS) WorkState = ADDITIONAL_STATE_TWO;
-			}
+			}*/
 		}break;
 		case ADDITIONAL_STATE_TWO:		//附加模式二
 		{
 			if (inputmode == STOP) WorkState = STOP_STATE;
+			
+			if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
+			if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
+			/*
 			if (inputmode == REMOTE_INPUT)
 			{
 				if(functionmode == UPPER_POS) WorkState = NORMAL_STATE;
 				if(functionmode == MIDDLE_POS) WorkState = ADDITIONAL_STATE_ONE;
-			}
+			}*/
 		}break;
 		case STOP_STATE:				//紧急停止
 		{
@@ -188,7 +200,7 @@ void ControlRotate(void)
 	CMRotatePID.Calc(&CMRotatePID);
 	if(ChassisTwistState) MINMAX(CMRotatePID.output,-30,30);
 	//rotate_speed = CMRotatePID.output * 16 + ChassisSpeedRef.forward_back_ref * 0.01 + ChassisSpeedRef.left_right_ref * 0.01;
-	rotate_speed = CMRotatePID.output * 16;
+	rotate_speed = CMRotatePID.output * 20;
 }
 
 void Chassis_Data_Decoding()
@@ -217,18 +229,12 @@ void Chassis_Data_Decoding()
 		CMBL.TargetAngle = 0;
 		CMBR.TargetAngle = 0;
 	}
-//	CMFL.TargetAngle = (  ChassisSpeedRef.forward_back_ref	*0.075 
-//						+ ChassisSpeedRef.left_right_ref	*0.075 
-//						+ rotate_speed					*0.075)*160;
-//	CMFR.TargetAngle = (- ChassisSpeedRef.forward_back_ref	*0.075 
-//						+ ChassisSpeedRef.left_right_ref	*0.075 
-//						+ rotate_speed					*0.075)*160;
-//	CMBL.TargetAngle = (  ChassisSpeedRef.forward_back_ref	*0.075 
-//						- ChassisSpeedRef.left_right_ref	*0.075 
-//						+ rotate_speed					*0.075)*160;
-//	CMBR.TargetAngle = (- ChassisSpeedRef.forward_back_ref	*0.075 
-//						- ChassisSpeedRef.left_right_ref	*0.075 
-//						+ rotate_speed					*0.075)*160;
+	
+//	rotate_speed-=0.1;
+//	CMFL.TargetAngle = (  ChassisSpeedRef.forward_back_ref + ChassisSpeedRef.left_right_ref	+ rotate_speed)*12;
+//	CMFR.TargetAngle = (- ChassisSpeedRef.forward_back_ref + ChassisSpeedRef.left_right_ref + rotate_speed)*12;
+//	CMBL.TargetAngle = (  ChassisSpeedRef.forward_back_ref - ChassisSpeedRef.left_right_ref + rotate_speed)*12;
+//	CMBR.TargetAngle = (- ChassisSpeedRef.forward_back_ref - ChassisSpeedRef.left_right_ref	+ rotate_speed)*12;
 }
 
 //主控制循环
@@ -278,6 +284,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(imu.InitCount == 2000) {imu.InitFinish = 1;imu.FirstEnter = 0;imu.InitCount = 0;}
 		//主循环在时间中断中启动
 		controlLoop();
+		Cap_Run();
 		
 		//自瞄数据解算（3ms）
 		static int aim_cnt=0;
