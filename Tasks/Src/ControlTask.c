@@ -200,7 +200,7 @@ void ControlRotate(void)
 	CMRotatePID.Calc(&CMRotatePID);
 	if(ChassisTwistState) MINMAX(CMRotatePID.output,-30,30);
 	//rotate_speed = CMRotatePID.output * 16 + ChassisSpeedRef.forward_back_ref * 0.01 + ChassisSpeedRef.left_right_ref * 0.01;
-	rotate_speed = CMRotatePID.output * 20;
+	rotate_speed = CMRotatePID.output * 25;
 }
 
 void Chassis_Data_Decoding()
@@ -286,10 +286,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		controlLoop();
 		Cap_Run();
 		
-		//自瞄数据解算（3ms）
+		//自瞄数据解算（5ms）
 		static int aim_cnt=0;
 		aim_cnt++;
-		if(aim_cnt==3)
+		if(aim_cnt==5)
 		{
 			EnemyINFOProcess();
 			aim_cnt=0;
@@ -299,10 +299,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 	else if (htim->Instance == htim7.Instance)//ims时钟
 	{
-		
 		rc_cnt++;
 		if(auto_counter > 0) auto_counter--;
 		if(auto_counter_stir > 0) auto_counter_stir--;
+		if(auto_counter_fps > 0) auto_counter_fps--;
+		
 		if (rx_free == 1 && tx_free == 1)
 		{
 			if( (rc_cnt <= 17) && (rc_first_frame == 1))

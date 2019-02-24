@@ -118,7 +118,7 @@ void ControlGMY(MotorINFO* id)
 	if(id==0) return;
 	if(id->s_count == 1)
 	{
-		#ifndef AUTOAIM_TEST
+		#ifdef USE_CHASSIS_FOLLOW
 		float 	ThisAngle = imu.yaw-90.0f;
 		#else
 		double 	ThisAngle = (double)(GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0;
@@ -171,7 +171,7 @@ void ControlGMP(MotorINFO* id)
 	if(id==0) return;
 	if(id->s_count == 1)
 	{
-		#ifndef AUTOAIM_TEST
+		#ifdef USE_CHASSIS_FOLLOW
 		float 	ThisAngle = imu.rol;
 		#else
 		double 	ThisAngle = (double)(GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0;

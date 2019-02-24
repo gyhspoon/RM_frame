@@ -15,7 +15,7 @@
 #include <string.h>
 #include "includes.h"
 
-#define CAP_USE_CURR
+//#define CAP_USE_CURR
 //#define CAP_AUTO_RECHARGE
 #define CAP_DEBUG
 
@@ -26,11 +26,11 @@
 #define ICOUT                   (1)       //PB0 Channel 8
 #define ICIN                    (2)       //PB1 Channel 9
 #define UCK1                    (3)       //PC0 Channel 10
-#define RECHARGE_POWER_MAX      (72)
-#define RELEASE_POWER_MAX       (68)//70
+#define RECHARGE_POWER_MAX      (65)
+#define RELEASE_POWER_MAX       (70)//70
 #define RECHARGE_CURR_MAX       (3.0)
 #define RELEASE_CURR_MAX        (3.0)
-#define RELEASE_POW_RATE        (1.4)//1.3
+#define RELEASE_POW_RATE        (2.0)//1.3
 #define RECHARGE_POW_RATE       ((PowerHeatData.chassisPower > RECHARGE_POWER_MAX)?\
                                 ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-0.8) + 0.8):\
                                 ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-1.0) + 1.0))
@@ -49,7 +49,7 @@
 #define VAL__OUTPUT_PWM_PERCENT (output_pwm_cmp * 100.0 / PWM_CMP_MAX)
 #define VAL__INPUT_PWM_PERCENT  (input_pwm_cmp * 100.0 / PWM_CMP_MAX)
 #define VAL__CAP_VOLTAGE        (FUNC__Get_Voltage(UCK1)  * 9.2 * 13.33 / 11.01)
-#define VAL__CAP_Power_CURR     (FUNC__Get_Voltage(ICIN)  * 2.48 / 1.08)
+#define VAL__CAP_Power_CURR     (FUNC__Get_Voltage(ICIN)  / 0.152)
 #define VAL__CAP_Power_Voltage    (FUNC__Get_Voltage(ICOUT)  * 9.2 * 13.33 / 11.01) //Power Voltage
 
 #define FUNC__Get_Voltage(dev)              (1.2 * ADC_val[dev] / ADC_val[VREFINT])
@@ -79,6 +79,8 @@ static int16_t ADC_val[ADC_CHANNALS];
 static int32_t input_pwm_cmp = 0;
 static int32_t output_pwm_cmp = 0;
 static int16_t recharge_cnt = 0;
+static int16_t release_cnt = 0;
+static int32_t output_pwm_cmp_max = 0;
 static cap_state CapState = CAP_STATE_STOP;
 CapControl_t Control_SuperCap = { 0,0 };
 
@@ -123,7 +125,7 @@ void Cap_State_Switch(cap_state State) {
 		HAL_GPIO_WritePin(Cap_Out_GPIO_Port, Cap_Out_Pin, GPIO_PIN_RESET);
 		break;
 	case CAP_STATE_RELEASE:
-		CapState = CAP_STATE_RELEASE, input_pwm_cmp = 0;
+		CapState = CAP_STATE_RELEASE, input_pwm_cmp = 0,release_cnt = 0;
 		HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(Cap_Out_GPIO_Port, Cap_Out_Pin, GPIO_PIN_SET);
 		break;
@@ -168,7 +170,8 @@ void Cap_State() { // called with period of 2 ms
 		__HAL_TIM_SET_COMPARE(&IN_VOL_PWM_TIM, IN_VOL_PWM_CHANNEL,input_pwm_cmp);
 		break;
 	case CAP_STATE_RELEASE:
-		__HAL_TIM_SET_COMPARE(&OUT_VOL_PWM_TIM, OUT_VOL_PWM_CHANNEL, output_pwm_cmp);
+//		__HAL_TIM_SET_COMPARE(&OUT_VOL_PWM_TIM, OUT_VOL_PWM_CHANNEL, output_pwm_cmp);
+		__HAL_TIM_SET_COMPARE(&OUT_VOL_PWM_TIM, OUT_VOL_PWM_CHANNEL, output_pwm_cmp_max);
 		__HAL_TIM_SET_COMPARE(&IN_VOL_PWM_TIM, IN_VOL_PWM_CHANNEL, 0);
 		break;
 	}
@@ -227,10 +230,10 @@ static void Cap_Ctr_RECHARGE() {
 #endif /* CAP_DEBUG */
 		if (recharge_cnt < 250) {
 			recharge_cnt++;
-			FUNC__RECAL_INPUT_PWM(0.0005f);//0.0005f
+			FUNC__RECAL_INPUT_PWM(0.0004f);//0.0005f
 		}
 		else {
-			FUNC__RECAL_INPUT_PWM(0.0015f);//0.002f
+			FUNC__RECAL_INPUT_PWM(0.0012f);//0.002f
 		}
 		if (input_pwm_cmp > VAL__INPUT_PWM_MAX) {
 			input_pwm_cmp = VAL__INPUT_PWM_MAX;
@@ -258,7 +261,16 @@ static void Cap_Ctr_RELEASE() {
       HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
     }
 #endif /* CAP_DEBUG */
-		FUNC__RECAL_OUTPUT_PWM(0.0015f);//0.002f
+		if (release_cnt < 50) { //by zzy;当打开放电状态后先让升压模块蓄电，积累到足够电压后打开抢占优先级；50=0.5秒。
+			release_cnt++;
+			output_pwm_cmp_max = 0;
+			output_pwm_cmp = 0;
+		}
+		else {
+			output_pwm_cmp_max = PWM_CMP_MAX;
+			FUNC__RECAL_OUTPUT_PWM(0.0015f);//0.002f
+		}
+		
 		if (output_pwm_cmp > VAL__OUTPUT_PWM_MAX) {
 			output_pwm_cmp = VAL__OUTPUT_PWM_MAX;
 		}

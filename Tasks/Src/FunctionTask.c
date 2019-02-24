@@ -12,6 +12,7 @@
 #include "includes.h"
 
 KeyboardMode_e KeyboardMode = NO_CHANGE;
+KeyboardMode_e LastKeyboardMode = NO_CHANGE;
 MouseMode_e MouseLMode = NO_CLICK;
 MouseMode_e MouseRMode = NO_CLICK;
 RampGen_t LRSpeedRamp = RAMP_GEN_DAFAULT;   	//斜坡函数
@@ -56,7 +57,9 @@ void FunctionTaskInit()
 void OptionalFunction()
 {
 	//if(Cap_Get_Cap_State()!=CAP_STATE_RELEASE)
+	#ifdef USE_POWERLIMITATION
 	PowerLimitation();
+	#endif
 }
 
 void Limit_and_Synchronization()
@@ -121,11 +124,14 @@ void RemoteControlProcess(Remote *rc)
 		if (LastState != WorkState)
 		{
 			Cap_State_Switch(CAP_STATE_STOP);
+			if(ShootState)
+			{
+				stirDirection=stirState;
+			}
 		}	
 		//
 		ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
 		ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF/3*2;
-		
 		#ifdef USE_CHASSIS_FOLLOW
 		GMY.TargetAngle += channellrow * RC_GIMBAL_SPEED_REF;
 		GMP.TargetAngle -= channellcol * RC_GIMBAL_SPEED_REF;
@@ -160,11 +166,16 @@ void RemoteControlProcess(Remote *rc)
 		if(LastState!= WorkState)
 		{
 			Cap_State_Switch(CAP_STATE_RELEASE);
+			if(ShootState)
+			{
+				ShootOneBullet();
+				stirDirection=stirState;
+			}
 		}
 		
-		if(Cap_Get_Cap_Voltage() > 10)
+		if(Cap_Get_Cap_Voltage() > 13)
 		{
-			ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF*2;
+			ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF*1.5f;
 			ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF;
 		}
 		else
@@ -204,18 +215,9 @@ void RemoteControlProcess(Remote *rc)
 		HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_SET);	
 	}
 	
-	if(ShootState)
+	OnePush(STIR.RxMsgC6x0.moment>5000 || STIR.RxMsgC6x0.moment<-5000,
 	{
-		OnePush(WorkState==ADDITIONAL_STATE_TWO,{
-			ShootOneBullet();
-			stirDirection=stirState;
-		});
-		OnePush(WorkState==ADDITIONAL_STATE_ONE,{
-			stirDirection=stirState;
-		});
-	}
-	OnePush(STIR.RxMsgC6x0.moment>5000 || STIR.RxMsgC6x0.moment<-5000,{
-		STIR.TargetAngle-=stirDirection*	15;
+		STIR.TargetAngle-=stirDirection*15;
 		stirDirection=0;
 		stirState=-stirState;
 	});
@@ -256,16 +258,23 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 		
 		ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
 		ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF/3*2;
+		ChassisSpeedRef.rotate_ref = -channellrow * RC_ROTATE_SPEED_REF;
 		#ifdef USE_CHASSIS_FOLLOW
 		GMY.TargetAngle += channellrow * RC_GIMBAL_SPEED_REF;
 		GMP.TargetAngle -= channellcol * RC_GIMBAL_SPEED_REF;
 		#else
 		ChassisSpeedRef.rotate_ref = -channellrow * RC_ROTATE_SPEED_REF;
 		#endif
+		
+		aim_mode=1;
+		AutoAimGMCTRL();
+		//chassis_lock=1;
+		HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_SET);
 	}
 	if(WorkState == ADDITIONAL_STATE_ONE) //用于串口发送功率数据@唐欣阳
 	{
-		if(sendfinish){
+		if(sendfinish)
+		{
 			sendfinish = 0;
 			HAL_UART_Transmit_DMA(&CAP_UART, (uint8_t*)cps, sizeof(cps));
 		}
@@ -279,6 +288,7 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 		#ifdef USE_CHASSIS_FOLLOW
 		GMY.TargetAngle += mouse->x * MOUSE_TO_YAW_ANGLE_INC_FACT;
 		GMP.TargetAngle += mouse->y * MOUSE_TO_PITCH_ANGLE_INC_FACT;
+		ChassisSpeedRef.rotate_ref = -mouse->x * RC_ROTATE_SPEED_REF;
 		#else
 		ChassisSpeedRef.rotate_ref = -mouse->x * RC_ROTATE_SPEED_REF;
 		#endif
@@ -413,14 +423,24 @@ void KeyboardModeFSM(Key *key)
 {
 	if((key->v & 0x30) == 0x30)//Shift_Ctrl
 	{
+		Cap_State_Switch(CAP_STATE_RECHARGE);
 		KM_FORWORD_BACK_SPEED=  LOW_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = LOW_LEFT_RIGHT_SPEED;
 		KeyboardMode=SHIFT_CTRL;
 	}
 	else if(key->v & KEY_SHIFT)//Shift
 	{
-		//SuperCap Control
-		if(Control_SuperCap.C_voltage>1200)
+		//电容状态控制
+		if(LastKeyboardMode != KeyboardMode && Cap_Get_Cap_Voltage() > 10)
+		{
+			Cap_State_Switch(CAP_STATE_RELEASE);
+		}
+		else if(Cap_Get_Cap_Voltage() <= 10)
+		{
+			Cap_State_Switch(CAP_STATE_RECHARGE);
+		}
+		//速度控制
+		if(Cap_Get_Cap_Voltage() > 15)
 		{
 			KM_FORWORD_BACK_SPEED=  HIGH_FORWARD_BACK_SPEED;
 			KM_LEFT_RIGHT_SPEED = HIGH_LEFT_RIGHT_SPEED;
@@ -435,16 +455,19 @@ void KeyboardModeFSM(Key *key)
 	}
 	else if(key->v & KEY_CTRL)//Ctrl
 	{
+		Cap_State_Switch(CAP_STATE_RECHARGE);
 		KM_FORWORD_BACK_SPEED=  LOW_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = LOW_LEFT_RIGHT_SPEED;
 		KeyboardMode=CTRL;
 	}
 	else
 	{
+		Cap_State_Switch(CAP_STATE_RECHARGE);
 		KM_FORWORD_BACK_SPEED=  NORMAL_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = NORMAL_LEFT_RIGHT_SPEED;
 		KeyboardMode=NO_CHANGE;
 	}	
+	LastKeyboardMode=KeyboardMode;
 }
 
 void MouseModeFSM(Mouse *mouse)

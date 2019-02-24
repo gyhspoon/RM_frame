@@ -14,13 +14,12 @@
 
 #define HERO_MAIN
 
-//#define DEBUG_MODE
 //#define NO_RC_MODE
 #define USE_AUTOAIM
-//#define USE_GYRO
 #define USE_IMU
 #define USE_CHASSIS_FOLLOW
 #define USE_HEAT_LIMIT_HERO_MAIN
+#define USE_POWERLIMITATION
 //#define AUTOAIM_TEST
 
 #define CAN11

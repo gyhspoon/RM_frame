@@ -20,8 +20,8 @@
 
 #define RC_UART 					huart1
 #define JUDGE_UART 				huart6
-#define AUTOAIM_UART 			huart7//huart7
-#define CAP_UART					huart8
+#define AUTOAIM_UART 			huart8
+#define CAP_UART					huart7
 #define GYRO_UART 				huart7
 #define UPPER_UART 				huart7
 
