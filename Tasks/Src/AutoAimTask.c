@@ -19,7 +19,7 @@
 
 //*****************************************声明变量******************************************//
 
-GMAngle_t aim,aim_rcd;																					//目标角度
+GMAngle_t aim,aim_rcd;																				//目标角度
 GMAngle_t adjust;																							//校准发射变量
 Coordinate_t enemy_gun,enemy_scope,scope_gun;									//坐标
 uint8_t Enemy_INFO[8];																				//接收
@@ -28,6 +28,7 @@ uint16_t aim_cnt=0;																						//自瞄分频延时变量
 uint16_t auto_counter_fps = 1000;															//检测帧率
 int16_t current_yaw=0,current_pitch=0;												//当前云台角度
 int16_t receive_cnt=0,receive_rcd=0;													//检测上位机信号帧数
+int8_t track_cnt=0;																					//追踪变量
 
 //********************************************************************************************//
 
@@ -62,12 +63,12 @@ void InitAutoAim()
 void AutoAimUartRxCpltCallback()
 {
 	//串口数据解码
-	if(!find_enemy&&RX_ENEMY_START=='s'&&RX_ENEMY_END=='e')
+	if(RX_ENEMY_START=='s'&&RX_ENEMY_END=='e')
 	{
 		enemy_scope.x=(float)((RX_ENEMY_X1<<8)|RX_ENEMY_X2)*k_coordinate;
 		enemy_scope.y=(float)((RX_ENEMY_Y1<<8)|RX_ENEMY_Y2)*k_coordinate;
 //		enemy_scope.z=(float)((RX_ENEMY_Z1<<8)|RX_ENEMY_Z2)*k_distance;
-		enemy_scope.z=600;
+		enemy_scope.z=500;
 		enemy_scope.x=(enemy_scope.x>coordinate_max)?(enemy_scope.x-2*coordinate_max):enemy_scope.x;
 		enemy_scope.y=(enemy_scope.y>coordinate_max)?(enemy_scope.y-2*coordinate_max):enemy_scope.y;
 		find_enemy=1;
@@ -182,6 +183,16 @@ void EnemyINFOProcess()
 	//角度计算（计算消耗内存较多，不能放在2ms以下的时间中断内执行）
 	aim.yaw=atan(enemy_gun.x/(enemy_gun.z*cos(GMP_ANGLE)-enemy_gun.y*sin(GMP_ANGLE)))/const_pi*180.0-adjust.yaw;
 	aim.pitch=atan(enemy_gun.y/enemy_gun.z)/const_pi*180.0+adjust.pitch;
+	
+	if(((aim.yaw>0 && aim_rcd.yaw>0) || (aim.yaw<0 && aim_rcd.yaw<0)))
+	{
+		track_cnt++;
+		MINMAX(track_cnt,0,255);
+	}
+	else
+	{
+		track_cnt=0;
+	}
 }
 
 //*********************************************************************************************//
@@ -191,8 +202,6 @@ void EnemyINFOProcess()
 
 void AutoAimNormal()
 {
-//	MINMAX(aim.y,-4.0f,4.0f);
-//	MINMAX(aim.p,-2.0f,2.0f);
 	MINMAX(aim.yaw,-3.0f,3.0f);
 	MINMAX(aim.pitch,-2.0f,2.0f);
 	if(find_enemy)
@@ -200,6 +209,7 @@ void AutoAimNormal()
 		if(aim_cnt<1)
 		{
 			GMY.TargetAngle+=(aim.yaw+aim_rcd.yaw)/2;
+//			GMY.TargetAngle+=(aim.yaw+aim_rcd.yaw)/2*(0.9f+0.001f*track_cnt);
 			GMP.TargetAngle+=(aim.pitch+aim_rcd.pitch)/4;
 			aim_cnt++;
 		}
@@ -285,7 +295,7 @@ void AutoAimGMCTRL()
 	//************检测帧数*************
 	if(receive_cnt == 0)
 		auto_counter_fps = 1000;
-	if(auto_counter == 0)
+	if(auto_counter_fps == 0)
 	{
 		receive_rcd = receive_cnt;
 		receive_cnt = 0;

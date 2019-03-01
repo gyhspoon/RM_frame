@@ -17,7 +17,8 @@ MouseMode_e MouseLMode = NO_CLICK;
 MouseMode_e MouseRMode = NO_CLICK;
 RampGen_t LRSpeedRamp = RAMP_GEN_DAFAULT;   	//斜坡函数
 RampGen_t FBSpeedRamp = RAMP_GEN_DAFAULT;
-ChassisSpeed_Ref_t ChassisSpeedRef; 
+ChassisSpeed_Ref_t ChassisSpeedRef;
+uint16_t LastKey=0;
 
 int ChassisTwistGapAngle = 0;
 
@@ -88,7 +89,6 @@ void RemoteControlProcess(Remote *rc)
 		{
 			Cap_State_Switch(CAP_STATE_RECHARGE);
 		}
-		//Cap_State_Switch(CAP_STATE_RECHARGE);
 		
 		ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
 		ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF/3*2;
@@ -120,16 +120,6 @@ void RemoteControlProcess(Remote *rc)
 	
 	if(WorkState == ADDITIONAL_STATE_ONE)
 	{
-		//for debug SuperC
-		if (LastState != WorkState)
-		{
-			Cap_State_Switch(CAP_STATE_STOP);
-			if(ShootState)
-			{
-				stirDirection=stirState;
-			}
-		}	
-		//
 		ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
 		ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF/3*2;
 		#ifdef USE_CHASSIS_FOLLOW
@@ -145,6 +135,15 @@ void RemoteControlProcess(Remote *rc)
 		FRICL.TargetAngle = FricSpeedLeft;
 		FRICR.TargetAngle = -FricSpeedRight;
 		STIR.TargetAngle+=stirDirection;
+		
+		if (LastState != WorkState)
+		{
+			Cap_State_Switch(CAP_STATE_STOP);
+			if(ShootState)
+			{
+				stirDirection=stirState;
+			}
+		}
 		
 		aim_mode=0;
 		AutoAimGMCTRL();
@@ -162,15 +161,9 @@ void RemoteControlProcess(Remote *rc)
 	
 	if(WorkState == ADDITIONAL_STATE_TWO)
 	{
-		//for debug SuperC
 		if(LastState!= WorkState)
 		{
 			Cap_State_Switch(CAP_STATE_RELEASE);
-			if(ShootState)
-			{
-				ShootOneBullet();
-				stirDirection=stirState;
-			}
 		}
 		
 		if(Cap_Get_Cap_Voltage() > 13)
@@ -197,9 +190,16 @@ void RemoteControlProcess(Remote *rc)
 		
 		ChassisTwistState = 0;
 		
+		ShootState = 1;
 		STIR.TargetAngle+=stirDirection;
 		FRICL.TargetAngle = FricSpeedLeft;
 		FRICR.TargetAngle = -FricSpeedRight;
+		
+		if(LastState!= WorkState && ShootState)
+		{
+			ShootOneBullet();
+			stirDirection=stirState;
+		}
 		
 		aim_mode=1;
 		AutoAimGMCTRL();
@@ -214,7 +214,16 @@ void RemoteControlProcess(Remote *rc)
 		//if(SuperCTestMode==1) ChassisTwistState = 2;
 		HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_SET);	
 	}
-	
+//	if(ShootState)
+//	{
+//		OnePush(WorkState==ADDITIONAL_STATE_TWO,{
+//			ShootOneBullet();
+//			stirDirection=stirState;
+//		});
+//		OnePush(WorkState==ADDITIONAL_STATE_ONE,{
+//			stirDirection=stirState;
+//		});
+//	}
 	OnePush(STIR.RxMsgC6x0.moment>5000 || STIR.RxMsgC6x0.moment<-5000,
 	{
 		STIR.TargetAngle-=stirDirection*15;
@@ -326,59 +335,52 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 			}
 			default: break;
 		}
-		//右键小云台发射，长按连射，左键大云台发射
-		OnePush(MouseLMode==SHORT_CLICK || MouseLMode==LONG_CLICK,
-		{
-			if(ShootState)
-			{
-				ShootOneBullet();
-				stirDirection=stirState;
-			}
-		});
 
 		KeyboardModeFSM(key);
 		
-		switch (KeyboardMode)																																		/******************************/
-		{																																												/*														*/
-			case SHIFT_CTRL:																																			/*	shift_ctrl：无视热量限制	*/
-			{																																											/*														*/
-				burst = 1;																																					/*														*/
-				break;																																							/*														*/
-			}																																											/*														*/
-			case CTRL:																																						/*	ctrl: 低速								*/
-			{																																											/*														*/
-				OnePushF(key->v & KEY_F ,{aim_mode = (aim_mode!=2) ? 2 : 0;});											/*	ctrl_f: 打符							*/
-				burst = 0;																																					/*														*/
-				break;																																							/*														*/
-			}																																											/*														*/
-			case SHIFT:																																						/*	shift: 高速								*/
-			{																																											/*														*/
-				if(key->v & KEY_R)																																	/*	shift_r：关摩擦轮，关激光	*/
-				{																																										/*	-													*/
-					FRICL.TargetAngle = 0;																														/*	-													*/
-					FRICR.TargetAngle = 0;																														/*	-													*/
-					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_RESET);										/*	-													*/
-					ShootState=0;																																			/*	-													*/
-				}																																										/*														*/
-				burst = 0;																																					/*														*/
-				break;																																							/*														*/
-			}																																											/*														*/
-			case NO_CHANGE:																																				/*	normal										*/
-			{																																											/*														*/
-				if(key->v & KEY_R)																																	/*	r: 开摩擦轮，开激光				*/
-				{																																										/*	-													*/
-					FRICL.TargetAngle = FricSpeedLeft;																								/*	-													*/
-					FRICR.TargetAngle = -FricSpeedRight;																							/*	-													*/
-					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_SET);											/*	-													*/
-					ShootState=1;																																			/*	-													*/
-				}																																										/*														*/
-				burst = 0;																																					/*														*/
-				OnePushZ(key->v & KEY_Z ,{chassis_lock = (chassis_lock!=1) ? 1 : 0;});							/*	z: 底盘锁定/解锁					*/
-				OnePushQ(key->v & KEY_Q ,{ChassisTwistState = (ChassisTwistState!=1) ? 1 : 0;});		/*	q: 正常扭腰								*/
-				OnePushE(key->v & KEY_E ,{ChassisTwistState = (ChassisTwistState!=2) ? 2 : 0;});		/*	e: 45度扭腰								*/
-				OnePushF(key->v & KEY_F ,{aim_mode = (aim_mode!=0) ? 0 : 1;});											/*	f: 开关自瞄								*/
-			}																																											/*														*/
-		}																																												/******************************/
+		switch (KeyboardMode)																																								/******************************/
+		{																																																		/*														*/
+			case SHIFT_CTRL:																																									/*	shift_ctrl：无视热量限制	*/
+			{																																																	/*														*/
+				burst = 1;																																											/*														*/
+				break;																																													/*														*/
+			}																																																	/*														*/
+			case CTRL:																																												/*	ctrl: 低速								*/
+			{																																																	/*														*/
+				OnePushF(key->v & KEY_F ,{aim_mode = (aim_mode!=2) ? 2 : 0;});																	/*	ctrl_f: 打符							*/
+				burst = 0;																																											/*														*/
+				break;																																													/*														*/
+			}																																																	/*														*/
+			case SHIFT:																																												/*	shift: 高速（超级电容）		*/
+			{																																																	/*														*/
+				if(key->v & KEY_B)																																							/*	shift_b：关摩擦轮，关激光	*/
+				{																																																/*	-													*/
+					FRICL.TargetAngle = 0;																																				/*	-													*/
+					FRICR.TargetAngle = 0;																																				/*	-													*/
+					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_RESET);																/*	-													*/
+					ShootState=0;																																									/*	-													*/
+				}																																																/*														*/
+				burst = 0;																																											/*														*/
+				break;																																													/*														*/
+			}																																																	/*														*/
+			case NO_CHANGE:																																										/*	normal										*/
+			{																																																	/*														*/
+				if(key->v & KEY_B)																																							/*	b: 开摩擦轮，开激光				*/
+				{																																																/*	-													*/
+					FRICL.TargetAngle = FricSpeedLeft;																														/*	-													*/
+					FRICR.TargetAngle = -FricSpeedRight;																													/*	-													*/
+					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_SET);																	/*	-													*/
+					ShootState=1;																																									/*	-													*/
+				}																																																/*														*/
+				burst = 0;																																											/*														*/
+				if(key->v & KEY_R && !(LastKey & KEY_R)) chassis_lock = (chassis_lock != 1) ? 1 : 0;						/*	r: 底盘锁定/解锁					*/
+				if(key->v & KEY_Q && !(LastKey & KEY_Q)) ChassisTwistState = (ChassisTwistState!=1) ? 1 : 0;		/*	q: 正常扭腰								*/
+				if(key->v & KEY_E && !(LastKey & KEY_E)) ChassisTwistState = (ChassisTwistState!=2) ? 2 : 0;		/*	e: 45度扭腰								*/
+//				if(key->v & KEY_F && !(LastKey & KEY_F)) aim_mode = (aim_mode!=0) ? 0 : 1;										/*	f: 开关自瞄								*/
+				if(key->v & KEY_F) aim_mode = 1;																																/*														*/
+				else aim_mode = 0;																																							/*														*/
+			}																																																	/*														*/
+		}																																																		/******************************/
 		
 		//*********************************CM Movement Process******************************************
 		if(key->v & KEY_W)  		//key: w
@@ -399,12 +401,14 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 			ChassisSpeedRef.left_right_ref = 0;
 			LRSpeedRamp.ResetCounter(&LRSpeedRamp);
 		}
+		
+		LastKey=key->v;
 		//**********************************************************************************************
 		
 		//***********************************防卡弹*********************************
 		if(ShootState) STIR.TargetAngle+=stirDirection;
 		OnePush(STIR.RxMsgC6x0.moment>5000 || STIR.RxMsgC6x0.moment<-5000,{
-			STIR.TargetAngle-=stirDirection*	15;
+			STIR.TargetAngle-=stirDirection*15;
 			stirDirection=0;
 			stirState=-stirState;
 		});
@@ -415,6 +419,7 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 		}
 		else ChassisDeTwist();
 		AutoAimGMCTRL();
+		FreshSuperCState();
 		//Limit_and_Synchronization();
 	}
 }
@@ -423,22 +428,16 @@ void KeyboardModeFSM(Key *key)
 {
 	if((key->v & 0x30) == 0x30)//Shift_Ctrl
 	{
-		Cap_State_Switch(CAP_STATE_RECHARGE);
 		KM_FORWORD_BACK_SPEED=  LOW_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = LOW_LEFT_RIGHT_SPEED;
 		KeyboardMode=SHIFT_CTRL;
-	}
-	else if(key->v & KEY_SHIFT)//Shift
-	{
-		//电容状态控制
-		if(LastKeyboardMode != KeyboardMode && Cap_Get_Cap_Voltage() > 10)
-		{
-			Cap_State_Switch(CAP_STATE_RELEASE);
-		}
-		else if(Cap_Get_Cap_Voltage() <= 10)
+		if(LastKeyboardMode != KeyboardMode)
 		{
 			Cap_State_Switch(CAP_STATE_RECHARGE);
 		}
+	}
+	else if(key->v & KEY_SHIFT)//Shift
+	{
 		//速度控制
 		if(Cap_Get_Cap_Voltage() > 15)
 		{
@@ -450,22 +449,36 @@ void KeyboardModeFSM(Key *key)
 			KM_FORWORD_BACK_SPEED=  NORMAL_FORWARD_BACK_SPEED;
 			KM_LEFT_RIGHT_SPEED = NORMAL_LEFT_RIGHT_SPEED;
 		}
-		
 		KeyboardMode=SHIFT;
+		//电容状态控制
+		if(LastKeyboardMode != KeyboardMode && Cap_Get_Cap_Voltage() > 10)
+		{
+			Cap_State_Switch(CAP_STATE_RELEASE);
+		}
+		else if(Cap_Get_Cap_Voltage() <= 10)
+		{
+			Cap_State_Switch(CAP_STATE_RECHARGE);
+		}
 	}
 	else if(key->v & KEY_CTRL)//Ctrl
 	{
-		Cap_State_Switch(CAP_STATE_RECHARGE);
 		KM_FORWORD_BACK_SPEED=  LOW_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = LOW_LEFT_RIGHT_SPEED;
 		KeyboardMode=CTRL;
+		if(LastKeyboardMode != KeyboardMode)
+		{
+			Cap_State_Switch(CAP_STATE_RECHARGE);
+		}
 	}
 	else
 	{
-		Cap_State_Switch(CAP_STATE_RECHARGE);
 		KM_FORWORD_BACK_SPEED=  NORMAL_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = NORMAL_LEFT_RIGHT_SPEED;
 		KeyboardMode=NO_CHANGE;
+		if(LastKeyboardMode != KeyboardMode)
+		{
+			Cap_State_Switch(CAP_STATE_RECHARGE);
+		}
 	}	
 	LastKeyboardMode=KeyboardMode;
 }
@@ -509,6 +522,11 @@ void MouseModeFSM(Mouse *mouse)
 		{
 			if(mouse->press_l)
 			{
+				if(ShootState)
+				{
+					ShootOneBullet();
+					stirDirection=stirState;
+				}
 				MouseLMode = SHORT_CLICK;
 			}
 		}break;
@@ -614,12 +632,12 @@ void ChassisTwist(void)
 				{ChassisTwistGapAngle = CHASSIS_TWIST_ANGLE_LIMIT;}break;
 				case CHASSIS_TWIST_ANGLE_LIMIT:
 				{
-					if(abs((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 360 / 8192.0f - ChassisTwistGapAngle)<12)
+					if(fabs((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 360 / 8192.0f - ChassisTwistGapAngle)<15)
 					{ChassisTwistGapAngle = -CHASSIS_TWIST_ANGLE_LIMIT;}break;
 				}
 				case -CHASSIS_TWIST_ANGLE_LIMIT:
 				{
-					if(abs((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 360 / 8192.0f - ChassisTwistGapAngle)<12)
+					if(fabs((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 360 / 8192.0f - ChassisTwistGapAngle)<15)
 					{ChassisTwistGapAngle = CHASSIS_TWIST_ANGLE_LIMIT;}break;
 				}
 				case CHASSIS_TWIST_ANGLE_LIMIT_45:
@@ -638,12 +656,12 @@ void ChassisTwist(void)
 				{ChassisTwistGapAngle = CHASSIS_TWIST_ANGLE_LIMIT_45;}break;
 				case CHASSIS_TWIST_ANGLE_LIMIT_45:
 				{
-					if(abs((GMY.RxMsg6623.angle - GM_YAW_ZERO + 1024) * 360 / 8192.0f - ChassisTwistGapAngle)<5)
+					if(fabs((GMY.RxMsg6623.angle - GM_YAW_ZERO + 1024) * 360 / 8192.0f - ChassisTwistGapAngle)<5)
 					{ChassisTwistGapAngle = -CHASSIS_TWIST_ANGLE_LIMIT_45;}break;
 				}
 				case -CHASSIS_TWIST_ANGLE_LIMIT_45:
 				{
-					if(abs((GMY.RxMsg6623.angle - GM_YAW_ZERO + 1024) * 360 / 8192.0f - ChassisTwistGapAngle)<5)
+					if(fabs((GMY.RxMsg6623.angle - GM_YAW_ZERO + 1024) * 360 / 8192.0f - ChassisTwistGapAngle)<5)
 					{ChassisTwistGapAngle = CHASSIS_TWIST_ANGLE_LIMIT_45;}break;
 				}
 				case CHASSIS_TWIST_ANGLE_LIMIT:
@@ -671,7 +689,7 @@ void LJHTwist(void)
 void ShootOneBullet(void)
 {
 	#ifndef USE_HEAT_LIMIT_HERO_MAIN
-	GATE.TargetAngle-=120;
+	GATE.TargetAngle-=170;
 	#else
 	cdflag0 = (JUDGE_State == ONLINE && remainHeat1 < 40 && burst==0) ? 1 : 0;
 	if(!cdflag0)

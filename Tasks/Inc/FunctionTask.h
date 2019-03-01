@@ -52,8 +52,8 @@
 #define MOUSE_LR_RAMP_TICK_COUNT		50
 #define MOUSR_FB_RAMP_TICK_COUNT		60
 
-#define MOUSE_TO_YAW_ANGLE_INC_FACT		((aim_mode == 0) ? 0.06f : 0.03f)
-#define MOUSE_TO_PITCH_ANGLE_INC_FACT	((aim_mode == 0) ? 0.06f : 0.03f)
+#define MOUSE_TO_YAW_ANGLE_INC_FACT		((aim_mode != 0 && find_enemy) ? 0.03f : 0.06f)
+#define MOUSE_TO_PITCH_ANGLE_INC_FACT	((aim_mode != 0	&& find_enemy) ? 0.03f : 0.06f)
 
 #define MK_ROTATE_SPEED_REF 			0.90f
 

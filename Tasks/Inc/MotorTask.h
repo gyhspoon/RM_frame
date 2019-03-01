@@ -41,6 +41,26 @@
 	&PID_Calc,&PID_Reset,\
 }
 
+//#define CHASSIS_MOTOR_ROTATE_PID_DEFAULT \
+//{\
+//	0,0,{0,0},\
+//	0.55f,0.0f,0.5f,/*p i d*/\
+//	0,0,0,\
+//	100,100,100,\
+//	0,20,0,0,0,\
+//	&PID_Calc,&PID_Reset,\
+//}
+
+//#define CHASSIS_MOTOR_SPEED_PID_DEFAULT \
+//{\
+//	0,0,{0,0},\
+//	27.0f,0.22f,15.0f,\
+//	0,0,0,\
+//	15000,15000,15000,\
+//	0,12000,0,0,0,\
+//	&PID_Calc,&PID_Reset,\
+//}
+
 #define FRIC_MOTOR_SPEED_PID_DEFAULT \
 {\
 	0,0,{0,0},\

@@ -26,7 +26,7 @@
 #define ICOUT                   (1)       //PB0 Channel 8
 #define ICIN                    (2)       //PB1 Channel 9
 #define UCK1                    (3)       //PC0 Channel 10
-#define RECHARGE_POWER_MAX      (65)
+#define RECHARGE_POWER_MAX      (70)
 #define RELEASE_POWER_MAX       (70)//70
 #define RECHARGE_CURR_MAX       (3.0)
 #define RELEASE_CURR_MAX        (3.0)

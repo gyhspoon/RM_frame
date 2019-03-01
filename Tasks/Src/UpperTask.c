@@ -15,7 +15,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #define fw_printf(...) printf(__VA_ARGS__)
-
+#ifdef __GNUC__
+  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+	#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif 
+PUTCHAR_PROTOTYPE
+{
+ 	HAL_UART_Transmit(&UPPER_UART , (uint8_t *)&ch, 1, 0xFFFF);
+	return ch;
+}
 #ifdef DEBUG_MODE
 //--------------------底层接收驱动部分-------------------//
 char buf[REC_LEN];

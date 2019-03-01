@@ -198,7 +198,7 @@ void ControlRotate(void)
 	CMRotatePID.ref = 0;
 	CMRotatePID.fdb = ChassisSpeedRef.rotate_ref;
 	CMRotatePID.Calc(&CMRotatePID);
-	if(ChassisTwistState) MINMAX(CMRotatePID.output,-30,30);
+	if(ChassisTwistState) MINMAX(CMRotatePID.output,-50,50);
 	//rotate_speed = CMRotatePID.output * 16 + ChassisSpeedRef.forward_back_ref * 0.01 + ChassisSpeedRef.left_right_ref * 0.01;
 	rotate_speed = CMRotatePID.output * 25;
 }
@@ -250,8 +250,15 @@ void controlLoop()
 	{
 		Chassis_Data_Decoding();
 		
+		#ifndef USE_CHASSIS_ADJUST
 		for(int i=0;i<8;i++) if(can1[i]!=0) (can1[i]->Handle)(can1[i]);
 		for(int i=0;i<8;i++) if(can2[i]!=0) (can2[i]->Handle)(can2[i]);
+		#else
+		for(int i=0;i<8;i++) if(can1[i]!=0) (can1[i]->Handle)(can1[i]);
+		if(CAP_STATE_RELEASE){chassisMixingPID(12,0,2, 4,0.01,0);}
+		else{chassisMixingPID(12,0,2, 3,0.4,0);}
+//		for(int i=0;i<8;i++) if(can2[i]!=0) (can2[i]->Handle)(can2[i]);
+		#endif
 		
 		OptionalFunction();
 
@@ -285,7 +292,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//主循环在时间中断中启动
 		controlLoop();
 		Cap_Run();
-		
+
 		//自瞄数据解算（5ms）
 		static int aim_cnt=0;
 		aim_cnt++;

@@ -34,7 +34,6 @@ void PowerLimitation(void)
 	if (JUDGE_State == OFFLINE)
 	{
 		CM_current_max = 4000;
-		sum = __fabs(CMFLIntensity) + __fabs(CMFRIntensity) + __fabs(CMBLIntensity) + __fabs(CMBRIntensity);
 		if(sum > CM_current_max)
 		{
 			CMFLIntensity = (CMFLIntensity/(sum+1.0f))*CM_current_max;
@@ -49,7 +48,6 @@ void PowerLimitation(void)
 	else if(PowerHeatData.chassisPowerBuffer-((PowerHeatData.chassisPower-80)>0?(PowerHeatData.chassisPower-80):0)*0.5f < 10.0f)
 	{
 		//CM_current_max = 2730;
-		sum = __fabs(CMFLIntensity) + __fabs(CMFRIntensity) + __fabs(CMBLIntensity) + __fabs(CMBRIntensity);
 		float realPowerBuffer = PowerHeatData.chassisPowerBuffer;
 		//float realPower = PowerHeatData.chassisPower;
 		//PowerLimitationPID.feedback = realPower;

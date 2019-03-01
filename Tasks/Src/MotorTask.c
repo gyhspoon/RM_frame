@@ -203,7 +203,7 @@ void ControlGMP(MotorINFO* id)
 			else
 				 id->RealAngle += (ThisAngle - id->lastRead)*dir;
 		}
-		if(abs(id->RealAngle-id->TargetAngle)<5) GMPReseted = 1;
+		if(fabs(id->RealAngle-id->TargetAngle)<5) GMPReseted = 1;
 		id->lastRead = ThisAngle ;
 		#ifdef HERO_MAIN
 		MINMAX(id->TargetAngle, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate - 45.0f, id->RealAngle - (GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0 / 8192.0 / id->ReductionRate + 15.0f);

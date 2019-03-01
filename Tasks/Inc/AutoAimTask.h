@@ -60,11 +60,13 @@ typedef struct Coordinate_t
 }Coordinate_t;
 
 extern uint8_t aim_mode;
+extern uint8_t find_enemy;
 extern uint16_t auto_counter_fps;
 extern GMAngle_t adjust;
 
 void InitAutoAim(void);
 void AutoAimUartRxCpltCallback(void);
+void AutoAimCallback(void);
 void CANTxINFO(void);
 void EnemyINFOProcess(void);
 void AutoAimNormal(void);
