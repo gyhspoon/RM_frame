@@ -22,11 +22,11 @@
 #define MPU_NSS_LOW HAL_GPIO_WritePin(GPIOF, GPIO_PIN_6, GPIO_PIN_RESET)
 #define MPU_NSS_HIGH HAL_GPIO_WritePin(GPIOF, GPIO_PIN_6, GPIO_PIN_SET)
 
-#define Kp 0.2f                                              /* 
+#define Kp 0.15f                                              /* 
                                                               * proportional gain governs rate of 
                                                               * convergence to accelerometer/magnetometer 
 																															*/
-#define Ki 0.06f                                             /* 
+#define Ki 0.004f                                             /* 
                                                               * integral gain governs rate of 
                                                               * convergence of gyroscope biases 
 																															*/
@@ -294,9 +294,9 @@ void mpu_get_data()
 {
     mpu_read_bytes(MPU6500_ACCEL_XOUT_H, mpu_buff, 14);
 
-    mpu_data.ax   = mpu_buff[0] << 8 | mpu_buff[1];
-    mpu_data.ay   = mpu_buff[2] << 8 | mpu_buff[3];
-    mpu_data.az   = mpu_buff[4] << 8 | mpu_buff[5];
+    mpu_data.ax = (mpu_buff[0] << 8 | mpu_buff[1]) - mpu_data.ax_offset;
+		mpu_data.ay = (mpu_buff[2] << 8 | mpu_buff[3]) - mpu_data.ay_offset;
+		mpu_data.az = (mpu_buff[4] << 8 | mpu_buff[5]) - mpu_data.az_offset;
     mpu_data.temp = mpu_buff[6] << 8 | mpu_buff[7];
 
     mpu_data.gx = ((mpu_buff[8]  << 8 | mpu_buff[9])  - mpu_data.gx_offset);
@@ -311,7 +311,8 @@ void mpu_get_data()
     imu.temp = 21 + mpu_data.temp / 333.87f;
 	  /* 2000dps -> rad/s */
 	  imu.wx   = mpu_data.gx / 16.384f / 57.3f; 
-    imu.wy   = mpu_data.gy / 16.384f / 57.3f; 
+    imu.wy   = mpu_data.gy / 16.384f / 57.3f - 0.015f; 
+//		imu.wy   = mpu_data.gy / 16.384f / 57.3f; 
     imu.wz   = mpu_data.gz / 16.384f / 57.3f;
 }
 
@@ -347,6 +348,7 @@ uint8_t id;
 	* @retval 
   * @usage  call in main() function
 	*/
+
 uint8_t mpu_device_init(void)
 {
 	imu.FirstEnter = 1;
@@ -354,13 +356,14 @@ uint8_t mpu_device_init(void)
 
 	id                               = mpu_read_byte(MPU6500_WHO_AM_I);
 	uint8_t i                        = 0;
+	//0: 250hz; 1: 184hz; 2: 92hz; 3: 41hz; 4: 20hz; 5: 10hz; 6: 5hz; 7: 3600hz
 	uint8_t MPU6500_Init_Data[10][2] = {{ MPU6500_PWR_MGMT_1, 0x80 },     /* Reset Device */ 
 																			{ MPU6500_PWR_MGMT_1, 0x03 },     /* Clock Source - Gyro-Z */ 
 																			{ MPU6500_PWR_MGMT_2, 0x00 },     /* Enable Acc & Gyro */ 
 																			{ MPU6500_CONFIG, 0x04 },         /* LPF 41Hz */ 
 																			{ MPU6500_GYRO_CONFIG, 0x18 },    /* +-2000dps */ 
 																			{ MPU6500_ACCEL_CONFIG, 0x10 },   /* +-8G */ 
-																			{ MPU6500_ACCEL_CONFIG_2, 0x02 }, /* enable LowPassFilter  Set Acc LPF */ 
+																			{ MPU6500_ACCEL_CONFIG_2, 0x04 }, /* enable LowPassFilter  Set Acc LPF */ 
 																			{ MPU6500_USER_CTRL, 0x20 },};    /* Enable AUX */ 
 	for (i = 0; i < 10; i++)
 	{
@@ -373,6 +376,7 @@ uint8_t mpu_device_init(void)
 
 	ist8310_init();
 	mpu_offset_call();
+	imu.InitFinish = 1;
 	return 0;
 }
 
@@ -385,7 +389,7 @@ uint8_t mpu_device_init(void)
 void mpu_offset_call(void)
 {
 	int i;
-	for (i=0; i<300;i++)
+	for (i=0; i<800;i++)
 	{
 		mpu_read_bytes(MPU6500_ACCEL_XOUT_H, mpu_buff, 14);
 
@@ -397,14 +401,14 @@ void mpu_offset_call(void)
 		mpu_data.gy_offset += mpu_buff[10] << 8 | mpu_buff[11];
 		mpu_data.gz_offset += mpu_buff[12] << 8 | mpu_buff[13];
 
-		MPU_DELAY(5);
+		MPU_DELAY(2);
 	}
-	mpu_data.ax_offset=mpu_data.ax_offset / 300;
-	mpu_data.ay_offset=mpu_data.ay_offset / 300;
-	mpu_data.az_offset=mpu_data.az_offset / 300;
-	mpu_data.gx_offset=mpu_data.gx_offset / 300;
-	mpu_data.gy_offset=mpu_data.gx_offset / 300;
-	mpu_data.gz_offset=mpu_data.gz_offset / 300;
+	mpu_data.ax_offset=mpu_data.ax_offset / 800;
+	mpu_data.ay_offset=mpu_data.ay_offset / 800;
+	mpu_data.az_offset=mpu_data.az_offset / 800;
+	mpu_data.gx_offset=mpu_data.gx_offset / 800;
+	mpu_data.gy_offset=mpu_data.gx_offset / 800;
+	mpu_data.gz_offset=mpu_data.gz_offset / 800;
 }
 
 
@@ -688,4 +692,3 @@ void imu_attitude_update(void)
 	/* roll   -pi----pi  */	
 	imu.rol =  atan2(2*q2*q3 + 2*q0*q1, -2*q1*q1 - 2*q2*q2 + 1)* 57.3;
 }
-

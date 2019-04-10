@@ -14,6 +14,8 @@
 
 #include "mytype.h"
 #define MPU_DELAY(x) HAL_Delay(x)
+#define VAL_MIN(a, b) ((a) < (b) ? (a) : (b))
+#define VAL_MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef struct
 {

@@ -150,11 +150,12 @@ extShootData_t ShootData1;
 uint16_t maxHP = MAXHP3;
 uint16_t remainHP = MAXHP3;
 uint16_t maxHeat0 = MAXHEAT03;
-uint16_t remainHeat0 = MAXHEAT03;
+int16_t remainHeat0 = MAXHEAT03;
 uint16_t maxHeat1 = MAXHEAT03;
-uint16_t remainHeat1 = MAXHEAT03;
+int16_t remainHeat1 = MAXHEAT03;
 uint16_t realHeat0 = 0;
 float fakeHeat0 = 0;
+float fakeHeat1 = 0;
 float realBulletSpeed0 = 22;
 float cooldown0 = COOLDOWN03;
 float cooldown1 = COOLDOWN13;
@@ -188,6 +189,10 @@ void Judge_Refresh_Power()
 
 	remainHeat0 = maxHeat0 - PowerHeatData.shooterHeat0;
 	remainHeat1 = maxHeat1 - PowerHeatData.shooterHeat1;
+	if(auto_counter_shoot==0)
+	{
+		fakeHeat1 = PowerHeatData.shooterHeat1;
+	}
 	JUDGE_Received = 1;
 	
 }
