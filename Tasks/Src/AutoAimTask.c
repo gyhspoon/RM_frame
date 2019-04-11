@@ -17,20 +17,33 @@
 #ifdef	USE_AUTOAIM
 
 #define USE_AUTOAIM_ANGLE
-//#define USE_AUTOAIM_PREDICT
+#define USE_KALMAN_FILTER
 
 //*****************************************声明变量******************************************//
 
-GMAngle_t aim, aim_rcd, aim_output;														//目标角度
+GMAngle_t aim,aim_rcd,aim_output;															//目标角度
 GMAngle_t adjust;																							//校准发射变量
-Coordinate_t enemy_gun, enemy_scope, scope_gun;								//坐标
-uint8_t Enemy_INFO[8], Tx_INFO[8];														//接收
-uint8_t find_enemy = 0, aim_mode = 0, upper_mode;							//aim_mode用于选择瞄准模式，0为手动瞄准，1为正常自瞄，2为打符，3暂无（吊射？）
+Coordinate_t enemy_gun,enemy_scope,scope_gun;									//坐标
+uint8_t Enemy_INFO[8],Tx_INFO[8];															//接收
+uint8_t find_enemy = 0,aim_mode = 0,upper_mode;								//aim_mode用于选择瞄准模式，0为手动瞄准，1为正常自瞄，2为打符，3暂无（吊射？）
 uint16_t aim_cnt = 0;																					//自瞄分频延时变量
 uint16_t auto_counter_fps = 1000;															//检测帧率
-int16_t receive_cnt = 0, receive_rcd = 0;											//检测上位机信号帧数
+int16_t receive_cnt = 0,receive_rcd = 0;											//检测上位机信号帧数
 int16_t track_cnt = 0;																				//追踪变量
 float delta_wz = 0;																						//相对角速度
+#ifdef USE_KALMAN_FILTER
+kalman_filter_init_t yaw_kalman_filter_para = {
+  .P_data = {2, 0, 0, 2},
+  .A_data = {1, 0.001, 0, 1},
+  .H_data = {1, 0, 0, 1},
+  .Q_data = {1, 0, 0, 1},
+  .R_data = {2000, 0, 0, 5000}
+};
+kalman_filter_t yaw_kalman_filter;
+float gimbal_attitude_archive[120][4];
+uint8_t archive_index = 0;
+uint8_t get_index = 0;
+#endif
 
 //********************************************************************************************//
 
@@ -56,6 +69,10 @@ void InitAutoAim()
 	
 	//设置坐标初始值（根据不同安装情况调整这3个参数）
 	scope_gun.x=0;		scope_gun.y=-10;		scope_gun.z=0;
+	
+	#ifdef USE_KALMAN_FILTER
+	kalman_filter_init(&yaw_kalman_filter, &yaw_kalman_filter_para);
+	#endif
 }
 
 //**************************************************************************//
@@ -85,15 +102,11 @@ void AutoAimUartRxCpltCallback()
 		aim.pitch=(float)( (((RX_ENEMY_PITCH1<<8)|RX_ENEMY_PITCH2)>0x7fff) ? (((RX_ENEMY_PITCH1<<8)|RX_ENEMY_PITCH2)-0xffff) : (RX_ENEMY_PITCH1<<8)|RX_ENEMY_PITCH2 )*k_angle;
 		enemy_scope.z=(float)((RX_ENEMY_Z1<<8)|RX_ENEMY_Z2)*k_distance;
 		
-		adjust.pitch = 0.5f + enemy_scope.z * 0.002f;
+		adjust.pitch = - 2.5f + enemy_scope.z * 0.002f;
 		aim.yaw -= adjust.yaw;
 		aim.pitch += adjust.pitch;
-		#ifndef USE_AUTOAIM_PREDICT
-		MINMAX(aim.yaw,-3.0f,3.0f);
-		#else
-		MINMAX(aim.yaw,-5.0f,5.0f);
-		#endif
-		MINMAX(aim.pitch,-2.0f,2.0f);
+		MINMAX(aim.yaw, -3.0f, 3.0f);
+		MINMAX(aim.pitch, -2.0f, 2.0f);
 		find_enemy=1;
 		receive_cnt++;
 	}
@@ -185,7 +198,7 @@ void CANTxINFO()
 
 //在时间中断中分频后调用该函数
 void EnemyINFOProcess()
-{
+{	
 	#ifndef USE_AUTOAIM_ANGLE
 	//坐标转换
 	enemy_gun.x=enemy_scope.x+scope_gun.x;
@@ -197,42 +210,43 @@ void EnemyINFOProcess()
 	aim.pitch=atan(enemy_gun.y/enemy_gun.z)/const_pi*180.0+adjust.pitch;
 	#endif
 	
-	//追踪
-	if(aim.yaw * aim_rcd.yaw > 0) track_cnt++;
-	else track_cnt = 0;
-	if(!find_enemy) track_cnt = 0;
-	MINMAX(track_cnt, 0, 1000);
-	#ifndef USE_AUTOAIM_PREDICT
-	//aim_output.yaw = (aim.yaw+aim_rcd.yaw)/4;
-	aim_output.yaw = (aim.yaw) * (0.27f+0.006f*track_cnt);
+	#ifdef USE_KALMAN_FILTER
+	mat_init(&yaw_kalman_filter.Q,2,2, yaw_kalman_filter_para.Q_data);
+  mat_init(&yaw_kalman_filter.R,2,2, yaw_kalman_filter_para.R_data);
+	
+	archive_index++;
+  if (archive_index > 99) //system delay ms
+		archive_index = 0;
+  gimbal_attitude_archive[archive_index][0] = imu.yaw;
+  gimbal_attitude_archive[archive_index][2] = -imu.wz;
+  get_index = archive_index + 50;
+  if( get_index > 99)
+    get_index -= 100;
+//	get_index = archive_index;
+	static float yaw_angle_raw;
+	static float yaw_speed_raw;
+	yaw_angle_raw = aim.yaw + imu.yaw;
+	yaw_speed_raw = - imu.wz + (aim.yaw - aim_rcd.yaw) * 1000.0f / (((float)receive_rcd > 40) ? receive_rcd : 40);
+	float *yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter, yaw_angle_raw, yaw_speed_raw);
+	aim_output.yaw = yaw_kf_result[0] - imu.yaw  + yaw_kf_result[1] * 0.3f;
 	#else
-	aim_output.yaw = (aim.yaw) * 0.27f + PredictDeltaAngle();
+	AutoAimTrackYaw();
 	#endif
 	aim_output.pitch = (aim.pitch+aim_rcd.pitch)/8;
 }
 
-//*********************************************************************************************//
-
-
-//********************************预测函数**********************************//
-float PredictDeltaAngle()
+void AutoAimTrackYaw()
 {
-	float kp = 1.0f;
-	float predict_angle = 0;
+	if(aim.yaw * aim_rcd.yaw > 0) track_cnt++;
+	else track_cnt = 0;
+	if(!find_enemy) track_cnt = 0;
+	MINMAX(track_cnt, 0, 1000);
 	
-	if(receive_rcd > 50)
-	{
-		delta_wz = (aim.yaw - aim_rcd.yaw) / 1000 * receive_rcd / 57.1f;
-		predict_angle = kp * (imu.wz - delta_wz);
-	}
-	else
-	{
-		predict_angle = 0;
-	}
-	
-	return predict_angle;
+	//aim_output.yaw = (aim.yaw+aim_rcd.yaw)/4;
+	aim_output.yaw = (aim.yaw) * (0.27f+0.006f*track_cnt);
 }
-//**************************************************************************//
+
+//*********************************************************************************************//
 
 
 //**************************普通模式自瞄控制函数****************************//
@@ -243,10 +257,10 @@ void AutoAimNormal()
 	{
 		GMY.TargetAngle += aim_output.yaw;
 		GMP.TargetAngle += aim_output.pitch;
-		
-		find_enemy = 0;
-		aim_rcd.yaw = aim.yaw;
-		aim_rcd.pitch = aim.pitch;
+		aim_cnt++;
+		find_enemy=0;
+		aim_rcd.yaw=aim.yaw;
+		aim_rcd.pitch=aim.pitch;
 	}
 }
 
@@ -329,6 +343,7 @@ void UpperStateFSM()
 
 void AutoAimGMCTRL()
 {
+	//UpperStateFSM();
 	switch(aim_mode)
 	{
 		case 1: 														//自瞄

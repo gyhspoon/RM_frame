@@ -15,9 +15,9 @@
 #include "includes.h"
 
 #ifdef HERO_MAIN
-#define GM_PITCH_GRAVITY_COMPENSATION 0
-#define GM_PITCH_ZERO 	5070
-#define GM_YAW_ZERO 		6610
+#define GM_PITCH_GRAVITY_COMPENSATION -40
+#define GM_PITCH_ZERO 	6000
+#define GM_YAW_ZERO 	420
 #endif
 #define CHASSIS_SPEED_ATTENUATION   (1.30f)
 #define NORMALIZE_ANGLE180(angle) angle = ((angle) > 180) ? ((angle) - 360) : (((angle) < -180) ? (angle) + 360 : angle)
@@ -41,13 +41,33 @@
 	&PID_Calc,&PID_Reset,\
 }
 
+//#define CHASSIS_MOTOR_ROTATE_PID_DEFAULT \
+//{\
+//	0,0,{0,0},\
+//	0.55f,0.0f,0.5f,/*p i d*/\
+//	0,0,0,\
+//	100,100,100,\
+//	0,20,0,0,0,\
+//	&PID_Calc,&PID_Reset,\
+//}
+
+//#define CHASSIS_MOTOR_SPEED_PID_DEFAULT \
+//{\
+//	0,0,{0,0},\
+//	27.0f,0.22f,15.0f,\
+//	0,0,0,\
+//	15000,15000,15000,\
+//	0,12000,0,0,0,\
+//	&PID_Calc,&PID_Reset,\
+//}
+
 #define FRIC_MOTOR_SPEED_PID_DEFAULT \
 {\
 	0,0,{0,0},\
-	30.0f,0.0f,5.0f,\
+	26.0f,0.0f,37.0f,\
 	0,0,0,\
-	15000,15000,15000,\
-	0,10000,0,0,0,\
+	10000,10000,10000,\
+	0,9000,0,0,0,\
 	&PID_Calc,&PID_Reset,\
 }
 
@@ -103,13 +123,13 @@ typedef struct MotorINFO
 
 #define Gimbal_MOTORINFO_Init(rdc,func,ppid,spid)\
 {\
-	ESC_C6x0,0,0,0,rdc,\
+	ESC_6623,0,0,0,rdc,\
 	{0,0,0},{0,0,0},0,0,1,0,0,func,\
 	ppid,spid,CHASSIS_MOTOR_SPEED_PID_DEFAULT,0 \
 }
 
 
-extern MotorINFO CMFL,CMFR,CMBL,CMBR,GMY,GMP,FRICL,FRICR,STIR,STIR;
+extern MotorINFO CMFL,CMFR,CMBL,CMBR,GMY,GMP,FRICL,FRICR,STIR,GATE;
 extern MotorINFO *can1[8],*can2[8];
 extern uint8_t GMYReseted,GMPReseted;
 

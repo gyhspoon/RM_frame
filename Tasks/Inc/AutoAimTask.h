@@ -72,7 +72,7 @@ void AutoAimUartRxCpltCallback(void);
 void AutoAimCallback(void);
 void CANTxINFO(void);
 void EnemyINFOProcess(void);
-float PredictDeltaAngle(void);
+void AutoAimTrackYaw(void);
 void AutoAimNormal(void);
 void AutoAimBuff(void);
 void AutoAimGMCTRL(void);

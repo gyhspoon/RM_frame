@@ -15,7 +15,9 @@
 #include <math.h>
 #include "mpu6500_reg.h"
 #include "spi.h"
+#include "kalman_filter.h"
 
+//#define USE_KALMAN_FILTER
 #define BOARD_DOWN (1)   
 //#define IST8310
 #define MPU_HSPI hspi5
@@ -43,6 +45,32 @@ uint8_t               mpu_buff[14];                          /* buffer to save i
 uint8_t               ist_buff[6];                           /* buffer to save IST8310 raw data */
 mpu_data_t            mpu_data;
 imu_t                 imu={0};
+kalman_filter_init_t imu_yaw_kalman_filter_para = {
+  .P_data = {2, 0, 0, 2},
+  .A_data = {1, 0, 0, 1},
+  .H_data = {1, 0, 0, 1},
+  .Q_data = {1, 0, 0, 1},
+  .R_data = {2000, 0, 0, 2000}
+};
+kalman_filter_init_t imu_pitch_kalman_filter_para = 
+{
+  .P_data = {2, 0, 0, 2},
+  .A_data = {1, 0, 0, 1},
+  .H_data = {1, 0, 0, 1},
+  .Q_data = {1, 0, 0, 1},
+  .R_data = {2000, 0, 0, 2000}
+};
+kalman_filter_init_t imu_roll_kalman_filter_para = 
+{
+  .P_data = {2, 0, 0, 2},
+  .A_data = {1, 0, 0, 1},
+  .H_data = {1, 0, 0, 1},
+  .Q_data = {1, 0, 0, 1},
+  .R_data = {2000, 0, 0, 2000}
+};
+kalman_filter_t imu_yaw_kalman_filter;
+kalman_filter_t imu_pitch_kalman_filter;
+kalman_filter_t imu_roll_kalman_filter;
 
 /**
   * @brief  fast inverse square-root, to calculate 1/Sqrt(x)
@@ -311,8 +339,7 @@ void mpu_get_data()
     imu.temp = 21 + mpu_data.temp / 333.87f;
 	  /* 2000dps -> rad/s */
 	  imu.wx   = mpu_data.gx / 16.384f / 57.3f; 
-    imu.wy   = mpu_data.gy / 16.384f / 57.3f - 0.015f; 
-//		imu.wy   = mpu_data.gy / 16.384f / 57.3f; 
+    imu.wy   = mpu_data.gy / 16.384f / 57.3f; 
     imu.wz   = mpu_data.gz / 16.384f / 57.3f;
 }
 
@@ -374,8 +401,15 @@ uint8_t mpu_device_init(void)
 	mpu_set_gyro_fsr(3); 		
 	mpu_set_accel_fsr(2);
 
+	#ifdef USE_KALMAN_FILTER
+	kalman_filter_init(&imu_yaw_kalman_filter, &imu_yaw_kalman_filter_para);
+  kalman_filter_init(&imu_pitch_kalman_filter, &imu_pitch_kalman_filter_para);
+	kalman_filter_init(&imu_roll_kalman_filter, &imu_roll_kalman_filter_para);
+	#endif
+	
 	ist8310_init();
 	mpu_offset_call();
+	
 	imu.InitFinish = 1;
 	return 0;
 }
@@ -691,4 +725,38 @@ void imu_attitude_update(void)
 	imu.pit = -asin(-2*q1*q3 + 2*q0*q2)* 57.3;   
 	/* roll   -pi----pi  */	
 	imu.rol =  atan2(2*q2*q3 + 2*q0*q1, -2*q1*q1 - 2*q2*q2 + 1)* 57.3;
+	#ifdef USE_KALMAN_FILTER
+	imu_data_kalman_filter();
+	#endif
+}
+
+void imu_data_kalman_filter(void)
+{
+	#ifdef USE_KALMAN_FILTER
+	static float imu_yaw_angle_raw;
+	static float imu_pitch_angle_raw;
+	static float imu_roll_angle_raw;
+	static float imu_wx_raw;
+	static float imu_wy_raw;
+	static float imu_wz_raw;
+
+	mat_init(&imu_yaw_kalman_filter.Q,2,2, imu_yaw_kalman_filter_para.Q_data);
+	mat_init(&imu_yaw_kalman_filter.R,2,2, imu_yaw_kalman_filter_para.R_data);
+	
+	imu_yaw_angle_raw = imu.yaw;
+	imu_pitch_angle_raw = imu.pit;
+	imu_roll_angle_raw = imu.rol;
+	imu_wx_raw = imu.wx;
+	imu_wy_raw = imu.wy;
+	imu_wz_raw = imu.wz;
+	
+	//kalman output  0:angle  1:speed
+	float *imu_yaw_kf_result   = kalman_filter_calc(&imu_yaw_kalman_filter,   imu_yaw_angle_raw,   imu_wz_raw);
+	float *imu_pitch_kf_result = kalman_filter_calc(&imu_pitch_kalman_filter, imu_pitch_angle_raw, imu_wy_raw);
+	float *imu_roll_kf_result  = kalman_filter_calc(&imu_roll_kalman_filter,  imu_roll_angle_raw,  imu_wx_raw);
+	
+	imu.yaw = imu_yaw_kf_result[0];
+	imu.pit = imu_pitch_kf_result[0];
+	imu.rol = imu_roll_kf_result[0];
+	#endif
 }

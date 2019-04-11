@@ -133,17 +133,12 @@ int main(void)
   MX_TIM3_Init();
 
   /* USER CODE BEGIN 2 */
-	/*****陀螺仪初始化*****/
-	mpu_device_init();
-	//init_quaternion();
-	/*****陀螺仪初始化结束*****/
-	MX_IWDG_Init();							//Cube配置完记得注释掉上面自动生成的看门狗初始化函数
-	//24V直流电源配置
-	ENABLE_DC24V_2();
-	ENABLE_DC24V_3();
-	DISABLE_DC24V_4();
-	ENABLE_DC24V_5();
 	//各模块初始化
+	#ifdef FRIC_PWM_MODE//临时使用，后续不需要
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
+	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_2,800);
+	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_3,800);
+	#endif /*FRIC_PWM_MODE*/
 	InitRemoteControl();
 	Motor_ID_Setting();
 	for(int i=0;i<8;i++) {InitMotor(can1[i]);InitMotor(can2[i]);}
@@ -151,9 +146,14 @@ int main(void)
 	InitCanReception();
 	//InitGyroUart();
 	InitJudgeUart();
+	/*****陀螺仪初始化*****/
+	mpu_device_init();
+	//init_quaternion();
+	/*****陀螺仪初始化结束*****/
 	#ifdef USE_AUTOAIM
 	InitAutoAim();
 	#endif
+	MX_IWDG_Init();							//Cube配置完记得注释掉上面自动生成的看门狗初始化函数
 	#ifdef DEBUG_MODE
 	ctrlUartInit();
 	//时间中断

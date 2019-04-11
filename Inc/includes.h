@@ -14,13 +14,13 @@
 
 #define HERO_MAIN
 
-#define NO_RC_MODE
+//#define NO_RC_MODE
 #define USE_AUTOAIM
 #define USE_IMU
 #define USE_CHASSIS_FOLLOW
 #define USE_HEAT_LIMIT_HERO_MAIN
-//#define USE_POWERLIMITATION
-//#define USE_CHASSIS_ADJUST
+#define USE_POWERLIMITATION
+#define USE_CHASSIS_ADJUST
 //#define AUTOAIM_TEST
 
 #define CAN11
@@ -56,7 +56,7 @@
 #include "PowerLimitationTask.h"
 #include "GyroReadTask.h"
 #include "bsp_imu.h"
-//#include "kalman_filter.h"
+#include "kalman_filter.h"
 
 
 extern int16_t global_catch;		//用于检测一个其他文档里，不值得设置全局变量，但是临时需要读取的数据

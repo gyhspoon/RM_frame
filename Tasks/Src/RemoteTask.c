@@ -76,16 +76,6 @@ void RemoteDataProcess(uint8_t *pData)
 											 ((int16_t)pData[4] << 10)) & 0x07FF;
 	RC_CtrlData.rc.ch3 = (((int16_t)pData[4] >> 1) | ((int16_t)pData[5]<<7)) & 0x07FF;
 	
-	//设置遥控器拨杆死区
-	if(RC_CtrlData.rc.ch0 <= 5 && RC_CtrlData.rc.ch0 >= -5)
-    RC_CtrlData.rc.ch0 = 0;
-	if(RC_CtrlData.rc.ch1 <= 5 && RC_CtrlData.rc.ch1 >= -5)
-    RC_CtrlData.rc.ch1 = 0;
-  if(RC_CtrlData.rc.ch2 <= 5 && RC_CtrlData.rc.ch2 >= -5)
-    RC_CtrlData.rc.ch2 = 0;
-  if(RC_CtrlData.rc.ch3 <= 5 && RC_CtrlData.rc.ch3 >= -5)
-    RC_CtrlData.rc.ch3 = 0;
-	
 	//16位，只看最低两位
 	RC_CtrlData.rc.s1 = ((pData[5] >> 4) & 0x000C) >> 2;
 	RC_CtrlData.rc.s2 = ((pData[5] >> 4) & 0x0003);
@@ -111,7 +101,7 @@ void RemoteDataProcess(uint8_t *pData)
 	else if(RC_CtrlData.rc.s1 == 3) functionmode = MIDDLE_POS; 
 	else functionmode = LOWER_POS;
 	
-	//左上角拨杆状态（RC_CtrlData.rc.s1）获取
+	///左上角拨杆状态（RC_CtrlData.rc.s1）获取
 	//用于遥控器发射控制
 	GetRemoteSwitchAction(&g_switch1, RC_CtrlData.rc.s1);
 	
