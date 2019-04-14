@@ -59,14 +59,14 @@
 
 #ifdef HERO_MAIN
 
-//#define MAXHP1 300
-//#define MAXHP2 500
-//#define MAXHP3 700
+#define MAXHP1 300
+#define MAXHP2 500
+#define MAXHP3 700
 
 //**heat limitation test**//
-#define MAXHP1 2000
-#define MAXHP2 3000
-#define MAXHP3 4000
+//#define MAXHP1 2000
+//#define MAXHP2 3000
+//#define MAXHP3 4000
 //************************//
 
 #define COOLDOWN01 40
@@ -81,7 +81,7 @@
 #define COOLDOWN12 40
 #define COOLDOWN13 60
 
-#define MAXHEAT11 80
+#define MAXHEAT11 150
 #define MAXHEAT12 250
 #define MAXHEAT13 400
 

@@ -260,7 +260,7 @@ void controlLoop()
 		#endif
 		
 		OptionalFunction();
-
+		
 		#ifdef CAN11
 		setCAN11();
 		#endif
@@ -331,7 +331,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				if (counter == 10) 
 				{
 					tx_free = 0;
-					Send_User_Data(); 
+//					Send_User_Data(); 
+					Referee_Transmit_UserData();
 					counter = 0;
 				}
 				else counter++;				

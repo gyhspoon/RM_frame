@@ -31,7 +31,10 @@
 #define RECHARGE_CURR_MAX       (3.0)
 #define RELEASE_CURR_MAX        (3.0)
 #define RELEASE_POW_RATE        (2.0)//1.3
-#define RECHARGE_POW_RATE       ((PowerHeatData.chassisPower > RECHARGE_POWER_MAX)?\
+//#define RECHARGE_POW_RATE       ((PowerHeatData.chassisPower > RECHARGE_POWER_MAX)?\
+//                                ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-0.8) + 0.8):\
+//                                ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-1.0) + 1.0))
+#define RECHARGE_POW_RATE       ((PowerHeat.chassis_power > RECHARGE_POWER_MAX)?\
                                 ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-0.8) + 0.8):\
                                 ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-1.0) + 1.0))
 #define INPUT_PWM_PERCENT_MAX   (100)
@@ -59,15 +62,23 @@
 #define FUNC__Cap_Set_Input_Percent(rate)   (input_pwm_cmp  = PWM_CMP_MAX*rate/100)
 
 #ifdef CAP_USE_CURR
+//#define FUNC__RECAL_INPUT_PWM(rate)       FUNC__ADD_INPUT_PWM_PERCENT(rate*CAL_RECHARGE(RECHARGE_POWER_MAX, \
+//                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+//#define FUNC__RECAL_OUTPUT_PWM(rate)      FUNC__ADD_OUTPUT_PWM_PERCENT(-rate*CAL_RELEASE(RELEASE_POWER_MAX, \
+//                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeatData.chassisPowerBuffer) / 2));
 #define FUNC__RECAL_INPUT_PWM(rate)       FUNC__ADD_INPUT_PWM_PERCENT(rate*CAL_RECHARGE(RECHARGE_POWER_MAX, \
-                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeat.chassis_power_buffer) / 2));
 #define FUNC__RECAL_OUTPUT_PWM(rate)      FUNC__ADD_OUTPUT_PWM_PERCENT(-rate*CAL_RELEASE(RELEASE_POWER_MAX, \
-                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeat.chassis_power_buffer) / 2));
 #else
+//#define FUNC__RECAL_INPUT_PWM(rate)       FUNC__ADD_INPUT_PWM_PERCENT(rate*CAL_RECHARGE(RECHARGE_POWER_MAX, \
+//                                              PowerHeatData.chassisPower + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+//#define FUNC__RECAL_OUTPUT_PWM(rate)      FUNC__ADD_OUTPUT_PWM_PERCENT(-rate*CAL_RELEASE(RELEASE_POWER_MAX, \
+//                                              PowerHeatData.chassisPower + (60 - PowerHeatData.chassisPowerBuffer) / 2));
 #define FUNC__RECAL_INPUT_PWM(rate)       FUNC__ADD_INPUT_PWM_PERCENT(rate*CAL_RECHARGE(RECHARGE_POWER_MAX, \
-                                              PowerHeatData.chassisPower + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+                                              PowerHeat.chassis_power + (60 - PowerHeat.chassis_power_buffer) / 2));
 #define FUNC__RECAL_OUTPUT_PWM(rate)      FUNC__ADD_OUTPUT_PWM_PERCENT(-rate*CAL_RELEASE(RELEASE_POWER_MAX, \
-                                              PowerHeatData.chassisPower + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+                                              PowerHeat.chassis_power + (60 - PowerHeat.chassis_power_buffer) / 2));
 #endif /* CAP_USE_CURR */
 
 #define CAL_RELEASE(max, x) (((max)>(x))?(pow((max)-(x), RELEASE_POW_RATE)):(-pow((x)-(max), RELEASE_POW_RATE)))
@@ -79,7 +90,8 @@ static int16_t ADC_val[ADC_CHANNALS];
 static int32_t input_pwm_cmp = 0;
 static int32_t output_pwm_cmp = 0;
 static int16_t recharge_cnt = 0;
-static int16_t release_cnt = 0;
+//static int16_t release_cnt = 0;
+int16_t release_cnt = 0;
 static int32_t output_pwm_cmp_max = 0;
 static cap_state CapState = CAP_STATE_STOP;
 CapControl_t Control_SuperCap = { 0,0 };
@@ -114,7 +126,7 @@ void Cap_Run(void) {
 	
 	Cap_Ctr();
 	Cap_State();
-	user_data.mask = 0xC0 | ((1 << ((int)(((VAL__CAP_VOLTAGE - RELEASE_VOLTAGE_MIN) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN)) * 6 + 1))) - 1);
+//	user_data.mask = 0xC0 | ((1 << ((int)(((VAL__CAP_VOLTAGE - RELEASE_VOLTAGE_MIN) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN)) * 6 + 1))) - 1);
 }
 
 void Cap_State_Switch(cap_state State) {
@@ -195,8 +207,10 @@ static void Cap_Ctr_STOP() {
 	Control_SuperCap.P_voltage = 100*Cap_Get_Power_Voltage();
 	Control_SuperCap.P_Power = 100*Cap_Get_Power_Voltage()*Cap_Get_Power_CURR();*/
     if(++cnt >=5 && ncnt < DEBUG_HITS){
-      cps[0][ncnt] = PowerHeatData.chassisPower * 100;
-      cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+//      cps[0][ncnt] = PowerHeatData.chassisPower * 100;
+//      cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+			cps[0][ncnt] = PowerHeat.chassis_power * 100;
+      cps[1][ncnt] = PowerHeat.chassis_power_buffer  * 100;
       cps[2][ncnt] = Cap_Get_Power_Voltage()*Cap_Get_Power_CURR()*100;
       cps[3][ncnt++] = VAL__INPUT_PWM_PERCENT * 100;
       cnt = 0;
@@ -219,8 +233,10 @@ static void Cap_Ctr_RECHARGE() {
 	Control_SuperCap.P_voltage = 100*Cap_Get_Power_Voltage();
 	Control_SuperCap.P_Power = 100*Cap_Get_Power_Voltage()*Cap_Get_Power_CURR();*/
     if(++cnt >=5 && ncnt < DEBUG_HITS){
-      cps[0][ncnt] = PowerHeatData.chassisPower * 100;
-      cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+//      cps[0][ncnt] = PowerHeatData.chassisPower * 100;
+//      cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+			cps[0][ncnt] = PowerHeat.chassis_power * 100;
+      cps[1][ncnt] = PowerHeat.chassis_power_buffer  * 100;
       cps[2][ncnt] = Cap_Get_Power_Voltage()*Cap_Get_Power_CURR()*100;
       cps[3][ncnt++] = VAL__INPUT_PWM_PERCENT * 100;
       cnt = 0;
@@ -252,8 +268,10 @@ static void Cap_Ctr_RELEASE() {
 
 #ifdef CAP_DEBUG
     if(++cnt>=5 && ncnt<DEBUG_HITS){
-      cps[0][ncnt] = PowerHeatData.chassisPower * 100;
-      cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+//      cps[0][ncnt] = PowerHeatData.chassisPower * 100;
+//      cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+			cps[0][ncnt] = PowerHeat.chassis_power * 100;
+      cps[1][ncnt] = PowerHeat.chassis_power_buffer  * 100;
       cps[2][ncnt] = Cap_Get_Power_Voltage()*Cap_Get_Power_CURR()*100;
       cps[3][ncnt++] = VAL__OUTPUT_PWM_PERCENT * 100;
       cnt = 0;
@@ -286,7 +304,8 @@ static void Cap_Ctr_RELEASE() {
   * @retval None
   */
 void Cap_Ctr() { // called with period of 2 ms
-	if (RobotState.remainHP < 1 || WorkState == STOP_STATE) {
+//	if (RobotState.remainHP < 1 || WorkState == STOP_STATE) {
+	if (GameRobotState.remain_HP < 1 || WorkState == STOP_STATE) {
 		Cap_State_Switch(CAP_STATE_STOP);
 	}
 	else {

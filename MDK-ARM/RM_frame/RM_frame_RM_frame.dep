@@ -1,8 +1,8 @@
 Dependencies for Project 'RM_frame', Target 'RM_frame': (DO NOT MODIFY !)
-F (..\Inc\includes.h)(0x5CA6915E)()
+F (..\Inc\includes.h)(0x5CB0E362)()
 F (..\Tasks\Inc\AuxDevice.h)(0x5C713CF9)()
-F (..\Tasks\Src\FunctionTask.c)(0x5CA6188D)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\functiontask.o --omf_browse .\rm_frame\functiontask.crf --depend .\rm_frame\functiontask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\FunctionTask.c)(0x5CB02F08)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\functiontask.o --omf_browse .\rm_frame\functiontask.crf --depend .\rm_frame\functiontask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -49,16 +49,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -69,8 +69,8 @@ I (D:\keil mdk\ARM\ARMCC\include\stdlib.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\MotorTask.c)(0x5CA826B4)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\motortask.o --omf_browse .\rm_frame\motortask.crf --depend .\rm_frame\motortask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\MotorTask.c)(0x5CB0E648)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\motortask.o --omf_browse .\rm_frame\motortask.crf --depend .\rm_frame\motortask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -117,16 +117,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -137,8 +137,8 @@ I (D:\keil mdk\ARM\ARMCC\include\stdlib.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\ControlTask.c)(0x5CA23003)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\controltask.o --omf_browse .\rm_frame\controltask.crf --depend .\rm_frame\controltask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\ControlTask.c)(0x5CB0B1B3)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\controltask.o --omf_browse .\rm_frame\controltask.crf --depend .\rm_frame\controltask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -185,16 +185,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -205,8 +205,8 @@ I (D:\keil mdk\ARM\ARMCC\include\stdlib.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\RemoteTask.c)(0x5C723E07)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\remotetask.o --omf_browse .\rm_frame\remotetask.crf --depend .\rm_frame\remotetask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\RemoteTask.c)(0x5CAF4B23)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\remotetask.o --omf_browse .\rm_frame\remotetask.crf --depend .\rm_frame\remotetask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -253,16 +253,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -273,8 +273,8 @@ I (D:\keil mdk\ARM\ARMCC\include\stdlib.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\CANTask.c)(0x5C827F36)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\cantask.o --omf_browse .\rm_frame\cantask.crf --depend .\rm_frame\cantask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\CANTask.c)(0x5CB04B56)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\cantask.o --omf_browse .\rm_frame\cantask.crf --depend .\rm_frame\cantask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -321,16 +321,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -341,8 +341,8 @@ I (D:\keil mdk\ARM\ARMCC\include\stdlib.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\JudgeTask.c)(0x5C7B3851)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\judgetask.o --omf_browse .\rm_frame\judgetask.crf --depend .\rm_frame\judgetask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\JudgeTask.c)(0x5CAF587B)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\judgetask.o --omf_browse .\rm_frame\judgetask.crf --depend .\rm_frame\judgetask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -389,16 +389,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -411,7 +411,7 @@ I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
 I (../Tasks/Inc/offical_Judge_Handler.h)(0x5C6F695D)
 F (..\Tasks\Src\UpperTask.c)(0x5C793850)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\uppertask.o --omf_browse .\rm_frame\uppertask.crf --depend .\rm_frame\uppertask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -458,16 +458,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -478,8 +478,8 @@ I (D:\keil mdk\ARM\ARMCC\include\stdlib.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\AutoAimTask.c)(0x5CA4F5DC)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\autoaimtask.o --omf_browse .\rm_frame\autoaimtask.crf --depend .\rm_frame\autoaimtask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\AutoAimTask.c)(0x5CB04733)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\autoaimtask.o --omf_browse .\rm_frame\autoaimtask.crf --depend .\rm_frame\autoaimtask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -526,16 +526,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -547,7 +547,7 @@ I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
 F (..\Tasks\Src\CapControlTask.c)(0x5C6F695D)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\capcontroltask.o --omf_browse .\rm_frame\capcontroltask.crf --depend .\rm_frame\capcontroltask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -594,16 +594,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -614,8 +614,8 @@ I (D:\keil mdk\ARM\ARMCC\include\stdlib.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\PowerLimitationTask.c)(0x5C727EF4)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\powerlimitationtask.o --omf_browse .\rm_frame\powerlimitationtask.crf --depend .\rm_frame\powerlimitationtask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+F (..\Tasks\Src\PowerLimitationTask.c)(0x5CAF50CE)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\powerlimitationtask.o --omf_browse .\rm_frame\powerlimitationtask.crf --depend .\rm_frame\powerlimitationtask.d)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -662,16 +662,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -683,7 +683,7 @@ I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
 F (..\Tasks\Src\GyroReadTask.c)(0x5C6F695D)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\gyroreadtask.o --omf_browse .\rm_frame\gyroreadtask.crf --depend .\rm_frame\gyroreadtask.d)
-I (../Inc/includes.h)(0x5CA6915E)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -730,16 +730,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -751,7 +751,7 @@ I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
 F (..\Tasks\Src\pid_regulator.c)(0x5C938EA6)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\pid_regulator.o --omf_browse .\rm_frame\pid_regulator.crf --depend .\rm_frame\pid_regulator.d)
-I (../Inc/includes.h)(0x5CA6915E)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -798,16 +798,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -867,10 +867,10 @@ I (../Tasks/Inc/mpu6500_reg.h)(0x5C6F695D)
 I (../Inc/spi.h)(0x5C937753)
 I (../Tasks/Inc/kalman_filter.h)(0x5CA03AEB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
-F (..\Tasks\Src\Cap2ControlTask.c)(0x5C827EB1)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\cap2controltask.o --omf_browse .\rm_frame\cap2controltask.crf --depend .\rm_frame\cap2controltask.d)
+F (..\Tasks\Src\Cap2ControlTask.c)(0x5CAF64C2)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\cap2controltask.o --omf_browse .\rm_frame\cap2controltask.crf --depend .\rm_frame\cap2controltask.d)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
-I (../Inc/includes.h)(0x5CA6915E)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -916,16 +916,16 @@ I (../Inc/iwdg.h)(0x5C937753)
 I (../Inc/adc.h)(0x5C937752)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -975,7 +975,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5BC297CB)
 I (../Drivers/CMSIS/Include/arm_math.h)(0x5CA1D950)
 I (D:\keil mdk\ARM\ARMCC\include\string.h)(0x599EDB3C)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
-F (../Src/main.c)(0x5CA4E5A3)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\main.o --omf_browse .\rm_frame\main.crf --depend .\rm_frame\main.d)
+F (../Src/main.c)(0x5CAF4B23)(-c --cpu Cortex-M4.fp -D__MICROLIB -g -O2 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Tasks/Inc -I ../Drivers/CMSIS/Include --C99-I.\RTE\_RM_frame-I"D:\keil mdk\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include"-I"D:\keil mdk\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include"-D__UVISION_VERSION="526" -D_RTE_ -DSTM32F427xx -DUSE_HAL_DRIVER -DSTM32F427xx -DARM_MATH_CM4 -D__FPU_PRESENT --C99-o .\rm_frame\main.o --omf_browse .\rm_frame\main.crf --depend .\rm_frame\main.d)
 I (../Inc/main.h)(0x5C937754)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5C937754)
@@ -1019,20 +1019,20 @@ I (../Inc/spi.h)(0x5C937753)
 I (../Inc/tim.h)(0x5C937753)
 I (../Inc/usart.h)(0x5C937754)
 I (../Inc/gpio.h)(0x5C937743)
-I (../Inc/includes.h)(0x5CA6915E)
+I (../Inc/includes.h)(0x5CB0E362)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)
@@ -1382,7 +1382,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x5BC297CB)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x5BC297CB)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5BC297CB)
 I (../Inc/stm32f4xx_it.h)(0x5C937754)
-I (../Inc/includes.h)(0x5CA6915E)
+I (../Inc/includes.h)(0x5CB0E362)
 I (../Inc/can.h)(0x5C937752)
 I (../Inc/dma.h)(0x5C937753)
 I (../Inc/spi.h)(0x5C937753)
@@ -1394,16 +1394,16 @@ I (../Inc/adc.h)(0x5C937752)
 I (D:\keil mdk\ARM\ARMCC\include\math.h)(0x5CA1D923)
 I (../Tasks/Inc/AuxDevice.h)(0x5C713CF9)
 I (../Tasks/Inc/RemoteTask.h)(0x5C6F695D)
-I (../Tasks/Inc/FunctionTask.h)(0x5C812335)
+I (../Tasks/Inc/FunctionTask.h)(0x5CB0B150)
 I (../Tasks/Inc/pid_regulator.h)(0x5C938E75)
 I (../Tasks/Inc/CANTask.h)(0x5C6F695D)
-I (../Tasks/Inc/MotorTask.h)(0x5C8A749A)
+I (../Tasks/Inc/MotorTask.h)(0x5CB09F21)
 I (../Tasks/Inc/ControlTask.h)(0x5C6F695D)
 I (../Tasks/Inc/drivers_ramp.h)(0x5C6F695D)
 I (../Tasks/Inc/AutoAimTask.h)(0x5CA06239)
-I (../Tasks/Inc/JudgeTask.h)(0x5C7A8829)
+I (../Tasks/Inc/JudgeTask.h)(0x5CAF3CE8)
 I (../Tasks/Inc/UpperTask.h)(0x5C6F695D)
-I (../Tasks/Inc/Cap2ControlTask.h)(0x5C6F695D)
+I (../Tasks/Inc/Cap2ControlTask.h)(0x5CAF64C2)
 I (../Tasks/Inc/PowerLimitationTask.h)(0x5C6F695D)
 I (../Tasks/Inc/GyroReadTask.h)(0x5C6F695D)
 I (../Tasks/Inc/bsp_imu.h)(0x5CA79399)

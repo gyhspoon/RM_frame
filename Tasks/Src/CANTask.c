@@ -126,7 +126,17 @@ void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan){
 					case ESC_6623:
 					{
 						can1[i]->RxMsg6623.angle		 = CanRxGetU16(Can1RxMsg, 0);
-						if(can1[i]==&GMY) can1[i]->RxMsg6623.angle=(can1[i]->RxMsg6623.angle>(4096+GM_YAW_ZERO))?(can1[i]->RxMsg6623.angle-8192):can1[i]->RxMsg6623.angle;
+						if(can1[i]==&GMY)
+						{
+							if(can1[i]->RxMsg6623.angle > (GM_YAW_ZERO + 4096))
+							{
+								can1[i]->RxMsg6623.angle -= 8192;
+							}
+							if(can1[i]->RxMsg6623.angle < (GM_YAW_ZERO - 4096))
+							{
+								can1[i]->RxMsg6623.angle += 8192;
+							}
+						}
 						can1[i]->RxMsg6623.realIntensity = CanRxGetU16(Can1RxMsg, 1);
 						can1[i]->RxMsg6623.giveIntensity = CanRxGetU16(Can1RxMsg, 2);
 					}

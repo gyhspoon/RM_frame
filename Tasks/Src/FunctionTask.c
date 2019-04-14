@@ -37,8 +37,8 @@ uint8_t ChassisTwistState = 0;
 uint8_t cdflag0 = 0;
 uint8_t burst = 0;
 uint16_t allowBullet0 = 0;
-uint16_t FricSpeedLeft = 4500;
-uint16_t FricSpeedRight = 4500;
+uint16_t FricSpeedLeft = 4000;
+uint16_t FricSpeedRight = 4000;
 uint8_t chassis_lock=0;
 
 //³õÊ¼»¯
@@ -137,7 +137,7 @@ void RemoteControlProcess(Remote *rc)
 		
 		if (LastState != WorkState)
 		{
-			Cap_State_Switch(CAP_STATE_STOP);
+			//Cap_State_Switch(CAP_STATE_STOP);
 			if(ShootState)
 			{
 				stirDirection=stirState;
@@ -155,7 +155,7 @@ void RemoteControlProcess(Remote *rc)
 			Cap_State_Switch(CAP_STATE_RELEASE);
 		}
 		
-		if(Cap_Get_Cap_Voltage() > 10)
+		if(Cap_Get_Cap_Voltage() > 10 && release_cnt >= 50)
 		{
 			ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF*1.5f;
 			ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF;
@@ -658,11 +658,11 @@ void ShootOneBullet(void)
 	#ifndef USE_HEAT_LIMIT_HERO_MAIN
 	GATE.TargetAngle -= 170;
 	#else
-	cdflag0 = (JUDGE_State == ONLINE && (maxHeat1 - fakeHeat1) < 40 && burst==0) ? 1 : 0;
+	cdflag0 = (JUDGE_State == ONLINE && (maxHeat1 - fakeHeat1) < 100 && burst==0) ? 1 : 0;
 	if(!cdflag0)
 	{
 		GATE.TargetAngle -= 170;
-		fakeHeat1 += 40;
+		fakeHeat1 += 100;
 		auto_counter_shoot=500;
 	}
 	#endif

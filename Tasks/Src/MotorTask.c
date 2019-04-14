@@ -11,6 +11,8 @@
   */
 #include "includes.h"
 
+//#define USE_GIMBAL_ENCODER
+
 void ControlNM(MotorINFO *id);
 void ControlCM(MotorINFO *id);
 void ControlGMY(MotorINFO *id);
@@ -39,8 +41,8 @@ MotorINFO FRICR = Chassis_MOTORINFO_Init(&ControlCM,FRIC_MOTOR_SPEED_PID_DEFAULT
 //************************************************************************
 //使用云台电机时，请务必确定校准过零点
 MotorINFO GMP  = Gimbal_MOTORINFO_Init(1.0,&ControlGMP,
-									   fw_PID_INIT(0.25,0,0, 	100.0, 100.0, 100.0, 10.0),
-									   fw_PID_INIT(2000,150,0, 	50000.0, 50000.0, 50000.0, 5000.0));
+									   fw_PID_INIT(0.2,0,0, 	100.0, 100.0, 100.0, 10.0),
+									   fw_PID_INIT(2000,100,0, 	50000.0, 50000.0, 50000.0, 5000.0));
 MotorINFO GMY  = Gimbal_MOTORINFO_Init(1.0,&ControlGMY,
 									   fw_PID_INIT(0.3,0,0, 	10.0, 10.0, 10.0, 10.0),
 									   fw_PID_INIT(12000,200,0, 	50000.0, 50000.0, 50000.0, 5000.0));
@@ -119,6 +121,7 @@ void ControlGMY(MotorINFO* id)
 	if(id->s_count == 1)
 	{
 		#ifdef USE_CHASSIS_FOLLOW
+		#ifndef USE_GIMBAL_ENCODER
 		float 	ThisAngle = imu.yaw;
 		static	float		ThisAngleZero = 0;
 		static	uint8_t	ChassisLockRCD = 0;
@@ -128,6 +131,9 @@ void ControlGMY(MotorINFO* id)
 			ChassisLockRCD = chassis_lock;
 		}
 		ThisAngle = (chassis_lock) ? ((float)(GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0f / 8192.0f + ThisAngleZero) : ThisAngle;
+		#else
+		double 	ThisAngle = (double)(GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0f / 8192.0f;
+		#endif
 		#else
 		double 	ThisAngle = (double)(GM_YAW_ZERO - id->RxMsg6623.angle) * 360.0f / 8192.0f;
 		#endif
@@ -180,8 +186,12 @@ void ControlGMP(MotorINFO* id)
 	if(id->s_count == 1)
 	{
 		#ifdef USE_CHASSIS_FOLLOW
+		#ifndef USE_GIMBAL_ENCODER
 		float 	ThisAngle = imu.rol;
 		ThisAngle = (chassis_lock) ? ((float)(GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0f / 8192.0f) : ThisAngle;
+		#else
+		double 	ThisAngle = (double)(GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0f / 8192.0f;
+		#endif
 		#else
 		double 	ThisAngle = (double)(GM_PITCH_ZERO - id->RxMsg6623.angle) * 360.0f / 8192.0f;
 		#endif

@@ -153,184 +153,139 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>CMFL.Intensity,0x0A</ItemText>
+          <ItemText>GMP,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>CMFR.Intensity,0x0A</ItemText>
+          <ItemText>GMY,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>CMBL.Intensity,0x0A</ItemText>
+          <ItemText>Control_SuperCap,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>CMBR.Intensity,0x0A</ItemText>
+          <ItemText>WorkState</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Control_SuperCap.P_Power,0x0A</ItemText>
+          <ItemText>inputmode</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Control_SuperCap.C_voltage,0x0A</ItemText>
+          <ItemText>imu.InitFinish</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>GMP,0x0A</ItemText>
+          <ItemText>isCan11FirstRx</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>GMY,0x0A</ItemText>
+          <ItemText>isCan12FirstRx</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>FricSpeedLeft,0x0A</ItemText>
+          <ItemText>isCan21FirstRx</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>FricSpeedRight,0x0A</ItemText>
+          <ItemText>isCan22FirstRx</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Control_SuperCap,0x0A</ItemText>
+          <ItemText>functionmode</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\RM_frame\../Tasks/Src/MotorTask.c\GMP.positionPID.kp</ItemText>
+          <ItemText>GameRobotState,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\RM_frame\../Tasks/Src/MotorTask.c\GMP.positionPID.ki</ItemText>
+          <ItemText>PowerHeat,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\RM_frame\../Tasks/Src/MotorTask.c\GMP.positionPID.kd</ItemText>
+          <ItemText>BuffMask,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\RM_frame\../Tasks/Src/MotorTask.c\GMP.speedPID.kp</ItemText>
+          <ItemText>ShootData,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\RM_frame\../Tasks/Src/MotorTask.c\GMP.speedPID.ki</ItemText>
+          <ItemText>Control_SuperCap,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\RM_frame\../Tasks/Src/MotorTask.c\GMP.speedPID.kd</ItemText>
+          <ItemText>release_cnt</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>FRICL,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>can1_update</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>can1_type</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
           <count>0</count>
           <WinNumber>2</WinNumber>
-          <ItemText>FRICL.Intensity,0x0A</ItemText>
+          <ItemText>enemy_scope.z</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>FRICR.Intensity,0x0A</ItemText>
+          <ItemText>receive_rcd,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>FRICL.TargetAngle</ItemText>
+          <ItemText>aim.yaw</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>FRICL.RealAngle</ItemText>
+          <ItemText>aim.pitch</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>2</WinNumber>
-          <ItemText>FRICL</ItemText>
+          <ItemText>fakeHeat1</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>2</WinNumber>
-          <ItemText>CMFL</ItemText>
+          <ItemText>cooldown1,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>2</WinNumber>
-          <ItemText>MouseLMode</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>MouseRMode</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>CMFR</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>enemy_scope.x</ItemText>
-        </Ww>
-        <Ww>
-          <count>10</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>enemy_scope.y</ItemText>
-        </Ww>
-        <Ww>
-          <count>11</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>enemy_scope.z</ItemText>
-        </Ww>
-        <Ww>
-          <count>12</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>receive_rcd,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>13</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>receive_cnt,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>14</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>imu,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>15</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>aim.yaw</ItemText>
-        </Ww>
-        <Ww>
-          <count>16</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>aim.pitch</ItemText>
-        </Ww>
-        <Ww>
-          <count>17</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>track_cnt,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>18</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>STIR</ItemText>
+          <ItemText>maxHeat1,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow4>

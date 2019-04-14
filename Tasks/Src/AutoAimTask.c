@@ -17,7 +17,7 @@
 #ifdef	USE_AUTOAIM
 
 #define USE_AUTOAIM_ANGLE
-#define USE_KALMAN_FILTER
+//#define USE_KALMAN_FILTER
 
 //*****************************************声明变量******************************************//
 
@@ -65,7 +65,7 @@ void InitAutoAim()
 	//角度变量初始化（不需要修改）
 	aim.yaw=0;						aim.pitch=0;
 	aim_output.yaw=0;			aim_output.pitch=0;
-	adjust.yaw=-0.3f;			adjust.pitch=0.9f;
+	adjust.yaw=-0.5f;			adjust.pitch=0.9f;
 	
 	//设置坐标初始值（根据不同安装情况调整这3个参数）
 	scope_gun.x=0;		scope_gun.y=-10;		scope_gun.z=0;
@@ -215,13 +215,13 @@ void EnemyINFOProcess()
   mat_init(&yaw_kalman_filter.R,2,2, yaw_kalman_filter_para.R_data);
 	
 	archive_index++;
-  if (archive_index > 99) //system delay ms
+  if (archive_index > 19) //system delay ms
 		archive_index = 0;
   gimbal_attitude_archive[archive_index][0] = imu.yaw;
   gimbal_attitude_archive[archive_index][2] = -imu.wz;
-  get_index = archive_index + 50;
-  if( get_index > 99)
-    get_index -= 100;
+  get_index = archive_index + 10;
+  if( get_index > 19)
+    get_index -= 20;
 //	get_index = archive_index;
 	static float yaw_angle_raw;
 	static float yaw_speed_raw;
@@ -237,7 +237,7 @@ void EnemyINFOProcess()
 
 void AutoAimTrackYaw()
 {
-	if(aim.yaw * aim_rcd.yaw > 0) track_cnt++;
+	if(aim.yaw * aim_rcd.yaw > 0 && aim_mode == 1) track_cnt++;
 	else track_cnt = 0;
 	if(!find_enemy) track_cnt = 0;
 	MINMAX(track_cnt, 0, 1000);

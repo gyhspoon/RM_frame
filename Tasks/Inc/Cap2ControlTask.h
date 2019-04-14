@@ -72,4 +72,6 @@ cap_state Cap_Get_Cap_State(void);
 
 void LED_Show_SuperCap_Voltage(uint8_t flag);
 
+extern int16_t release_cnt;
+
 #endif /* __CAP_2_CONTROL_TASK__ */

@@ -45,10 +45,14 @@ void PowerLimitation(void)
 	}
 	
 	//·Â¹ðµç²ßÂÔ
-	else if(PowerHeatData.chassisPowerBuffer-((PowerHeatData.chassisPower-80)>0?(PowerHeatData.chassisPower-80):0)*0.5f < 10.0f)
+//	else if(PowerHeatData.chassisPowerBuffer-((PowerHeatData.chassisPower-80)>0?(PowerHeatData.chassisPower-80):0)*0.5f < 10.0f)
+//	{
+//		//CM_current_max = 2730;
+//		float realPowerBuffer = PowerHeatData.chassisPowerBuffer;
+	else if(PowerHeat.chassis_power_buffer-((PowerHeat.chassis_power-80)>0?(PowerHeat.chassis_power-80):0)*0.5f < 10.0f)
 	{
 		//CM_current_max = 2730;
-		float realPowerBuffer = PowerHeatData.chassisPowerBuffer;
+		float realPowerBuffer = PowerHeat.chassis_power_buffer;
 		//float realPower = PowerHeatData.chassisPower;
 		//PowerLimitationPID.feedback = realPower;
 		//PowerLimitationPID.target = 70;
