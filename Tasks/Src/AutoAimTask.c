@@ -237,9 +237,12 @@ void EnemyINFOProcess()
 
 void AutoAimTrackYaw()
 {
-	if(aim.yaw * aim_rcd.yaw > 0 && aim_mode == 1) track_cnt++;
-	else track_cnt = 0;
-	if(!find_enemy) track_cnt = 0;
+	if(aim.yaw * aim_rcd.yaw > 0 && aim_mode == 1)
+		track_cnt++;
+	else
+		track_cnt = 0;
+	if(!find_enemy)
+		track_cnt = 0;
 	MINMAX(track_cnt, 0, 1000);
 	
 	//aim_output.yaw = (aim.yaw+aim_rcd.yaw)/4;
@@ -255,8 +258,10 @@ void AutoAimNormal()
 {
 	if(find_enemy)
 	{
-		GMY.TargetAngle += aim_output.yaw;
-		GMP.TargetAngle += aim_output.pitch;
+//		GMY.TargetAngle += aim_output.yaw;
+//		GMP.TargetAngle += aim_output.pitch;
+		GMY.TargetAngle = GMY.RealAngle + aim.yaw;
+		GMP.TargetAngle = GMP.RealAngle + aim.pitch;
 		aim_cnt++;
 		find_enemy=0;
 		aim_rcd.yaw=aim.yaw;

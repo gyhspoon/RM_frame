@@ -302,7 +302,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//自瞄数据解算
 //		static int aim_cnt = 0;
 //		aim_cnt++;
-//		if(aim_cnt == 10)
+//		if(aim_cnt == 3)
 //		{
 //			EnemyINFOProcess();
 //			aim_cnt=0;

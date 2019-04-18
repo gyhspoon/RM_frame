@@ -314,18 +314,27 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 			}																																																	/*														*/
 			case CTRL:																																												/*	ctrl: 低速								*/
 			{																																																	/*														*/
-				OnePushF(key->v & KEY_F ,{aim_mode = (aim_mode!=2) ? 2 : 0;});																	/*	ctrl_f: 打符							*/
+				if(key->v & KEY_Z)																																							/*	ctrl_z: 桥头吊射					*/
+				{																																																/*														*/
+					chassis_lock = 1;																																							/*														*/
+					GMP.TargetAngle = SHOOTMODE_PITCH_INIT_BRIDGE;																								/*														*/
+				}																																																/*														*/
 				burst = 0;																																											/*														*/
 				break;																																													/*														*/
 			}																																																	/*														*/
 			case SHIFT:																																												/*	shift: 高速（超级电容）		*/
 			{																																																	/*														*/
 				if(key->v & KEY_B)																																							/*	shift_b：关摩擦轮，关激光	*/
-				{																																																/*	-													*/
-					FRICL.TargetAngle = 0;																																				/*	-													*/
-					FRICR.TargetAngle = 0;																																				/*	-													*/
-					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_RESET);																/*	-													*/
-					ShootState=0;																																									/*	-													*/
+				{																																																/*														*/
+					FRICL.TargetAngle = 0;																																				/*														*/
+					FRICR.TargetAngle = 0;																																				/*														*/
+					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_RESET);																/*														*/
+					ShootState=0;																																									/*														*/
+				}																																																/*														*/
+				if(key->v & KEY_Z)																																							/*	shift_z: 桥洞口吊射				*/
+				{																																																/*														*/
+					chassis_lock = 1;																																							/*														*/
+					GMP.TargetAngle = SHOOTMODE_PITCH_INIT_SUPPLY;																								/*														*/
 				}																																																/*														*/
 				burst = 0;																																											/*														*/
 				break;																																													/*														*/
@@ -333,20 +342,35 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 			case NO_CHANGE:																																										/*	normal										*/
 			{																																																	/*														*/
 				if(key->v & KEY_B)																																							/*	b: 开摩擦轮，开激光				*/
-				{																																																/*	-													*/
-					FRICL.TargetAngle = FricSpeedLeft;																														/*	-													*/
-					FRICR.TargetAngle = -FricSpeedRight;																													/*	-													*/
-					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_SET);																	/*	-													*/
-					ShootState=1;																																									/*	-													*/
+				{																																																/*														*/
+					FRICL.TargetAngle = FricSpeedLeft;																														/*														*/
+					FRICR.TargetAngle = -FricSpeedRight;																													/*														*/
+					HAL_GPIO_WritePin(LASER_GPIO_Port, LASER_Pin, GPIO_PIN_SET);																	/*														*/
+					ShootState=1;																																									/*														*/
 				}																																																/*														*/
 				burst = 0;																																											/*														*/
+				if(key->v & KEY_Q && !(LastKey & KEY_Q)) GMY.TargetAngle -= 90;																	/*	q: 左转90°								*/
+				if(key->v & KEY_E && !(LastKey & KEY_E)) GMY.TargetAngle += 90;																	/*	e: 右转90°								*/
 				if(key->v & KEY_R && !(LastKey & KEY_R)) chassis_lock = (chassis_lock != 1) ? 1 : 0;						/*	r: 底盘锁定/解锁					*/
-				if(key->v & KEY_Q && !(LastKey & KEY_Q)) ChassisTwistState = (ChassisTwistState!=1) ? 1 : 0;		/*	q: 正常扭腰								*/
-				if(key->v & KEY_E && !(LastKey & KEY_E)) ChassisTwistState = (ChassisTwistState!=2) ? 2 : 0;		/*	e: 45度扭腰								*/
+				if(key->v & KEY_X && !(LastKey & KEY_X)) ChassisTwistState = (ChassisTwistState!=1) ? 1 : 0;		/*	x: 正常扭腰								*/
+				if(key->v & KEY_C && !(LastKey & KEY_C)) ChassisTwistState = (ChassisTwistState!=2) ? 2 : 0;		/*	c: 45度扭腰								*/
 				if(key->v & KEY_F) aim_mode = 1;																																/*	f: 按住f自瞄							*/
 				else aim_mode = 0;																																							/*														*/
 			}																																																	/*														*/
 		}																																																		/******************************/
+		//**********************************吊射模式云台微调**************************************
+		if(chassis_lock)
+		{
+			if(key->v & KEY_W)  		//key: w
+				GMP.TargetAngle -= SHOOTMODE_GM_ADJUST_ANGLE;
+			else if(key->v & KEY_S) 	//key: s
+				GMP.TargetAngle += SHOOTMODE_GM_ADJUST_ANGLE;
+			if(key->v & KEY_D)  		//key: d
+				GMY.TargetAngle += SHOOTMODE_GM_ADJUST_ANGLE;
+			else if(key->v & KEY_A) 	//key: a
+				GMY.TargetAngle -= SHOOTMODE_GM_ADJUST_ANGLE;
+		}
+		//****************************************************************************************
 		
 		//*********************************CM Movement Process******************************************
 		if(key->v & KEY_W)  		//key: w
