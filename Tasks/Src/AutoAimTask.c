@@ -17,33 +17,19 @@
 #ifdef	USE_AUTOAIM
 
 #define USE_AUTOAIM_ANGLE
-//#define USE_KALMAN_FILTER
 
 //*****************************************声明变量******************************************//
 
-GMAngle_t aim,aim_rcd,aim_output;															//目标角度
+GMAngle_t aim, aim_rcd, aim_output;														//目标角度
 GMAngle_t adjust;																							//校准发射变量
-Coordinate_t enemy_gun,enemy_scope,scope_gun;									//坐标
-uint8_t Enemy_INFO[8],Tx_INFO[8];															//接收
-uint8_t find_enemy = 0,aim_mode = 0,upper_mode;								//aim_mode用于选择瞄准模式，0为手动瞄准，1为正常自瞄，2为打符，3暂无（吊射？）
+Coordinate_t enemy_gun, enemy_scope, scope_gun;								//坐标
+uint8_t Enemy_INFO[8], Tx_INFO[8];														//接收
+uint8_t find_enemy = 0, aim_mode = 0, upper_mode;							//aim_mode用于选择瞄准模式，0为手动瞄准，1为正常自瞄，2为打符，3暂无（吊射？）
 uint16_t aim_cnt = 0;																					//自瞄分频延时变量
 uint16_t auto_counter_fps = 1000;															//检测帧率
-int16_t receive_cnt = 0,receive_rcd = 0;											//检测上位机信号帧数
+int16_t receive_cnt = 0, receive_rcd = 0;											//检测上位机信号帧数
 int16_t track_cnt = 0;																				//追踪变量
 float delta_wz = 0;																						//相对角速度
-#ifdef USE_KALMAN_FILTER
-kalman_filter_init_t yaw_kalman_filter_para = {
-  .P_data = {2, 0, 0, 2},
-  .A_data = {1, 0.001, 0, 1},
-  .H_data = {1, 0, 0, 1},
-  .Q_data = {1, 0, 0, 1},
-  .R_data = {2000, 0, 0, 5000}
-};
-kalman_filter_t yaw_kalman_filter;
-float gimbal_attitude_archive[120][4];
-uint8_t archive_index = 0;
-uint8_t get_index = 0;
-#endif
 
 //********************************************************************************************//
 
@@ -59,20 +45,16 @@ void InitAutoAim()
 	}
 
 	//坐标变量初始化（不需要修改）
-	enemy_scope.x=0;	enemy_scope.y=0;	enemy_scope.z=200;
-	enemy_gun.x=0;		enemy_gun.y=0;		enemy_gun.z=200;
+	enemy_scope.x = 0;	enemy_scope.y = 0;	enemy_scope.z = 200;
+	enemy_gun.x = 0;		enemy_gun.y = 0;		enemy_gun.z = 200;
 	
 	//角度变量初始化（不需要修改）
-	aim.yaw=0;						aim.pitch=0;
-	aim_output.yaw=0;			aim_output.pitch=0;
-	adjust.yaw=-0.5f;			adjust.pitch=0.9f;
+	aim.yaw = 0;						aim.pitch = 0;
+	aim_output.yaw = 0;			aim_output.pitch = 0;
+	adjust.yaw = -0.3f;			adjust.pitch = 0.9f;
 	
 	//设置坐标初始值（根据不同安装情况调整这3个参数）
-	scope_gun.x=0;		scope_gun.y=-10;		scope_gun.z=0;
-	
-	#ifdef USE_KALMAN_FILTER
-	kalman_filter_init(&yaw_kalman_filter, &yaw_kalman_filter_para);
-	#endif
+	scope_gun.x = 0;		scope_gun.y = -10;		scope_gun.z = 0;
 }
 
 //**************************************************************************//
@@ -154,7 +136,7 @@ void CANTxINFO()
 	hcan1.pTxMsg->Data[4] = (uint8_t)RC_CtrlData.mouse.press_r;
 	hcan1.pTxMsg->Data[5] = (uint8_t)(RC_CtrlData.key.v & 0xff);
 	hcan1.pTxMsg->Data[6] = (uint8_t)((RC_CtrlData.key.v>>8) & 0xff);
-	hcan1.pTxMsg->Data[7] = 0;
+	hcan1.pTxMsg->Data[7] = enemy_scope.z / 300.0f * 255.0f;
 
 	if(can1_update == 1 && can1_type == 3)
 	{
@@ -210,28 +192,7 @@ void EnemyINFOProcess()
 	aim.pitch=atan(enemy_gun.y/enemy_gun.z)/const_pi*180.0+adjust.pitch;
 	#endif
 	
-	#ifdef USE_KALMAN_FILTER
-	mat_init(&yaw_kalman_filter.Q,2,2, yaw_kalman_filter_para.Q_data);
-  mat_init(&yaw_kalman_filter.R,2,2, yaw_kalman_filter_para.R_data);
-	
-	archive_index++;
-  if (archive_index > 19) //system delay ms
-		archive_index = 0;
-  gimbal_attitude_archive[archive_index][0] = imu.yaw;
-  gimbal_attitude_archive[archive_index][2] = -imu.wz;
-  get_index = archive_index + 10;
-  if( get_index > 19)
-    get_index -= 20;
-//	get_index = archive_index;
-	static float yaw_angle_raw;
-	static float yaw_speed_raw;
-	yaw_angle_raw = aim.yaw + imu.yaw;
-	yaw_speed_raw = - imu.wz + (aim.yaw - aim_rcd.yaw) * 1000.0f / (((float)receive_rcd > 40) ? receive_rcd : 40);
-	float *yaw_kf_result = kalman_filter_calc(&yaw_kalman_filter, yaw_angle_raw, yaw_speed_raw);
-	aim_output.yaw = yaw_kf_result[0] - imu.yaw  + yaw_kf_result[1] * 0.3f;
-	#else
 	AutoAimTrackYaw();
-	#endif
 	aim_output.pitch = (aim.pitch+aim_rcd.pitch)/8;
 }
 

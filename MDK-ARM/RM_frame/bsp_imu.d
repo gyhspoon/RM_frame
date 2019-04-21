@@ -47,6 +47,3 @@
 .\rm_frame\bsp_imu.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\bsp_imu.o: ../Tasks/Inc/mpu6500_reg.h
 .\rm_frame\bsp_imu.o: ../Inc/spi.h
-.\rm_frame\bsp_imu.o: ../Tasks/Inc/kalman_filter.h
-.\rm_frame\bsp_imu.o: ../Drivers/CMSIS/Include/arm_math.h
-.\rm_frame\bsp_imu.o: ../Drivers/CMSIS/Include/core_cm4.h

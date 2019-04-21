@@ -46,8 +46,8 @@
 .\rm_frame\autoaimtask.o: ../Inc/gpio.h
 .\rm_frame\autoaimtask.o: ../Inc/iwdg.h
 .\rm_frame\autoaimtask.o: ../Inc/adc.h
-.\rm_frame\autoaimtask.o: ../Inc/dac.h
 .\rm_frame\autoaimtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
+.\rm_frame\autoaimtask.o: ../Inc/dac.h
 .\rm_frame\autoaimtask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\autoaimtask.o: ../Inc/includes.h
 .\rm_frame\autoaimtask.o: ../Tasks/Inc/RemoteTask.h
@@ -69,6 +69,3 @@
 .\rm_frame\autoaimtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\stdbool.h
 .\rm_frame\autoaimtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\stdlib.h
 .\rm_frame\autoaimtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\string.h
-.\rm_frame\autoaimtask.o: ../Tasks/Inc/kalman_filter.h
-.\rm_frame\autoaimtask.o: ../Drivers/CMSIS/Include/arm_math.h
-.\rm_frame\autoaimtask.o: ../Drivers/CMSIS/Include/core_cm4.h

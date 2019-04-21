@@ -30,6 +30,7 @@ void fw_PID_Reset(fw_PID_Regulator_t *pid){
 void fw_PID_Calc(fw_PID_Regulator_t *pid){
 	pid->errorCurr = pid->target - pid->feedback;
 	pid->errorSum += pid->errorCurr - pid->err[pid->SumCount];
+	//pid->errorSum += pid->errorCurr;
 	pid->err[pid->SumCount] = pid->errorCurr;
 	pid->SumCount = (pid->SumCount + 1) % PID_I_CNT;
 	

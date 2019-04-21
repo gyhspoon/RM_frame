@@ -47,8 +47,8 @@ void WorkStateFSM(void)
 		case PREPARE_STATE:				//准备模式
 		{
 			//if (inputmode == STOP) WorkState = STOP_STATE;
-			if(prepare_time < 1000) prepare_time++;	
-			if(prepare_time >= 1000 && imu.InitFinish == 1 && isCan11FirstRx == 1 && isCan12FirstRx == 1 && isCan21FirstRx == 1 && isCan22FirstRx == 1)//imu初始化完成且所有can电机上电完成后进入正常模式
+			if(prepare_time < 500) prepare_time++;	
+			if(prepare_time >= 500 && imu.InitFinish == 1 && isCan11FirstRx == 1 && isCan12FirstRx == 1 && isCan21FirstRx == 1 && isCan22FirstRx == 1)//imu初始化完成且所有can电机上电完成后进入正常模式
 			{
 				//playMusicSuperMario();
 				CMRotatePID.Reset(&CMRotatePID);
@@ -121,37 +121,17 @@ void WorkStateFSM(void)
 			{
 				if((can1[i]==&FRICL || can1[i]==&FRICR)&&(can2[i]==&CMFL || can2[i]==&CMFR || can2[i]==&CMBL || can2[i]==&CMBR))
 				{
-					can1[i]->FirstEnter=1;
-					can1[i]->lastRead=0;
-					can1[i]->RealAngle=0;
-					can1[i]->TargetAngle=0;
-					can1[i]->offical_speedPID.Reset(&(can1[i]->offical_speedPID));
-					(can1[i]->Handle)(can1[i]);
-					can2[i]->FirstEnter=1;
-					can2[i]->lastRead=0;
-					can2[i]->RealAngle=0;
-					can2[i]->TargetAngle=0;
-					can2[i]->offical_speedPID.Reset(&(can1[i]->offical_speedPID));
-					(can2[i]->Handle)(can2[i]);
+					CAN1_SHUTDOWN(i);
+					CAN2_SHUTDOWN(i);
 				}
 				else if(can1[i]==&FRICL || can1[i]==&FRICR)
 				{
-					can1[i]->FirstEnter=1;
-					can1[i]->lastRead=0;
-					can1[i]->RealAngle=0;
-					can1[i]->TargetAngle=0;
-					can1[i]->offical_speedPID.Reset(&(can1[i]->offical_speedPID));
-					(can1[i]->Handle)(can1[i]);
+					CAN1_SHUTDOWN(i);
 					InitMotor(can2[i]);
 				}
 				else if(can2[i]==&CMFL || can2[i]==&CMFR || can2[i]==&CMBL || can2[i]==&CMBR)
 				{
-					can2[i]->FirstEnter=1;
-					can2[i]->lastRead=0;
-					can2[i]->RealAngle=0;
-					can2[i]->TargetAngle=0;
-					can2[i]->offical_speedPID.Reset(&(can1[i]->offical_speedPID));
-					(can2[i]->Handle)(can2[i]);
+					CAN2_SHUTDOWN(i);
 					InitMotor(can1[i]);
 				}
 				else
@@ -188,9 +168,9 @@ void ControlRotate(void)
 	#ifdef USE_CHASSIS_FOLLOW
 	switch (ChassisTwistState)
 	{
-		case 1: ChassisSpeedRef.rotate_ref=(GMY.RxMsg6623.angle - GM_YAW_ZERO) * 360 / 8192.0f - ChassisTwistGapAngle; break;
-		case 2: ChassisSpeedRef.rotate_ref=(GMY.RxMsg6623.angle - GM_YAW_ZERO + 1024) * 360 / 8192.0f - ChassisTwistGapAngle; break;
-		default: ChassisSpeedRef.rotate_ref=(GMY.RxMsg6623.angle - GM_YAW_ZERO) * 360 / 8192.0f - ChassisTwistGapAngle; break;
+		case 1: ChassisSpeedRef.rotate_ref=-(GMY.RxMsgC6x0.angle - chassis_follow_center) * 360 / 8192.0f - ChassisTwistGapAngle; break;
+		case 2: ChassisSpeedRef.rotate_ref=-(GMY.RxMsgC6x0.angle - chassis_follow_center + 1024) * 360 / 8192.0f - ChassisTwistGapAngle; break;
+		default: ChassisSpeedRef.rotate_ref=-(GMY.RxMsgC6x0.angle - chassis_follow_center) * 360 / 8192.0f - ChassisTwistGapAngle; break;
 	}
 	NORMALIZE_ANGLE180(ChassisSpeedRef.rotate_ref);
 	#endif
@@ -208,17 +188,17 @@ void Chassis_Data_Decoding()
 	{
 		ControlRotate();
 
-		CMFL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-							+ ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+		CMFL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ ChassisSpeedRef.left_right_ref *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
 							+ rotate_speed)*12;
-		CMFR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-							+ ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+		CMFR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							+ ChassisSpeedRef.left_right_ref *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
 							+ rotate_speed)*12;
-		CMBL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-							- ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+		CMBL.TargetAngle = (  (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							- ChassisSpeedRef.left_right_ref *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
 							+ rotate_speed)*12;
-		CMBR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
-							- ChassisSpeedRef.left_right_ref *(cos((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin((GMY.RxMsg6623.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+		CMBR.TargetAngle = (- (ChassisSpeedRef.forward_back_ref + fabs(rotate_speed*0.06)) *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)-sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
+							- ChassisSpeedRef.left_right_ref *(cos(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f)+sin(-(GMY.RxMsgC6x0.angle - GM_YAW_ZERO) * 6.28 / 8192.0f))
 							+ rotate_speed)*12;
 	}
 	else
@@ -228,12 +208,6 @@ void Chassis_Data_Decoding()
 		CMBL.TargetAngle = 0;
 		CMBR.TargetAngle = 0;
 	}
-	
-//	rotate_speed-=0.1;
-//	CMFL.TargetAngle = (  ChassisSpeedRef.forward_back_ref + ChassisSpeedRef.left_right_ref	+ rotate_speed)*12;
-//	CMFR.TargetAngle = (- ChassisSpeedRef.forward_back_ref + ChassisSpeedRef.left_right_ref + rotate_speed)*12;
-//	CMBL.TargetAngle = (  ChassisSpeedRef.forward_back_ref - ChassisSpeedRef.left_right_ref + rotate_speed)*12;
-//	CMBR.TargetAngle = (- ChassisSpeedRef.forward_back_ref - ChassisSpeedRef.left_right_ref	+ rotate_speed)*12;
 }
 
 //主控制循环
@@ -260,7 +234,7 @@ void controlLoop()
 		#endif
 		
 		OptionalFunction();
-		
+
 		#ifdef CAN11
 		setCAN11();
 		#endif
@@ -297,17 +271,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		imu_attitude_update();
 		//主循环在时间中断中启动
 		controlLoop();
-		static uint8_t cap_time_cnt = 0;
-		cap_time_cnt += 1;
-		if (cap_time_cnt >= 2){
-		   Cap_Run();
-		   cap_time_cnt = 0;
-		}
+		Cap_Run();
 
-		//自瞄数据解算
-//		static int aim_cnt = 0;
+		//自瞄数据解算（5ms）
+//		static int aim_cnt=0;
 //		aim_cnt++;
-//		if(aim_cnt == 3)
+//		if(aim_cnt==5)
 //		{
 //			EnemyINFOProcess();
 //			aim_cnt=0;
@@ -336,8 +305,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				if (counter == 10) 
 				{
 					tx_free = 0;
-//					Send_User_Data(); 
-					Referee_Transmit_UserData();
+					Send_User_Data();
 					counter = 0;
 				}
 				else counter++;				

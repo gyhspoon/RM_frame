@@ -15,31 +15,31 @@
 #include "includes.h"
 
 //遥控常量区
-#define RC_CHASSIS_SPEED_REF    		0.85f
+#define RC_CHASSIS_SPEED_REF    	0.85f
 #define RC_ROTATE_SPEED_REF 			0.07f
 #define RC_GIMBAL_SPEED_REF				0.006f
 
 #define IGNORE_RANGE 					200
 
 //键鼠常量区
-#define KEY_W			0x1
-#define KEY_S			0x2
-#define KEY_A			0x4
-#define KEY_D			0x8
+#define KEY_W				0x1
+#define KEY_S				0x2
+#define KEY_A				0x4
+#define KEY_D				0x8
 #define KEY_SHIFT		0x10
 #define KEY_CTRL		0x20
-#define KEY_Q			0x40
-#define KEY_E			0x80
-#define KEY_R			0x100
-#define KEY_F			0x200
-#define KEY_G			0x400
-#define KEY_Z			0x800
-#define KEY_X			0x1000
-#define KEY_C			0x2000
-#define KEY_V			0x4000
-#define KEY_B			0x8000
+#define KEY_Q				0x40
+#define KEY_E				0x80
+#define KEY_R				0x100
+#define KEY_F				0x200
+#define KEY_G				0x400
+#define KEY_Z				0x800
+#define KEY_X				0x1000
+#define KEY_C				0x2000
+#define KEY_V				0x4000
+#define KEY_B				0x8000
 
-#define NORMAL_FORWARD_BACK_SPEED 		600
+#define NORMAL_FORWARD_BACK_SPEED 	600
 #define NORMAL_LEFT_RIGHT_SPEED  		600/1.5f
 #define HIGH_FORWARD_BACK_SPEED 		800
 #define HIGH_LEFT_RIGHT_SPEED   		800/1.5f
@@ -63,14 +63,14 @@
 
 #ifdef HERO_MAIN
 
-#define MAXHP1 300
-#define MAXHP2 500
-#define MAXHP3 700
+//#define MAXHP1 300
+//#define MAXHP2 500
+//#define MAXHP3 700
 
 //**heat limitation test**//
-//#define MAXHP1 2000
-//#define MAXHP2 3000
-//#define MAXHP3 4000
+#define MAXHP1 2000
+#define MAXHP2 3000
+#define MAXHP3 4000
 //************************//
 
 #define COOLDOWN01 40
@@ -85,6 +85,7 @@
 #define COOLDOWN12 40
 #define COOLDOWN13 60
 
+//#define MAXHEAT11 80
 #define MAXHEAT11 150
 #define MAXHEAT12 250
 #define MAXHEAT13 400
@@ -220,6 +221,8 @@ extern int32_t auto_counter;
 extern int32_t auto_counter_stir;
 extern int32_t auto_counter_shoot;
 extern uint8_t chassis_lock;
+extern uint8_t chassis_change_forward_back;
+extern int16_t chassis_follow_center;
 
 void FunctionTaskInit(void);
 void Limit_Position(void);
@@ -227,7 +230,7 @@ void OptionalFunction(void);
 void FreshSuperCState(void);
 void ChassisTwist(void);
 void ChassisDeTwist(void);
-void LJHTwist(void);
 void ShootOneBullet(void);
+void Chassis_forward_back_Handler(void);
 
 #endif /*__FUNCTIONTASK_H*/

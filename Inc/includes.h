@@ -14,14 +14,14 @@
 
 #define HERO_MAIN
 
-//#define NO_RC_MODE
+#define NO_RC_MODE
 #define USE_AUTOAIM
 #define USE_IMU
 #define USE_CHASSIS_FOLLOW
 #define USE_HEAT_LIMIT_HERO_MAIN
-#define USE_POWERLIMITATION
+//#define USE_POWERLIMITATION
 #define USE_CHASSIS_ADJUST
-//#define AUTOAIM_TEST
+#define JUDGE_RM_2018
 
 #define CAN11
 #define CAN12
@@ -38,8 +38,8 @@
 #include "gpio.h"
 #include "iwdg.h"
 #include "adc.h"
-#include "dac.h"
 #include "math.h"
+#include "dac.h"
 
 #include "AuxDevice.h"
 #include "RemoteTask.h"
@@ -52,12 +52,11 @@
 #include "AutoAimTask.h"
 #include "JudgeTask.h"
 #include "UpperTask.h"
+//#include "CapControlTask.h"
 #include "Cap2ControlTask.h"
 #include "PowerLimitationTask.h"
 #include "GyroReadTask.h"
 #include "bsp_imu.h"
-#include "kalman_filter.h"
-
 
 extern int16_t global_catch;		//用于检测一个其他文档里，不值得设置全局变量，但是临时需要读取的数据
 //#include "visualscope.h"

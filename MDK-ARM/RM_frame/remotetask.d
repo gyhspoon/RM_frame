@@ -46,8 +46,8 @@
 .\rm_frame\remotetask.o: ../Inc/gpio.h
 .\rm_frame\remotetask.o: ../Inc/iwdg.h
 .\rm_frame\remotetask.o: ../Inc/adc.h
-.\rm_frame\remotetask.o: ../Inc/dac.h
 .\rm_frame\remotetask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
+.\rm_frame\remotetask.o: ../Inc/dac.h
 .\rm_frame\remotetask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\remotetask.o: ../Inc/includes.h
 .\rm_frame\remotetask.o: ../Tasks/Inc/RemoteTask.h
@@ -69,6 +69,3 @@
 .\rm_frame\remotetask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\stdbool.h
 .\rm_frame\remotetask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\stdlib.h
 .\rm_frame\remotetask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\string.h
-.\rm_frame\remotetask.o: ../Tasks/Inc/kalman_filter.h
-.\rm_frame\remotetask.o: ../Drivers/CMSIS/Include/arm_math.h
-.\rm_frame\remotetask.o: ../Drivers/CMSIS/Include/core_cm4.h
