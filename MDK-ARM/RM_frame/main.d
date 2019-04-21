@@ -25,6 +25,8 @@
 .\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h
 .\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h
 .\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
+.\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dac.h
+.\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dac_ex.h
 .\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 .\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 .\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -37,6 +39,7 @@
 .\rm_frame\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 .\rm_frame\main.o: ../Inc/adc.h
 .\rm_frame\main.o: ../Inc/can.h
+.\rm_frame\main.o: ../Inc/dac.h
 .\rm_frame\main.o: ../Inc/dma.h
 .\rm_frame\main.o: ../Inc/iwdg.h
 .\rm_frame\main.o: ../Inc/spi.h

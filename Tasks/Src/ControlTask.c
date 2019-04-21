@@ -297,7 +297,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		imu_attitude_update();
 		//主循环在时间中断中启动
 		controlLoop();
-		Cap_Run();
+		static uint8_t cap_time_cnt = 0;
+		cap_time_cnt += 1;
+		if (cap_time_cnt >= 2){
+		   Cap_Run();
+		   cap_time_cnt = 0;
+		}
 
 		//自瞄数据解算
 //		static int aim_cnt = 0;

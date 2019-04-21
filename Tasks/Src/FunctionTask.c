@@ -58,9 +58,17 @@ void FunctionTaskInit()
 
 void OptionalFunction()
 {
-	//if(Cap_Get_Cap_State()!=CAP_STATE_RELEASE)
 	#ifdef USE_POWERLIMITATION
-	PowerLimitation();
+	if (Cap_Get_Cap_State() == CAP_STATE_STOP){
+      CurBased_PowerLimitation(); //基于自测功率的功率限制，适用于充电和停止状态
+		  }else{
+		    if (Cap_Get_Cap_State() == CAP_STATE_RECHARGE || Cap_Get_Cap_State() == CAP_STATE_TEMP_RECHARGE)
+		      CurBased_PowerLimitation();//基于自测功率的功率限制，适用于充电和停止状态
+		      else{
+		        if (Cap_Get_Cap_State() == CAP_STATE_RELEASE)
+		          CapBased_PowerLimitation();//超级电容工作模式下的功率限制
+		      }
+	    }
 	#endif
 }
 
@@ -86,9 +94,9 @@ void RemoteControlProcess(Remote *rc)
 	if(WorkState == NORMAL_STATE)
 	{
 		//for debug SuperC
-		if(LastState!= WorkState)
+		if(LastState!= WorkState && Cap_Get_Cap_State() != CAP_STATE_STOP)
 		{
-			Cap_State_Switch(CAP_STATE_RECHARGE);
+			Cap_State_Switch(CAP_STATE_STOP);
 		}
 		
 		ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
@@ -117,6 +125,11 @@ void RemoteControlProcess(Remote *rc)
 	
 	if(WorkState == ADDITIONAL_STATE_ONE)
 	{
+		if(LastState!= WorkState && Cap_Get_Cap_State() != CAP_STATE_RELEASE)
+		{
+			Cap_State_Switch(CAP_STATE_RELEASE);
+		}
+		
 		ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
 		ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF/3*2;
 		#ifdef USE_CHASSIS_FOLLOW
@@ -137,7 +150,6 @@ void RemoteControlProcess(Remote *rc)
 		
 		if (LastState != WorkState)
 		{
-			//Cap_State_Switch(CAP_STATE_STOP);
 			if(ShootState)
 			{
 				stirDirection=stirState;
@@ -150,31 +162,33 @@ void RemoteControlProcess(Remote *rc)
 	
 	if(WorkState == ADDITIONAL_STATE_TWO)
 	{
-		if(LastState!= WorkState)
+		if(LastState!= WorkState && Cap_Get_Cap_State() != CAP_STATE_RELEASE)
 		{
 			Cap_State_Switch(CAP_STATE_RELEASE);
 		}
 		
-		if(Cap_Get_Cap_Voltage() > 10 && release_cnt >= 50)
+		if (Cap_Get_Power_Voltage() > 9 && Cap_Get_Cap_State() == CAP_STATE_RELEASE)
 		{
-			ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF*1.5f;
-			ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF;
-		}
+		  ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF*2;
+		  ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF*2;
+    }
 		else
 		{
 			ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
-			ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF/3*2;
+		  ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF*3/2;
 		}
-		/*
-		
-		ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF;
-		ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF/3*2;
-		*/
 		#ifdef USE_CHASSIS_FOLLOW
 		GMY.TargetAngle += channellrow * RC_GIMBAL_SPEED_REF;
 		GMP.TargetAngle -= channellcol * RC_GIMBAL_SPEED_REF;
 		#else
-		ChassisSpeedRef.rotate_ref = -channellrow * RC_ROTATE_SPEED_REF;
+		if (Cap_Get_Power_Voltage() > 9 && Cap_Get_Cap_State() == CAP_STATE_RELEASE)
+		{
+		  ChassisSpeedRef.rotate_ref = -channellrow * RC_ROTATE_SPEED_REF*2;
+		}
+		else
+		{
+			ChassisSpeedRef.rotate_ref = -channellrow * RC_ROTATE_SPEED_REF;
+		}
 		GMP.TargetAngle -= channellcol * RC_GIMBAL_SPEED_REF;
 		#endif
 		
@@ -200,7 +214,6 @@ void RemoteControlProcess(Remote *rc)
 		stirState=-stirState;
 	});
 	//FreshSuperCState();
-	LED_Show_SuperCap_Voltage(1);
 	if(ChassisTwistState)
 	{
 		LJHTwist();
@@ -409,7 +422,6 @@ void MouseKeyControlProcess(Mouse *mouse, Key *key,Remote *rc)
 		}
 		else ChassisDeTwist();
 		AutoAimGMCTRL();
-		LED_Show_SuperCap_Voltage(1);
 		//FreshSuperCState();
 		//Limit_and_Synchronization();
 	}
@@ -422,10 +434,6 @@ void KeyboardModeFSM(Key *key)
 		KM_FORWORD_BACK_SPEED=  LOW_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = LOW_LEFT_RIGHT_SPEED;
 		KeyboardMode=SHIFT_CTRL;
-		if(LastKeyboardMode != KeyboardMode)
-		{
-			Cap_State_Switch(CAP_STATE_RECHARGE);
-		}
 	}
 	else if(key->v & KEY_SHIFT)//Shift
 	{
@@ -442,13 +450,9 @@ void KeyboardModeFSM(Key *key)
 		}
 		KeyboardMode=SHIFT;
 		//电容状态控制
-		if(LastKeyboardMode != KeyboardMode && Cap_Get_Cap_Voltage() > 8)
+		if(LastKeyboardMode != KeyboardMode && Cap_Get_Cap_State() != CAP_STATE_TEMP_RECHARGE && Cap_Get_Cap_State() != CAP_STATE_RELEASE)
 		{
 			Cap_State_Switch(CAP_STATE_RELEASE);
-		}
-		else if(Cap_Get_Cap_Voltage() <= 10)
-		{
-			Cap_State_Switch(CAP_STATE_RECHARGE);
 		}
 	}
 	else if(key->v & KEY_CTRL)//Ctrl
@@ -456,20 +460,12 @@ void KeyboardModeFSM(Key *key)
 		KM_FORWORD_BACK_SPEED=  LOW_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = LOW_LEFT_RIGHT_SPEED;
 		KeyboardMode=CTRL;
-		if(LastKeyboardMode != KeyboardMode)
-		{
-			Cap_State_Switch(CAP_STATE_RECHARGE);
-		}
 	}
 	else
 	{
 		KM_FORWORD_BACK_SPEED=  NORMAL_FORWARD_BACK_SPEED;
 		KM_LEFT_RIGHT_SPEED = NORMAL_LEFT_RIGHT_SPEED;
 		KeyboardMode=NO_CHANGE;
-		if(LastKeyboardMode != KeyboardMode)
-		{
-			Cap_State_Switch(CAP_STATE_RECHARGE);
-		}
 	}	
 	LastKeyboardMode=KeyboardMode;
 }

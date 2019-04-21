@@ -18,7 +18,8 @@
 typedef enum {
 	CAP_STATE_STOP,
 	CAP_STATE_RECHARGE,
-	CAP_STATE_RELEASE
+	CAP_STATE_RELEASE,
+	CAP_STATE_TEMP_RECHARGE
 }cap_state;
 
 typedef __packed struct
@@ -29,6 +30,7 @@ typedef __packed struct
 }CapControl_t;
 
 extern CapControl_t Control_SuperCap;
+extern uint8_t rlease_flag;
 
 /*********************************************************
   * @brief  Initialize the capacitance controller.
@@ -71,7 +73,5 @@ double Cap_Get_Power_CURR(void);
 cap_state Cap_Get_Cap_State(void);
 
 void LED_Show_SuperCap_Voltage(uint8_t flag);
-
-extern int16_t release_cnt;
 
 #endif /* __CAP_2_CONTROL_TASK__ */

@@ -38,6 +38,7 @@
 #include "gpio.h"
 #include "iwdg.h"
 #include "adc.h"
+#include "dac.h"
 #include "math.h"
 
 #include "AuxDevice.h"
@@ -51,7 +52,6 @@
 #include "AutoAimTask.h"
 #include "JudgeTask.h"
 #include "UpperTask.h"
-//#include "CapControlTask.h"
 #include "Cap2ControlTask.h"
 #include "PowerLimitationTask.h"
 #include "GyroReadTask.h"

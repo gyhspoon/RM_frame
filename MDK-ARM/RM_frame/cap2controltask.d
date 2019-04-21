@@ -28,6 +28,8 @@
 .\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h
 .\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h
 .\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
+.\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dac.h
+.\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dac_ex.h
 .\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 .\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 .\rm_frame\cap2controltask.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -46,6 +48,7 @@
 .\rm_frame\cap2controltask.o: ../Inc/gpio.h
 .\rm_frame\cap2controltask.o: ../Inc/iwdg.h
 .\rm_frame\cap2controltask.o: ../Inc/adc.h
+.\rm_frame\cap2controltask.o: ../Inc/dac.h
 .\rm_frame\cap2controltask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\cap2controltask.o: ../Inc/includes.h
 .\rm_frame\cap2controltask.o: ../Tasks/Inc/RemoteTask.h

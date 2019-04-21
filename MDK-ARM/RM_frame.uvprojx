@@ -338,7 +338,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx,ARM_MATH_CM4,__FPU_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;                                                        ../Drivers/STM32F4xx_HAL_Driver/Inc;                                                        ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                                                        ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                                                        ../Tasks/Inc;     ../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Inc;                                                          ../Drivers/STM32F4xx_HAL_Driver/Inc;                                                          ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                                                          ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                                                          ../Tasks/Inc;       ../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -433,11 +433,6 @@
               <FilePath>..\Tasks\Src\AutoAimTask.c</FilePath>
             </File>
             <File>
-              <FileName>CapControlTask.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Tasks\Src\CapControlTask.c</FilePath>
-            </File>
-            <File>
               <FileName>PowerLimitationTask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Tasks\Src\PowerLimitationTask.c</FilePath>
@@ -498,6 +493,11 @@
               <FilePath>../Src/can.c</FilePath>
             </File>
             <File>
+              <FileName>dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Src/dac.c</FilePath>
+            </File>
+            <File>
               <FileName>dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/dma.c</FilePath>
@@ -548,11 +548,6 @@
           <GroupName>Drivers/CMSIS</GroupName>
           <Files>
             <File>
-              <FileName>system_stm32f4xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..//Src/system_stm32f4xx.c</FilePath>
-            </File>
-            <File>
               <FileName>arm_mat_add_f32.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Drivers\CMSIS\Device\arm_mat\arm_mat_add_f32.c</FilePath>
@@ -597,6 +592,11 @@
               <FileType>1</FileType>
               <FilePath>..\Drivers\CMSIS\Device\arm_mat\arm_mat_trans_f32.c</FilePath>
             </File>
+            <File>
+              <FileName>system_stm32f4xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..//Src/system_stm32f4xx.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -616,6 +616,16 @@
               <FileName>stm32f4xx_hal_can.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_dac_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dac_ex.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hal_iwdg.c</FileName>
