@@ -47,8 +47,8 @@
 .\rm_frame\stm32f4xx_it.o: ../Inc/gpio.h
 .\rm_frame\stm32f4xx_it.o: ../Inc/iwdg.h
 .\rm_frame\stm32f4xx_it.o: ../Inc/adc.h
-.\rm_frame\stm32f4xx_it.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\stm32f4xx_it.o: ../Inc/dac.h
+.\rm_frame\stm32f4xx_it.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\stm32f4xx_it.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\stm32f4xx_it.o: ../Inc/includes.h
 .\rm_frame\stm32f4xx_it.o: ../Tasks/Inc/RemoteTask.h

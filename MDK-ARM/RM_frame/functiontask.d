@@ -46,8 +46,8 @@
 .\rm_frame\functiontask.o: ../Inc/gpio.h
 .\rm_frame\functiontask.o: ../Inc/iwdg.h
 .\rm_frame\functiontask.o: ../Inc/adc.h
-.\rm_frame\functiontask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\functiontask.o: ../Inc/dac.h
+.\rm_frame\functiontask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\functiontask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\functiontask.o: ../Inc/includes.h
 .\rm_frame\functiontask.o: ../Tasks/Inc/RemoteTask.h

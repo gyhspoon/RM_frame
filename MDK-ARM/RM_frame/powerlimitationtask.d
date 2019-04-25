@@ -46,8 +46,8 @@
 .\rm_frame\powerlimitationtask.o: ../Inc/gpio.h
 .\rm_frame\powerlimitationtask.o: ../Inc/iwdg.h
 .\rm_frame\powerlimitationtask.o: ../Inc/adc.h
-.\rm_frame\powerlimitationtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\powerlimitationtask.o: ../Inc/dac.h
+.\rm_frame\powerlimitationtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\powerlimitationtask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\powerlimitationtask.o: ../Inc/includes.h
 .\rm_frame\powerlimitationtask.o: ../Tasks/Inc/RemoteTask.h

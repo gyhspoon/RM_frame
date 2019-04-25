@@ -46,8 +46,8 @@
 .\rm_frame\uppertask.o: ../Inc/gpio.h
 .\rm_frame\uppertask.o: ../Inc/iwdg.h
 .\rm_frame\uppertask.o: ../Inc/adc.h
-.\rm_frame\uppertask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\uppertask.o: ../Inc/dac.h
+.\rm_frame\uppertask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\uppertask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\uppertask.o: ../Inc/includes.h
 .\rm_frame\uppertask.o: ../Tasks/Inc/RemoteTask.h

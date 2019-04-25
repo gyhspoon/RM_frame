@@ -46,8 +46,8 @@
 .\rm_frame\judgetask.o: ../Inc/gpio.h
 .\rm_frame\judgetask.o: ../Inc/iwdg.h
 .\rm_frame\judgetask.o: ../Inc/adc.h
-.\rm_frame\judgetask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\judgetask.o: ../Inc/dac.h
+.\rm_frame\judgetask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\judgetask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\judgetask.o: ../Inc/includes.h
 .\rm_frame\judgetask.o: ../Tasks/Inc/RemoteTask.h

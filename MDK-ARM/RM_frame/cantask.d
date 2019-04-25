@@ -46,8 +46,8 @@
 .\rm_frame\cantask.o: ../Inc/gpio.h
 .\rm_frame\cantask.o: ../Inc/iwdg.h
 .\rm_frame\cantask.o: ../Inc/adc.h
-.\rm_frame\cantask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\cantask.o: ../Inc/dac.h
+.\rm_frame\cantask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\cantask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\cantask.o: ../Inc/includes.h
 .\rm_frame\cantask.o: ../Tasks/Inc/RemoteTask.h

@@ -80,6 +80,7 @@ void mpu_get_data(void);
 void imu_ahrs_update(void);
 void imu_attitude_update(void);
 void mpu_offset_call(void);
+void imu_data_kalman_filter(void);
 
 #endif
 

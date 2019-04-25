@@ -46,8 +46,8 @@
 .\rm_frame\pid_regulator.o: ../Inc/gpio.h
 .\rm_frame\pid_regulator.o: ../Inc/iwdg.h
 .\rm_frame\pid_regulator.o: ../Inc/adc.h
-.\rm_frame\pid_regulator.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\pid_regulator.o: ../Inc/dac.h
+.\rm_frame\pid_regulator.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\pid_regulator.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\pid_regulator.o: ../Inc/includes.h
 .\rm_frame\pid_regulator.o: ../Tasks/Inc/RemoteTask.h

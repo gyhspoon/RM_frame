@@ -7,7 +7,6 @@
 ".\rm_frame\judgetask.o"
 ".\rm_frame\uppertask.o"
 ".\rm_frame\autoaimtask.o"
-".\rm_frame\capcontroltask.o"
 ".\rm_frame\powerlimitationtask.o"
 ".\rm_frame\gyroreadtask.o"
 ".\rm_frame\pid_regulator.o"

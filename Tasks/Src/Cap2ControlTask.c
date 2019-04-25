@@ -487,7 +487,7 @@ static void Cap_Ctr_RECHARGE() {
   #endif /* USE_CAP2 */
 	
 	#ifdef USE_CAPex
-	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
 					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
 			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	}else{
@@ -513,7 +513,7 @@ static void Cap_Ctr_RECHARGE() {
 static void Cap_Ctr_TEMP_RECHARGE() {
 	
 	#ifdef USE_CAPex
-	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
 					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
 			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	}else{
@@ -586,7 +586,7 @@ static void Cap_Ctr_RELEASE() {
 		      Cap_State_Switch(CAP_STATE_TEMP_RECHARGE);
 	      }
 	      else {
-					if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+					if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
 					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
 			        HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	  }else{
@@ -618,7 +618,7 @@ static void Cap_Ctr_RELEASE() {
   * @retval None
   */
 void Cap_Ctr() { // called with period of 2 ms
-	if (GameRobotState.remain_HP < 1 || WorkState == STOP_STATE || WorkState == PREPARE_STATE) {
+	if (GameRobotState.remain_HP < 1 || WorkState == STOP_STATE || WorkState == PREPARE_STATE || inputmode == STOP) {
 		Cap_State_Switch(CAP_STATE_STOP);
 	}
 	else {

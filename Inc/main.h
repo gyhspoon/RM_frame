@@ -53,16 +53,8 @@
 #define Cap_In_GPIO_Port GPIOE
 #define Cap_Out_Pin GPIO_PIN_5
 #define Cap_Out_GPIO_Port GPIOE
-#define DC24V_2_Pin GPIO_PIN_2
-#define DC24V_2_GPIO_Port GPIOH
-#define DC24V_3_Pin GPIO_PIN_3
-#define DC24V_3_GPIO_Port GPIOH
-#define DC24V_4_Pin GPIO_PIN_4
-#define DC24V_4_GPIO_Port GPIOH
 #define LED8_Pin GPIO_PIN_8
 #define LED8_GPIO_Port GPIOG
-#define DC24V_5_Pin GPIO_PIN_5
-#define DC24V_5_GPIO_Port GPIOH
 #define LED7_Pin GPIO_PIN_7
 #define LED7_GPIO_Port GPIOG
 #define LED6_Pin GPIO_PIN_6
@@ -94,15 +86,7 @@
 /* #define USE_FULL_ASSERT    1U */
 
 /* USER CODE BEGIN Private defines */
-#define ENABLE_DC24V_2() 	HAL_GPIO_WritePin(DC24V_2_GPIO_Port, DC24V_2_Pin, GPIO_PIN_SET)
-#define ENABLE_DC24V_3() 	HAL_GPIO_WritePin(DC24V_3_GPIO_Port, DC24V_3_Pin, GPIO_PIN_SET)
-#define ENABLE_DC24V_4() 	HAL_GPIO_WritePin(DC24V_4_GPIO_Port, DC24V_4_Pin, GPIO_PIN_SET)
-#define ENABLE_DC24V_5() 	HAL_GPIO_WritePin(DC24V_5_GPIO_Port, DC24V_5_Pin, GPIO_PIN_SET)
 
-#define DISABLE_DC24V_2() HAL_GPIO_WritePin(DC24V_2_GPIO_Port, DC24V_2_Pin, GPIO_PIN_RESET)
-#define DISABLE_DC24V_3() HAL_GPIO_WritePin(DC24V_3_GPIO_Port, DC24V_3_Pin, GPIO_PIN_RESET)
-#define DISABLE_DC24V_4() HAL_GPIO_WritePin(DC24V_4_GPIO_Port, DC24V_4_Pin, GPIO_PIN_RESET)
-#define DISABLE_DC24V_5() HAL_GPIO_WritePin(DC24V_5_GPIO_Port, DC24V_5_Pin, GPIO_PIN_RESET)
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

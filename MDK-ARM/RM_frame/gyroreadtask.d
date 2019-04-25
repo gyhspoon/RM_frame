@@ -46,8 +46,8 @@
 .\rm_frame\gyroreadtask.o: ../Inc/gpio.h
 .\rm_frame\gyroreadtask.o: ../Inc/iwdg.h
 .\rm_frame\gyroreadtask.o: ../Inc/adc.h
-.\rm_frame\gyroreadtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\gyroreadtask.o: ../Inc/dac.h
+.\rm_frame\gyroreadtask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\math.h
 .\rm_frame\gyroreadtask.o: ../Tasks/Inc/AuxDevice.h
 .\rm_frame\gyroreadtask.o: ../Inc/includes.h
 .\rm_frame\gyroreadtask.o: ../Tasks/Inc/RemoteTask.h
