@@ -20,14 +20,14 @@
 
 //*****************************************声明变量******************************************//
 
-GMAngle_t aim,aim_rcd,aim_output;															//目标角度
+GMAngle_t aim, aim_rcd, aim_output;														//目标角度
 GMAngle_t adjust;																							//校准发射变量
-Coordinate_t enemy_gun,enemy_scope,scope_gun;									//坐标
-uint8_t Enemy_INFO[8],Tx_INFO[8];															//接收
-uint8_t find_enemy = 0,aim_mode = 0,upper_mode;								//aim_mode用于选择瞄准模式，0为手动瞄准，1为正常自瞄，2为打符，3暂无（吊射？）
+Coordinate_t enemy_gun, enemy_scope, scope_gun;								//坐标
+uint8_t Enemy_INFO[8], Tx_INFO[8];														//接收
+uint8_t find_enemy = 0, aim_mode = 0, upper_mode;							//aim_mode用于选择瞄准模式，0为手动瞄准，1为正常自瞄，2为打符，3暂无（吊射？）
 uint16_t aim_cnt = 0;																					//自瞄分频延时变量
 uint16_t auto_counter_fps = 1000;															//检测帧率
-int16_t receive_cnt = 0,receive_rcd = 0;											//检测上位机信号帧数
+int16_t receive_cnt = 0, receive_rcd = 0;											//检测上位机信号帧数
 int16_t track_cnt = 0;																				//追踪变量
 float delta_wz = 0;																						//相对角速度
 
@@ -45,20 +45,16 @@ void InitAutoAim()
 	}
 
 	//坐标变量初始化（不需要修改）
-	enemy_scope.x=0;	enemy_scope.y=0;	enemy_scope.z=200;
-	enemy_gun.x=0;		enemy_gun.y=0;		enemy_gun.z=200;
+	enemy_scope.x = 0;	enemy_scope.y = 0;	enemy_scope.z = 200;
+	enemy_gun.x = 0;		enemy_gun.y = 0;		enemy_gun.z = 200;
 	
 	//角度变量初始化（不需要修改）
-	aim.yaw=0;						aim.pitch=0;
-	aim_output.yaw=0;			aim_output.pitch=0;
-	adjust.yaw=-0.5f;			adjust.pitch=0.9f;
+	aim.yaw = 0;						aim.pitch = 0;
+	aim_output.yaw = 0;			aim_output.pitch = 0;
+	adjust.yaw = -0.3f;			adjust.pitch = 0.9f;
 	
 	//设置坐标初始值（根据不同安装情况调整这3个参数）
-	scope_gun.x=0;		scope_gun.y=-10;		scope_gun.z=0;
-	
-	#ifdef USE_KALMAN_FILTER
-	kalman_filter_init(&yaw_kalman_filter, &yaw_kalman_filter_para);
-	#endif
+	scope_gun.x = 0;		scope_gun.y = -10;		scope_gun.z = 0;
 }
 
 //**************************************************************************//
@@ -140,7 +136,7 @@ void CANTxINFO()
 	hcan1.pTxMsg->Data[4] = (uint8_t)RC_CtrlData.mouse.press_r;
 	hcan1.pTxMsg->Data[5] = (uint8_t)(RC_CtrlData.key.v & 0xff);
 	hcan1.pTxMsg->Data[6] = (uint8_t)((RC_CtrlData.key.v>>8) & 0xff);
-	hcan1.pTxMsg->Data[7] = 0;
+	hcan1.pTxMsg->Data[7] = enemy_scope.z / 300.0f * 255.0f;
 
 	if(can1_update == 1 && can1_type == 3)
 	{
@@ -195,7 +191,7 @@ void EnemyINFOProcess()
 	aim.yaw=atan(enemy_gun.x/(enemy_gun.z*cos(GMP_ANGLE)-enemy_gun.y*sin(GMP_ANGLE)))/const_pi*180.0-adjust.yaw;
 	aim.pitch=atan(enemy_gun.y/enemy_gun.z)/const_pi*180.0+adjust.pitch;
 	#endif
-
+	
 	AutoAimTrackYaw();
 	aim_output.pitch = (aim.pitch+aim_rcd.pitch)/8;
 }

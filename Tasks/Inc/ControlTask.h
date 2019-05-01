@@ -59,6 +59,26 @@
 #define H6U	1865
 #define H7	1976
 
+#define CAN1_SHUTDOWN(i)\
+{\
+	can1[i]->FirstEnter=1;\
+	can1[i]->lastRead=0;\
+	can1[i]->RealAngle=0;\
+	can1[i]->TargetAngle=0;\
+	can1[i]->offical_speedPID.Reset(&(can1[i]->offical_speedPID));\
+	(can1[i]->Handle)(can1[i]);\
+}
+
+#define CAN2_SHUTDOWN(i)\
+{\
+	can2[i]->FirstEnter=1;\
+	can2[i]->lastRead=0;\
+	can2[i]->RealAngle=0;\
+	can2[i]->TargetAngle=0;\
+	can2[i]->offical_speedPID.Reset(&(can1[i]->offical_speedPID));\
+	(can2[i]->Handle)(can2[i]);\
+}
+
 typedef struct {
 	uint16_t note;
 	uint16_t time;

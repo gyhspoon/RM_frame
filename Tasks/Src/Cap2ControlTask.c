@@ -76,9 +76,15 @@
   #define RECHARGE_CURR_MAX       (3.0)
   #define RELEASE_CURR_MAX        (3.0)
   #define RELEASE_POW_RATE        (1.5)//1.3
+#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
   #define RECHARGE_POW_RATE       ((PowerHeat.chassis_power > RECHARGE_POWER_MAX)?\
-                                ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-0.8) + 0.8):\
-                                ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-1.0) + 1.0))
+	                                ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-0.8) + 0.8):\
+																	((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-1.0) + 1.0))
+#else //JUDGE_RM_2018
+	#define RECHARGE_POW_RATE       ((PowerHeatData.chassisPower > RECHARGE_POWER_MAX)?\
+	                                ((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-0.8) + 0.8):\
+																	((RECHARGE_VOLTAGE_MAX - VAL__CAP_VOLTAGE) / (RECHARGE_VOLTAGE_MAX - RELEASE_VOLTAGE_MIN) * (1.4-1.0) + 1.0))
+#endif
   #define INPUT_PWM_PERCENT_MAX   (100)
   #define OUTPUT_PWM_PERCENT_MAX  (100)
   #define RECHARGE_VOLTAGE_MAX    (21.5)
@@ -105,7 +111,7 @@
   #define FUNC__Cap_Set_Input_Percent(rate)   (input_pwm_cmp  = PWM_CMP_MAX*rate/100)
 
 
-
+	#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
   #ifdef CAP_USE_CURR
     #define FUNC__RECAL_INPUT_PWM(rate)       FUNC__ADD_INPUT_PWM_PERCENT(rate*CAL_RECHARGE(RECHARGE_POWER_MAX, \
                                               Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeat.chassis_power_buffer) / 2));
@@ -117,6 +123,19 @@
     #define FUNC__RECAL_OUTPUT_PWM(rate)      FUNC__ADD_OUTPUT_PWM_PERCENT(-rate*CAL_RELEASE(RELEASE_POWER_MAX, \
                                               PowerHeat.chassis_power + (60 - PowerHeat.chassis_power_buffer) / 2));
   #endif /* CAP_USE_CURR */
+	#else //JUDGE_RM_2018
+	#ifdef CAP_USE_CURR
+    #define FUNC__RECAL_INPUT_PWM(rate)       FUNC__ADD_INPUT_PWM_PERCENT(rate*CAL_RECHARGE(RECHARGE_POWER_MAX, \
+                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+    #define FUNC__RECAL_OUTPUT_PWM(rate)      FUNC__ADD_OUTPUT_PWM_PERCENT(-rate*CAL_RELEASE(RELEASE_POWER_MAX, \
+                                              Cap_Get_Power_Voltage()*Cap_Get_Power_CURR() + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+  #else
+    #define FUNC__RECAL_INPUT_PWM(rate)       FUNC__ADD_INPUT_PWM_PERCENT(rate*CAL_RECHARGE(RECHARGE_POWER_MAX, \
+                                              PowerHeatData.chassisPower + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+    #define FUNC__RECAL_OUTPUT_PWM(rate)      FUNC__ADD_OUTPUT_PWM_PERCENT(-rate*CAL_RELEASE(RELEASE_POWER_MAX, \
+                                              PowerHeatData.chassisPower + (60 - PowerHeatData.chassisPowerBuffer) / 2));
+  #endif /* CAP_USE_CURR */
+	#endif
 
   #define CAL_RELEASE(max, x) (((max)>(x))?(pow((max)-(x), RELEASE_POW_RATE)):(-pow((x)-(max), RELEASE_POW_RATE)))
   #define CAL_RECHARGE(max, x) (((max)>(x))?(pow((max)-(x), RECHARGE_POW_RATE)):(-pow((x)-(max), RECHARGE_POW_RATE)))
@@ -182,7 +201,7 @@ static void Cap_Ctr(void);
 
 void Cap_Init(void) {
 	HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(Cap_Out_GPIO_Port, Cap_Out_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(Cap_Out_GPIO_Port, Cap_Out_Pin, GPIO_PIN_RESET);
 	memset(ADC_hits_val, 0, sizeof(ADC_hits_val));
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_hits_val, ADC_CHANNALS*ADC_HITS);
 	#ifdef USE_CAP2
@@ -223,8 +242,6 @@ void Cap_Init(void) {
 #endif /* USE_CAPex */
 
 void Cap_Run(void) {
-	
-	
 	VAL__CAP_VOLTAGE = FUNC_NEW_Get_Voltage() * 35.2 / 2.2;
 	Control_SuperCap.C_voltage = 100*Cap_Get_Cap_Voltage();
 	Control_SuperCap.P_voltage = 100*Cap_Get_Power_Voltage();
@@ -427,8 +444,13 @@ static void Cap_Ctr_STOP() {
 	    Control_SuperCap.P_voltage = 100*Cap_Get_Power_Voltage();
 	    Control_SuperCap.P_Power = 100*Cap_Get_Power_Voltage()*Cap_Get_Power_CURR();*/
       if(++cnt >=5 && ncnt < DEBUG_HITS){
+			#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
         cps[0][ncnt] = PowerHeat.chassis_power * 100;
         cps[1][ncnt] = PowerHeat.chassis_power_buffer  * 100;
+			#else //RM_2018
+				cps[0][ncnt] = PowerHeatData.chassisPower * 100;
+        cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+			#endif
         cps[2][ncnt] = Cap_Get_Power_Voltage()*Cap_Get_Power_CURR()*100;
         cps[3][ncnt++] = VAL__INPUT_PWM_PERCENT * 100;
         cnt = 0;
@@ -467,8 +489,13 @@ static void Cap_Ctr_RECHARGE() {
 	          Control_SuperCap.P_voltage = 100*Cap_Get_Power_Voltage();
 	          Control_SuperCap.P_Power = 100*Cap_Get_Power_Voltage()*Cap_Get_Power_CURR();
             if(++cnt >=5 && ncnt < DEBUG_HITS){
-               cps[0][ncnt] = PowerHeat.chassis_power * 100;
-               cps[1][ncnt] = PowerHeat.chassis_power_buffer  * 100;
+							#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
+								cps[0][ncnt] = PowerHeat.chassis_power * 100;
+								cps[1][ncnt] = PowerHeat.chassis_power_buffer  * 100;
+							#else //RM_2018
+								cps[0][ncnt] = PowerHeatData.chassisPower * 100;
+								cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+							#endif
                cps[2][ncnt] = Cap_Get_Power_Voltage()*Cap_Get_Power_CURR()*100;
                cps[3][ncnt++] = VAL__INPUT_PWM_PERCENT * 100;
                cnt = 0;
@@ -493,12 +520,22 @@ static void Cap_Ctr_RECHARGE() {
   #endif /* USE_CAP2 */
 	
 	#ifdef USE_CAPex
-	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
-					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 59.0f){
+	#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
+		if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
 			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	}else{
 				    HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
 	  }
+	#else //RM_2018
+		if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeatData.chassisPowerBuffer < 30.0f){
+			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
+		  	}else{
+				    HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
+	  }
+	#endif
+	  
 				
 	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX) {
 		  Cap_State_Switch(CAP_STATE_STOP);
@@ -519,12 +556,21 @@ static void Cap_Ctr_RECHARGE() {
 static void Cap_Ctr_TEMP_RECHARGE() {
 	
 	#ifdef USE_CAPex
-	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
-					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 59.0f){
+	#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
+	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
 			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	}else{
 				    HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
 	  }
+	#else //JUDGE_RM_2018
+		if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeatData.chassisPowerBuffer < 30.0f){
+			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
+		  	}else{
+				    HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
+	  }
+	#endif
 				
 	  if (VAL__CAP_VOLTAGE > 15){
 		  Cap_State_Switch(CAP_STATE_RELEASE);
@@ -557,8 +603,13 @@ static void Cap_Ctr_RELEASE() {
 
       #ifdef CAP_DEBUG
          if(++cnt>=5 && ncnt<DEBUG_HITS){
+					#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
           cps[0][ncnt] = PowerHeat.chassis_power * 100;
           cps[1][ncnt] = PowerHeat.chassis_power_buffer  * 100;
+					#else //JUDGE_RM_2018
+					cps[0][ncnt] = PowerHeatData.chassisPower * 100;
+          cps[1][ncnt] = PowerHeatData.chassisPowerBuffer  * 100;
+					#endif
           cps[2][ncnt] = Cap_Get_Power_Voltage()*Cap_Get_Power_CURR()*100;
           cps[3][ncnt++] = VAL__OUTPUT_PWM_PERCENT * 100;
           cnt = 0;
@@ -592,12 +643,21 @@ static void Cap_Ctr_RELEASE() {
 		      Cap_State_Switch(CAP_STATE_TEMP_RECHARGE);
 	      }
 	      else {
-					if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
-					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 59.0f){
+					#ifndef JUDGE_RM_2018 //JUDGE_RM_2019
+					if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
 			        HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	  }else{
 				      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
 			    } 
+					#else //JUDGE_RM_2018
+					if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 3000 || \
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeatData.chassisPowerBuffer < 30.0f){
+			        HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
+		  	  }else{
+				      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
+			    } 
+					#endif
 		      input_dac_per = FUNC__RECAL_INPUT_DAC_T;
 		      if (input_dac_per > VAL__INPUT_DAC_MAX) {
 			      input_dac_per = VAL__INPUT_DAC_MAX;
@@ -624,9 +684,15 @@ static void Cap_Ctr_RELEASE() {
   * @retval None
   */
 void Cap_Ctr() { // called with period of 2 ms
-	if (GameRobotState.remain_HP < 1 || WorkState == STOP_STATE || WorkState == PREPARE_STATE || inputmode == STOP) {
+	#ifndef JUDGE_RM_2018 //JUDGE_RM2019
+	if (GameRobotState.remain_HP < 1 || WorkState == STOP_STATE || WorkState == PREPARE_STATE) {
 		Cap_State_Switch(CAP_STATE_STOP);
 	}
+	#else //JUDGE_RM2018
+	if (RobotState.remainHP < 1 || WorkState == STOP_STATE || WorkState == PREPARE_STATE) {
+		Cap_State_Switch(CAP_STATE_STOP);
+	}
+	#endif
 	else {
 		switch (CapState) {
 		case CAP_STATE_STOP:
