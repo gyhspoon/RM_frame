@@ -74,7 +74,7 @@ void PowerLimitation(void)
 		CMBRIntensity *= LimitFactor/sum;
 	}
 	//else if (Control_SuperCap.release_power==0 || PowerHeatData.chassisPower>30)
-	else if (Cap_Get_Cap_State()!=CAP_STATE_RELEASE||Cap_Get_Cap_Voltage()<13)
+	else if(Cap_Get_Cap_State()!=CAP_STATE_RELEASE||Cap_Get_Cap_Voltage()<11)
 	{
 		//PowerLimitationPID.Reset(&PowerLimitationPID);
 		//LimitFactor = 1.0f;
@@ -181,6 +181,7 @@ void CapBased_PowerLimitation(void)
 	int32_t CMFRIntensity = CMFR.Intensity;
 	int32_t CMBLIntensity = CMBL.Intensity;
 	int32_t CMBRIntensity = CMBR.Intensity;
+	
 	//ÀëÏßÄ£Ê½
 	if (JUDGE_State == OFFLINE)
 	{
@@ -195,7 +196,7 @@ void CapBased_PowerLimitation(void)
 		}
 		//CM_current_max = CM_current_MAX;
 	}
-	else if(Cap_Get_Cap_Voltage() < 8 && (PowerHeat.chassis_power_buffer-((Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70)>0?(Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70):0)*1.0f < 50.0f))
+	else if(Cap_Get_Cap_Voltage() < 8 && (PowerHeat.chassis_power_buffer-((Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70)>0?(Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70):0)*0.5f < 20.0f))
 	{
 		//CM_current_max = 2730;
 		sum = __fabs(CMFLIntensity) + __fabs(CMFRIntensity) + __fabs(CMBLIntensity) + __fabs(CMBRIntensity);
@@ -217,6 +218,7 @@ void CapBased_PowerLimitation(void)
 		CMBLIntensity *= LimitFactor/sum;
 		CMBRIntensity *= LimitFactor/sum;
 	}
+	
 	CMFL.Intensity = CMFLIntensity;
 	CMFR.Intensity = CMFRIntensity;
 	CMBL.Intensity = CMBLIntensity;

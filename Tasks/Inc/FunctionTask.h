@@ -15,7 +15,7 @@
 #include "includes.h"
 
 //Ò£¿Ø³£Á¿Çø
-#define RC_CHASSIS_SPEED_REF    	0.85f
+#define RC_CHASSIS_SPEED_REF    		0.85f
 #define RC_ROTATE_SPEED_REF 			0.07f
 #define RC_GIMBAL_SPEED_REF				0.006f
 
@@ -218,7 +218,7 @@ extern int ChassisTwistGapAngle;
 extern uint8_t ChassisTwistState;
 extern int32_t auto_counter;
 extern int32_t auto_counter_stir;
-extern int32_t auto_counter_shoot;
+extern int32_t auto_counter_heat1;
 extern uint8_t chassis_lock;
 
 void FunctionTaskInit(void);

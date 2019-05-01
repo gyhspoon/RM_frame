@@ -136,6 +136,11 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 	//各模块初始化
+	#ifdef FRIC_PWM_MODE//临时使用，后续不需要
+	HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
+	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_2,800);
+	__HAL_TIM_SetCompare(&htim2,TIM_CHANNEL_3,800);
+	#endif /*FRIC_PWM_MODE*/
 	InitRemoteControl();
 	Motor_ID_Setting();
 	for(int i=0;i<8;i++) {InitMotor(can1[i]);InitMotor(can2[i]);}

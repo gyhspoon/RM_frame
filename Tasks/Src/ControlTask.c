@@ -323,7 +323,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if(auto_counter > 0) auto_counter--;
 		if(auto_counter_stir > 0) auto_counter_stir--;
 		if(auto_counter_fps > 0) auto_counter_fps--;
-		if(auto_counter_shoot > 0) auto_counter_shoot--;
+		if(auto_counter_heat1 > 0) auto_counter_heat1--;
 		
 		if (rx_free == 1 && tx_free == 1)
 		{

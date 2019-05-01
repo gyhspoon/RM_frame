@@ -56,6 +56,8 @@
 #define ICIN                    (2)       //PB1 Channel 9
 #define UCK1                    (3)       //PC0 Channel 10
 
+
+
 #ifdef USE_CAP1
   #define RECHARGE_VOLTAGE_MAX    (21.5)
   #define RE_RECHARGE_VOLTAGE     (20.0)
@@ -179,6 +181,8 @@ static void Cap_Ctr(void);
 #endif /* CAP_DEBUG */
 
 void Cap_Init(void) {
+	HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Cap_Out_GPIO_Port, Cap_Out_Pin, GPIO_PIN_RESET);
 	memset(ADC_hits_val, 0, sizeof(ADC_hits_val));
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_hits_val, ADC_CHANNALS*ADC_HITS);
 	#ifdef USE_CAP2
@@ -219,6 +223,8 @@ void Cap_Init(void) {
 #endif /* USE_CAPex */
 
 void Cap_Run(void) {
+	
+	
 	VAL__CAP_VOLTAGE = FUNC_NEW_Get_Voltage() * 35.2 / 2.2;
 	Control_SuperCap.C_voltage = 100*Cap_Get_Cap_Voltage();
 	Control_SuperCap.P_voltage = 100*Cap_Get_Power_Voltage();
@@ -488,7 +494,7 @@ static void Cap_Ctr_RECHARGE() {
 	
 	#ifdef USE_CAPex
 	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
-					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 59.0f){
 			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	}else{
 				    HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
@@ -514,7 +520,7 @@ static void Cap_Ctr_TEMP_RECHARGE() {
 	
 	#ifdef USE_CAPex
 	  if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
-					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 59.0f){
 			      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	}else{
 				    HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);
@@ -587,7 +593,7 @@ static void Cap_Ctr_RELEASE() {
 	      }
 	      else {
 					if (VAL__CAP_VOLTAGE > RECHARGE_VOLTAGE_MAX  || fabs(CMFL.offical_speedPID.fdb - CMFL.offical_speedPID.ref) > 300 || fabs(CMFR.offical_speedPID.fdb - CMFR.offical_speedPID.ref) > 300 || \
-					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 30.0f){
+					  fabs(CMBL.offical_speedPID.fdb - CMBL.offical_speedPID.ref) > 300 || fabs(CMBR.offical_speedPID.fdb - CMBR.offical_speedPID.ref) > 300 || PowerHeat.chassis_power_buffer < 59.0f){
 			        HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_RESET);
 		  	  }else{
 				      HAL_GPIO_WritePin(Cap_In_GPIO_Port, Cap_In_Pin, GPIO_PIN_SET);

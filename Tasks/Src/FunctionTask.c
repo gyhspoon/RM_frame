@@ -24,7 +24,7 @@ int ChassisTwistGapAngle = 0;
 
 int32_t auto_counter=0;		//用于准确延时的完成某事件
 int32_t auto_counter_stir=0;
-int32_t auto_counter_shoot=0;
+int32_t auto_counter_heat1=0;
 
 int16_t channelrrow = 0;
 int16_t channelrcol = 0;
@@ -59,18 +59,20 @@ void FunctionTaskInit()
 void OptionalFunction()
 {
 	#ifdef USE_POWERLIMITATION
-	if (Cap_Get_Cap_State() == CAP_STATE_STOP)
+	if(Cap_Get_Cap_State() == CAP_STATE_STOP)
 	{
-		PowerLimitation(); 
+		PowerLimitation(); //基于自测功率的功率限制，适用于充电和停止状态
 	}
 	else
 	{
-//		if (Cap_Get_Cap_State() == CAP_STATE_RECHARGE || Cap_Get_Cap_State() == CAP_STATE_TEMP_RECHARGE)
-//			CurBased_PowerLimitation();//基于自测功率的功率限制，适用于充电和停止状态
-//		else if (Cap_Get_Cap_State() == CAP_STATE_RELEASE)
-//		  CapBased_PowerLimitation();//超级电容工作模式下的功率限制
- 	}
-//	PowerLimitation();
+		if (Cap_Get_Cap_State() == CAP_STATE_RECHARGE || Cap_Get_Cap_State() == CAP_STATE_TEMP_RECHARGE)
+			CurBased_PowerLimitation();//基于自测功率的功率限制，适用于充电和停止状态
+		else
+		{
+			if (Cap_Get_Cap_State() == CAP_STATE_RELEASE)
+				CapBased_PowerLimitation();//超级电容工作模式下的功率限制
+		}
+	}
 	#endif
 }
 
@@ -169,10 +171,10 @@ void RemoteControlProcess(Remote *rc)
 			Cap_State_Switch(CAP_STATE_RELEASE);
 		}
 		
-		if (Cap_Get_Power_Voltage() > 9 && Cap_Get_Cap_State() == CAP_STATE_RELEASE)
+		if (Cap_Get_Power_Voltage() > 10 && Cap_Get_Cap_State() == CAP_STATE_RELEASE)
 		{
 		  ChassisSpeedRef.forward_back_ref = channelrcol * RC_CHASSIS_SPEED_REF*2;
-		  ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF*3/2;
+		  ChassisSpeedRef.left_right_ref   = channelrrow * RC_CHASSIS_SPEED_REF*1.5f;
     }
 		else
 		{
@@ -183,9 +185,9 @@ void RemoteControlProcess(Remote *rc)
 		GMY.TargetAngle += channellrow * RC_GIMBAL_SPEED_REF;
 		GMP.TargetAngle -= channellcol * RC_GIMBAL_SPEED_REF;
 		#else
-		if (Cap_Get_Power_Voltage() > 9 && Cap_Get_Cap_State() == CAP_STATE_RELEASE)
+		if (Cap_Get_Power_Voltage() > 10 && Cap_Get_Cap_State() == CAP_STATE_RELEASE)
 		{
-		  ChassisSpeedRef.rotate_ref = -channellrow * RC_ROTATE_SPEED_REF*2;
+		  ChassisSpeedRef.rotate_ref = -channellrow * RC_ROTATE_SPEED_REF*1.5;
 		}
 		else
 		{
@@ -452,10 +454,10 @@ void KeyboardModeFSM(Key *key)
 		}
 		KeyboardMode=SHIFT;
 		//电容状态控制
-//		if(LastKeyboardMode != KeyboardMode && Cap_Get_Cap_State() != CAP_STATE_TEMP_RECHARGE && Cap_Get_Cap_State() != CAP_STATE_RELEASE && Cap_Get_Power_Voltage() > 9)
-//		{
-//			Cap_State_Switch(CAP_STATE_RELEASE);
-//		}
+		if(LastKeyboardMode != KeyboardMode&& Cap_Get_Power_Voltage() > 9 && Cap_Get_Cap_State() != CAP_STATE_TEMP_RECHARGE && Cap_Get_Cap_State() != CAP_STATE_RELEASE)
+		{
+			Cap_State_Switch(CAP_STATE_RELEASE);
+		}
 	}
 	else if(key->v & KEY_CTRL)//Ctrl
 	{
@@ -587,27 +589,27 @@ void FreshSuperCState(void)
 		HAL_GPIO_WritePin(GPIOF, LED_GREEN_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GPIOE, LED_RED_Pin, GPIO_PIN_SET);
 	}
-	HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin 
-                          |LED5_Pin|LED4_Pin|LED3_Pin|LED2_Pin 
-                          |LED1_Pin, GPIO_PIN_RESET);
-	if(Control_SuperCap.C_voltage<1100)
-	{
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin|LED3_Pin|LED2_Pin|LED1_Pin, GPIO_PIN_SET);
-	}
-	else if(Control_SuperCap.C_voltage<1300)
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin|LED3_Pin|LED2_Pin, GPIO_PIN_SET);
-	else if(Control_SuperCap.C_voltage<1500)
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin|LED3_Pin, GPIO_PIN_SET);
-	else if(Control_SuperCap.C_voltage<1700)
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin, GPIO_PIN_SET);
-	else if(Control_SuperCap.C_voltage<1800)
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin, GPIO_PIN_SET);
-	else if(Control_SuperCap.C_voltage<1900)
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin, GPIO_PIN_SET);
-	else if(Control_SuperCap.C_voltage<2000)
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin, GPIO_PIN_SET);
-	else if(Control_SuperCap.C_voltage<2100)
-		HAL_GPIO_WritePin(GPIOG, LED8_Pin, GPIO_PIN_SET);
+//	HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin 
+//                          |LED5_Pin|LED4_Pin|LED3_Pin|LED2_Pin 
+//                          |LED1_Pin, GPIO_PIN_RESET);
+//	if(Control_SuperCap.C_voltage<1100)
+//	{
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin|LED3_Pin|LED2_Pin|LED1_Pin, GPIO_PIN_SET);
+//	}
+//	else if(Control_SuperCap.C_voltage<1300)
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin|LED3_Pin|LED2_Pin, GPIO_PIN_SET);
+//	else if(Control_SuperCap.C_voltage<1500)
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin|LED3_Pin, GPIO_PIN_SET);
+//	else if(Control_SuperCap.C_voltage<1700)
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin|LED4_Pin, GPIO_PIN_SET);
+//	else if(Control_SuperCap.C_voltage<1800)
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin|LED5_Pin, GPIO_PIN_SET);
+//	else if(Control_SuperCap.C_voltage<1900)
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin|LED6_Pin, GPIO_PIN_SET);
+//	else if(Control_SuperCap.C_voltage<2000)
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin|LED7_Pin, GPIO_PIN_SET);
+//	else if(Control_SuperCap.C_voltage<2100)
+//		HAL_GPIO_WritePin(GPIOG, LED8_Pin, GPIO_PIN_SET);
 }
 
 void ChassisTwist(void)
@@ -685,7 +687,7 @@ void ShootOneBullet(void)
 	{
 		GATE.TargetAngle -= 170;
 		fakeHeat1 += 100;
-		auto_counter_shoot=500;
+		auto_counter_heat1=500;
 	}
 	#endif
 	if(find_enemy && aim_mode == 1)

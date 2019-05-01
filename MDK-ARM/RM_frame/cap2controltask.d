@@ -69,3 +69,6 @@
 .\rm_frame\cap2controltask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\stdarg.h
 .\rm_frame\cap2controltask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\stdbool.h
 .\rm_frame\cap2controltask.o: D:\keil mdk\ARM\ARMCC\Bin\..\include\stdlib.h
+.\rm_frame\cap2controltask.o: ../Tasks/Inc/kalman_filter.h
+.\rm_frame\cap2controltask.o: ../Drivers/CMSIS/Include/arm_math.h
+.\rm_frame\cap2controltask.o: ../Drivers/CMSIS/Include/core_cm4.h

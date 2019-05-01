@@ -229,7 +229,7 @@ void Judge_Refresh_Power()
 	realHeat0 = PowerHeatData.shooterHeat0;
 	remainHeat0 = maxHeat0 - PowerHeatData.shooterHeat0;
 	remainHeat1 = maxHeat1 - PowerHeatData.shooterHeat1;
-	if(auto_counter_shoot==0)
+	if(auto_counter_heat1==0)
 	{
 		fakeHeat1 = PowerHeatData.shooterHeat1;
 	}
@@ -421,13 +421,11 @@ void Referee_Update_RobotState()
 		grs7[i] = (unsigned char)tmp7[i];
 	}
 	
-	switch(GameRobotState.robot_level)
-	{
-		case 1:{maxHeat0 = MAXHEAT01;cooldown0 = COOLDOWN01;maxHeat1 = MAXHEAT11;cooldown1 = COOLDOWN11;}break;
-		case 2:{maxHeat0 = MAXHEAT02;cooldown0 = COOLDOWN02;maxHeat1 = MAXHEAT12;cooldown1 = COOLDOWN12;}break;
-		case 3:{maxHeat0 = MAXHEAT03;cooldown0 = COOLDOWN03;maxHeat1 = MAXHEAT13;cooldown1 = COOLDOWN13;}break;
-		default:{maxHeat0 = MAXHEAT03;cooldown0 = COOLDOWN03;maxHeat1 = MAXHEAT13;cooldown1 = COOLDOWN13;}break;
-	}
+	maxHeat0 = GameRobotState.shooter_heat0_cooling_limit;
+	cooldown0 = GameRobotState.shooter_heat0_cooling_rate;
+	maxHeat1 = GameRobotState.shooter_heat1_cooling_limit;
+	cooldown1 = GameRobotState.shooter_heat1_cooling_rate;
+
 	JUDGE_Received = 1;
 	//电源输出情况TBD
 	
@@ -465,7 +463,7 @@ void Referee_Update_PowerHeatData()
 	realHeat0 = PowerHeat.shooter_heat0;
 	remainHeat0 = maxHeat0 - PowerHeat.shooter_heat0;
 	remainHeat1 = maxHeat1 - PowerHeat.shooter_heat1;
-	if(auto_counter_shoot==0)
+	if(auto_counter_heat1==0)
 	{
 		fakeHeat1 = PowerHeat.shooter_heat1;
 	}
