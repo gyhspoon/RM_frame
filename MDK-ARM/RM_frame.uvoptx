@@ -230,6 +230,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>Control_SuperCap,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ADC_val[(4)]</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -266,6 +271,11 @@
           <count>6</count>
           <WinNumber>2</WinNumber>
           <ItemText>maxHeat1,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ADC_tmp</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow4>

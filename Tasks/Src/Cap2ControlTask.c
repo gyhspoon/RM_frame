@@ -129,7 +129,7 @@
   #define DAC_PER_MAX             (4095)
   #define RECHARGE_VOLTAGE_MAX    (23.5)
   #define RE_RECHARGE_VOLTAGE     (17.0)
-  #define RELEASE_VOLTAGE_MIN     (9.0)
+  #define RELEASE_VOLTAGE_MIN     (11.0)
   #define VAL__INPUT_DAC_MAX      (4095)
   #define RE_RELASE_VOLTAGE_MIN   (15.0)
   double VAL__CAP_VOLTAGE;
@@ -234,7 +234,7 @@ void Cap_Run(void) {
 	#endif /* CAP_LED_SHOW */
 	Cap_Ctr();
 	Cap_State();
-	//custom_data.masks = 0xC0 | ((1 << ((int)(((pow(VAL__CAP_VOLTAGE,2) - pow(RELEASE_VOLTAGE_MIN,2)) / (pow(RECHARGE_VOLTAGE_MAX,2) - pow(RELEASE_VOLTAGE_MIN,2))) * 6 + 1))) - 1);
+	//custom_data.masks = 0xC0 | ((1 << ((int)(((VAL__CAP_VOLTAGE*VAL__CAP_VOLTAGE - 121) / (RECHARGE_VOLTAGE_MAX*RECHARGE_VOLTAGE_MAX - 121)) * 6 + 1))) - 1);
 }
 
 void Cap_State_Switch(cap_state State) {
@@ -376,7 +376,7 @@ void Cap_State() { // called with period of 2 ms
 	    #else
 	        HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
 	    #endif /* CAP_FINAL_TEST */
-	    if (Cap_Get_Cap_Voltage() > 9){
+	    if (Cap_Get_Cap_Voltage() > 11){
 		    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, output_dac_per); //
 			}
 			else{
@@ -678,11 +678,11 @@ void LED_Show_SuperCap_Voltage(uint8_t flag)
 		HAL_GPIO_WritePin(GPIOG, 0x1fe, GPIO_PIN_SET);
 		return;
 	}
-	if (VAL__CAP_VOLTAGE < 8)
+	if (VAL__CAP_VOLTAGE < 11)
 		HAL_GPIO_WritePin(GPIOG, 0x1fe, GPIO_PIN_SET);
 	else {
 		HAL_GPIO_WritePin(GPIOG, 0x1fe, GPIO_PIN_SET);
-		int unlight = 7 - (int) ( ((VAL__CAP_VOLTAGE * VAL__CAP_VOLTAGE - 100) / (23*23 - 100)) * 6);
+		int unlight = 7 - (int) ( ((VAL__CAP_VOLTAGE * VAL__CAP_VOLTAGE - 121) / (23*23 - 121)) * 6);
 		if (unlight < 0) unlight = 0;
 		HAL_GPIO_WritePin(GPIOG, 0x1fe >> unlight, GPIO_PIN_RESET);
 	}

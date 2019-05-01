@@ -196,7 +196,7 @@ void CapBased_PowerLimitation(void)
 		}
 		//CM_current_max = CM_current_MAX;
 	}
-	else if(Cap_Get_Cap_Voltage() < 8 && (PowerHeat.chassis_power_buffer-((Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70)>0?(Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70):0)*0.5f < 20.0f))
+	else if(Cap_Get_Cap_Voltage() < 12 && (PowerHeat.chassis_power_buffer-((Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70)>0?(Cap_Get_Power_CURR()*Cap_Get_Power_Voltage()-70):0)*1.0f < 20.0f))
 	{
 		//CM_current_max = 2730;
 		sum = __fabs(CMFLIntensity) + __fabs(CMFRIntensity) + __fabs(CMBLIntensity) + __fabs(CMBRIntensity);
